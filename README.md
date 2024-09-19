@@ -4,9 +4,13 @@
 
 ## Team Members
 Joyal Biju Kulangara - 40237314
+
 Kevin Mandiouba - 40243497
+
 Jonathan Mehmannavaz - 40210330
+
 Oussama Bouhenchir - 40249465
+
 Owen Jorgensen - 40227851
 
 
