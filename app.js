@@ -42,6 +42,38 @@ app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
+// Route to handle user registration
+app.post("/register", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  const role = req.body.role;
+
+  try {
+    const checkResult = await db.query(
+      "SELECT * FROM users WHERE username = $1",
+      [username]
+    );
+
+    if (checkResult.rows.length > 0) {
+      res.send("Username already exists. Try logging in.");
+    } else {
+      bcrypt.hash(password, saltRounds, async (err, hash) => {
+        if (err) {
+          console.error("Error hashing password:", err);
+        } else {
+          await db.query(
+            "INSERT INTO users (username, password, userType) VALUES ($1, $2, $3)",
+            [username, hash, role]
+          );
+          res.send("Registration successful!"); // Redirect to a different page if needed
+        }
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // Start the Express server. Server listening on port 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
