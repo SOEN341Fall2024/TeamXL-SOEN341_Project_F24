@@ -26,3 +26,8 @@ const db = new pg.Client({
   port: process.env.DB_PORT,
 });
 db.connect();
+
+// Route for the home page, render the home.ejs view
+app.get("/", (req, res) => {
+  res.render("home.ejs");
+});
