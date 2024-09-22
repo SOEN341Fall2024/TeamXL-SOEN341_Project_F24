@@ -65,9 +65,35 @@ app.post("/register", async (req, res) => {
             "INSERT INTO users (username, password, userType) VALUES ($1, $2, $3)",
             [username, hash, role]
           );
-          res.send("Registration successful!"); // Redirect to a different page if needed
+          res.send("Registration successful!");
         }
       });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// Route to handle user login
+app.post("/login", async (req, res) => {
+  const username = req.body.username;
+  const loginPassword = req.body.password;
+
+  try {
+    const result = await db.query("SELECT * FROM users WHERE username = $1", [
+      username,
+    ]);
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      bcrypt.compare(loginPassword, user.password, (err, match) => {
+        if (match) {
+          res.send("Login successful!");
+        } else {
+          res.send("Incorrect password.");
+        }
+      });
+    } else {
+      res.send("User not found.");
     }
   } catch (err) {
     console.log(err);
