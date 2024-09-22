@@ -3,6 +3,9 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Create an instance of an Express application, specify port for the server to listen on, define the number of rounds for bcrypt hashing
 const app = express();
@@ -13,3 +16,12 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+
+// Create a new PostgreSQL client for database connection
+const db = new pg.Client({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+});
