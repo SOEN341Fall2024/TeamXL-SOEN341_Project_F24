@@ -32,7 +32,12 @@ app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-// Route for login page, render the login.ejs view
+// Route for the login page, render the login.ejs view
 app.get("/login", (req, res) => {
   res.render("login.ejs");
+});
+
+// Route for the register page, render the register.ejs view
+app.get("/register", (req, res) => {
+  res.render("register.ejs");
 });
