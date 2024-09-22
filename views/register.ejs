@@ -1,2 +1,15 @@
 <%- include('partials/header', { title: 'Register' }) %>
+<h1>Register</h1>
+<form>
+  <label>
+    <input type="radio" name="role" value="instructor" /> Instructor
+  </label>
+  <label> <input type="radio" name="role" value="student" /> Student </label>
+
+  <label for="username">Username</label>
+  <input type="username" name="username" required />
+  <label for="password">Password</label>
+  <input type="password" name="password" required />
+  <button type="submit">Register</button>
+</form>
 <%- include('partials/footer') %>
