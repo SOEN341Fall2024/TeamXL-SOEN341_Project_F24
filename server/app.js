@@ -41,3 +41,8 @@ app.get("/login", (req, res) => {
 app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
+
+// Start the Express server. Server listening on port 3000
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`); // Log that the server is running
+});
