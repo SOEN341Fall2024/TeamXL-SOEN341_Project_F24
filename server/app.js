@@ -8,3 +8,8 @@ import bcrypt from "bcrypt";
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+
+// Middleware to parse URL-encoded bodies (from forms)
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+app.use(express.static("public"));
