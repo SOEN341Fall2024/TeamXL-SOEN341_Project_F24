@@ -31,3 +31,8 @@ db.connect();
 app.get("/", (req, res) => {
   res.render("home.ejs");
 });
+
+// Route for login page, render the login.ejs view
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
