@@ -1,33 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('header.ejs') %>
+<%- include('partials/header.ejs') %>
 <body>
     <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-4">
-                <h3 class="text-center">Register</h3>
-                <form action="/register" method="POST">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Role</label>
-                        <select class="form-select" name="role">
-                            <option value="student">Student</option>
-                            <option value="instructor">Instructor</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Register</button>
-                </form>
-                <p class="mt-3 text-center">Already have an account? <a href="/login">Login here</a></p>
+        <h2 class="text-center my-4">Register</h2>
+        <!-- Radio buttons for user type -->
+        <form action="/register" method="POST">
+            <div class="radio-group">
+                <input type="radio" name="role" value="Instructor" id="instructor" required>
+                <label for="instructor">Instructor</label>
+                <input type="radio" name="role" value="Student" id="student" required>
+                <label for="student">Student</label>
             </div>
-        </div>
+            <!-- Username and Password fields -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-register">Register</button>
+        </form>
     </div>
 </body>
-<%- include('footer.ejs') %>
+<%- include('partials/footer.ejs') %>
 </html>

@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/header.ejs') %>
-
 <body>
-    <div class="container mt-5">
+    <div class="container text-center">
+        <!-- Concordia Logo -->
+        <img src="/images/concordia-logo.png" alt="Concordia University" class="img-fluid my-4" style="max-width: 300px;">
+        
+        <!-- Heading -->
         <h1 class="text-center">Welcome to the Peer Assessment System</h1>
-        <div class="row justify-content-center">
-            <div class="col-md-6 text-center">
-                <a href="/login" class="btn btn-outline-primary">Login</a>
-                <a href="/register" class="btn btn-outline-secondary">Register</a>
-            </div>
+        
+        <!-- Add the peer assessment image with rounded edges -->
+        <img src="/images/peer-assessment-image-1.jpg" alt="Peer Assessment" class="img-fluid my-4 rounded" style="max-width: 600px; border-radius: 20px;">
+
+        <!-- Login and Register Buttons in a row -->
+        <div class="button-group">
+            <a href="/login" class="btn btn-login">Log in</a>
+            <a href="/register" class="btn btn-register">Register</a>
         </div>
     </div>
 </body>

@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-// Route for the login page, render the login.ejs view
+// Route for the login page, render the unified login.ejs view
 app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
@@ -74,20 +74,22 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Route to handle user login
+// Route to handle unified login (for both students and instructors)
 app.post("/login", async (req, res) => {
   const username = req.body.username;
   const loginPassword = req.body.password;
 
   try {
-    const result = await db.query("SELECT * FROM users WHERE username = $1", [
-      username,
-    ]);
+    const result = await db.query(
+      "SELECT * FROM users WHERE username = $1",
+      [username]
+    );
+    
     if (result.rows.length > 0) {
       const user = result.rows[0];
       bcrypt.compare(loginPassword, user.password, (err, match) => {
         if (match) {
-          res.send("Login successful!");
+          res.send("Login successful!"); // Handle success (add redirects if needed)
         } else {
           res.send("Incorrect password.");
         }
@@ -97,6 +99,7 @@ app.post("/login", async (req, res) => {
     }
   } catch (err) {
     console.log(err);
+    res.status(500).send("Server error.");
   }
 });
 
