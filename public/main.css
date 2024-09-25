@@ -1,0 +1,62 @@
+/* Ensure the body and html take up the full height of the viewport */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Center the content vertically and horizontally */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    text-align: center;
+}
+
+/* Style the heading */
+h1 {
+    margin-bottom: 30px;
+    font-weight: bold;
+    font-size: 2.5rem;
+    color: #343a40;
+}
+
+/* Customize the primary button (Login) with Concordia Red */
+.btn-primary {
+    background-color: #8D0023; /* Concordia Red */
+    border-color: #8D0023;
+    padding: 12px 30px; /* Consistent padding */
+    font-size: 1rem;
+    width: 160px;
+    text-align: center;
+    transition: transform 0.3s ease; /* Smooth transition for scaling */
+}
+
+/* Customize the secondary button (Register) with Concordia Red */
+.btn-concordia {
+    background-color: #8D0023; /* Concordia Red */
+    border-color: #8D0023;
+    color: white;
+    padding: 12px 30px;
+    font-size: 1rem;
+    width: 160px;
+    text-align: center;
+    transition: transform 0.3s ease; /* Smooth transition for scaling */
+}
+
+/* Add spacing between buttons */
+.btn {
+    margin: 0 10px;
+}
+
+/* Hover effect: Keep button colors the same, scale the button without layout shifts */
+.btn-primary:hover, .btn-concordia:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    background-color: inherit; /* Keep the same background color */
+    border-color: inherit; /* Keep the same border color */
+    color: inherit; /* Keep the same text color */
+    transition: transform 0.3s ease; /* Ensure smooth scaling animation */
+}
