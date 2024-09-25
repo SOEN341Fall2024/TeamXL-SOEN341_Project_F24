@@ -1,15 +1,37 @@
 <%- include('partials/header', { title: 'Register' }) %>
-<h1>Register</h1>
-<form action="/register" method="POST">
-  <label>
-    <input type="radio" name="role" value="instructor" /> Instructor
-  </label>
-  <label> <input type="radio" name="role" value="student" /> Student </label>
 
-  <label for="username">Username</label>
-  <input type="text" name="username" required />
-  <label for="password">Password</label>
-  <input type="password" name="password" required />
-  <button type="submit">Register</button>
-</form>
+
+<div class="container">
+  <div class="d-flex align-items-center justify-content-center py-5 bg-body-tertiary">
+    <form  action="/register" method="POST">
+    
+      <div>
+        <h1 class="h3 mb-3 fw-normal">Welcome, please register to get started</h1>
+      </div>
+      
+      <div>
+        <label>
+          <input type="radio" name="role" value="instructor" /> Instructor</label>
+        <label> <input type="radio" name="role" value="student" /> Student</label>
+      </div>
+
+      <div class="form-floating my-3">
+        <input type="text" class="form-control" id="floatingInput" placeholder="Username" name="username">
+        <label for="username" for="floatingInput">Username</label>
+      </div>
+
+      <div class="form-floating my-3">
+        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+        <label for="floatingPassword">Password</label>
+      </div>
+
+      <div class="my-4">
+      <button class="btn btn-primary w-100 py-2" type="submit">Register</button>
+      </div>
+
+    </form>
+</div>
+</div>
 <%- include('partials/footer') %>
+
+

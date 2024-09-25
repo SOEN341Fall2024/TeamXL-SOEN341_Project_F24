@@ -42,6 +42,16 @@ app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
+// Route for the student dashboard page, render the student_dashboard view
+app.get("/student_dashboard", (req, res) => {
+  res.render("student_dashboard.ejs");
+});
+
+// Route for the instructor dashboard page, render the student_dashboard view
+app.get("/instructor_dashboard", (req, res) => {
+  res.render("instructor_dashboard.ejs");
+});
+
 // Route to handle user registration
 app.post("/register", async (req, res) => {
   const username = req.body.username;
