@@ -8,61 +8,137 @@ html, body {
     font-family: Arial, sans-serif;
 }
 
-/* Center the login container */
+/* Center the login page */
 .login-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     padding: 20px;
+    background-color: #f9f9f9;
 }
 
 /* Style the login form */
 form {
     width: 100%;
     max-width: 400px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-/* Style input fields */
+h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
 input[type="text"], input[type="password"] {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
+    padding: 12px;
+    margin-bottom: 20px;
     border: 1px solid #ced4da;
     border-radius: 4px;
     font-size: 1rem;
 }
 
-/* Style the login button */
 button[type="submit"] {
     background-color: #8D0023;
     color: white;
-    padding: 12px 30px;
+    padding: 12px;
     border: none;
     border-radius: 4px;
     font-size: 1rem;
-    cursor: pointer;
     width: 100%;
-    margin-top: 10px;
+    cursor: pointer;
 }
 
 button[type="submit"]:hover {
-    background-color: #74001A;
+    background-color: #8D0023;
 }
 
-/* Style the forgot password and register links */
 a {
     display: block;
     margin-top: 10px;
-    color: #8D0023;
     text-decoration: none;
+    color: #8D0023;
+    text-align: center;
 }
 
 a:hover {
     text-decoration: underline;
+}
+
+/* Style the radio buttons and their labels */
+.radio-group {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.radio-group label {
+    font-size: 1rem;
+    margin-right: 15px;
+    color: #343a40;
+}
+
+input[type="radio"] {
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* Style for the role selection buttons */
+.role-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.role-button {
+    padding: 12px 30px;
+    font-size: 1rem;
+    text-align: center;
+    border: 2px solid #8D0023; /* Concordia red */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    width: 160px;
+}
+
+input[type="radio"] {
+    display: none; /* Hide the actual radio button */
+}
+
+/* Default unselected role button (grey) */
+.role-button {
+    background-color: #f9f9f9; /* Lighter grey */
+    color: #8D0023; /* Concordia red text */
+}
+
+/* Highlight selected role button */
+input[type="radio"]:checked + label.role-button {
+    background-color: #8D0023; /* Concordia red when selected */
+    color: white;
+}
+
+/* Unselected role button */
+input[type="radio"]:not(:checked) + label.role-button {
+    background-color: #f9f9f9; /* Light background */
+    color: #8D0023; /* Concordia red text */
+}
+
+/* Add hover effect for buttons */
+.role-button:hover {
+    transform: scale(1.05); /* Slight hover effect */
+    background-color: #8D0023; /* Concordia red on hover */
+    color: white; /* White text on hover */
 }

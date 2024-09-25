@@ -1,10 +1,42 @@
-<%- include('partials/header', { title: 'Log In' }) %>
-<h1>Login</h1>
-<form action="/login" method="POST">
-  <label for="username">Username</label>
-  <input type="text" name="username" required />
-  <label for="password">Password</label>
-  <input type="password" class="form-control" name="password" required />
-  <button type="submit">Register</button>
-</form>
-<%- include('partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <!-- Link to the login.css -->
+  <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+  <div class="container text-center login-container">
+    <h2 class="my-4">Log in</h2>
+    <form action="/login" method="POST">
+      
+      <!-- Role selection buttons -->
+      <div class="role-group">
+        <input type="radio" id="student" name="role" value="student" checked>
+        <label for="student" class="role-button">Student</label>
+  
+        <input type="radio" id="instructor" name="role" value="instructor">
+        <label for="instructor" class="role-button">Instructor</label>
+      </div>
+  
+      <!-- Username and Password inputs -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+  
+      <!-- Log in button -->
+      <button type="submit" class="btn btn-login">Log in</button>
+      <a href="#">Forgot password?</a>
+      <a href="/register">Don't have an account? Register now!</a>
+    </form>
+  </div>
+  
+</body>
+</html>
