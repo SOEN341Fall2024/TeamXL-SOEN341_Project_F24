@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('partials/header.ejs') %>
-<!-- Link the specific CSS for login -->
-<link rel="stylesheet" href="/css/login.css"> <!-- Ensure the correct path -->
+<%- include('partials/header.ejs') %> <!-- Header includes global styles like Bootstrap -->
+
+<!-- Link the login.css file -->
+<link rel="stylesheet" href="/css/login.css">
 
 <body>
-    <div class="container text-center">
-        <h2 class="my-4">Log in</h2>
+    <div class="login-container">
+        <h2>Log in</h2>
         <form action="/login" method="POST">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
@@ -16,11 +17,11 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn btn-login">Log in</button>
+            <button type="submit">Log in</button>
             <a href="#">Forgot password?</a>
-            <a href="/register">Don't have an account? Sign up now!</a>
+            <a href="/register">Don't have an account? Register now!</a>
         </form>
     </div>
-</body>
 <%- include('partials/footer.ejs') %>
+</body>
 </html>

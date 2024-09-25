@@ -16,15 +16,7 @@ html, body {
     text-align: center;
 }
 
-/* Style the heading */
-h1 {
-    margin-bottom: 30px;
-    font-weight: bold;
-    font-size: 2.5rem;
-    color: #343a40;
-}
-
-/* Add a container for the buttons to appear in a row */
+/* Add a container for the buttons to appear centered below the image */
 .button-group {
     display: flex;
     justify-content: center;
@@ -49,7 +41,7 @@ h1 {
     margin: 0 10px;
 }
 
-/* Hover effect: Keep button colors the same, scale the button without layout shifts */
+/* Hover effect for buttons */
 .btn-login:hover, .btn-register:hover {
     transform: scale(1.05); /* Slightly enlarge the button on hover */
     background-color: inherit; /* Keep the same background color */
@@ -58,40 +50,99 @@ h1 {
     transition: transform 0.3s ease;
 }
 
-/* Prevent color change when buttons are clicked (active or focus state) */
-.btn-login:focus, .btn-login:active, 
-.btn-register:focus, .btn-register:active {
-    background-color: inherit;
-    border-color: inherit;
-    color: inherit;
-    outline: none;
-    box-shadow: none; /* Remove any focus outline or shadow */
+/* Adjust image container and buttons positioning */
+.img-fluid {
+    display: block;
+    margin: 0 auto;
+    max-width: 600px;
+    border-radius: 20px;
 }
 
-/* Style the radio buttons and align them properly */
-.radio-group {
+.text-center {
+    text-align: center;
+}
+
+/* Style for the login page container */
+/* Style for the login page container */
+.login-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background similar to your example */
+}
+
+/* Center the login form and apply padding */
+form {
     width: 100%;
-    margin-bottom: 15px;
+    max-width: 400px;
+    padding: 40px;
+    background-color: #ffffff; /* White background for the form */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    text-align: left; /* Align text to left like in the example */
 }
 
-input[type="radio"] {
-    margin-right: 10px;
+/* Style for form labels */
+label {
+    font-size: 1rem;
+    color: #343a40;
+    font-weight: 500;
 }
 
-/* Optional: Adjust submit button styling for more prominent action */
+/* Style form inputs */
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+/* Style the login button */
 button[type="submit"] {
-    background-color: #8D0023;
+    background-color: #007bff; /* Blue color for the login button */
     color: white;
     padding: 12px 30px;
     border: none;
     border-radius: 4px;
     font-size: 1rem;
     cursor: pointer;
-    width: 100%;
+    width: 100%; /* Full width button */
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 button[type="submit"]:hover {
-    background-color: #8D0023;
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.02); /* Slight hover effect */
+}
+
+/* Style the 'Forgot password' and signup links */
+a {
+    display: block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 0.875rem;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Heading styles */
+h2 {
+    font-size: 32px; /* Adjust the size */
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Optional spacing for form elements */
+.mb-3 {
+    margin-bottom: 1.5rem; /* Increased space between form elements */
 }
