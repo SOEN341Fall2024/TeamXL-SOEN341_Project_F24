@@ -1,4 +1,17 @@
-<%- include('partials/header', { title: 'Home' }) %>
-<a href="/register">Register</a>
-<a href="/login">Log In</a>
-<%- include('partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/header.ejs') %>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Welcome to the Peer Assessment System</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <a href="/login" class="btn btn-outline-primary">Login</a>
+                <a href="/register" class="btn btn-outline-secondary">Register</a>
+            </div>
+        </div>
+    </div>
+</body>
+<%- include('partials/footer.ejs') %>
+</html>
