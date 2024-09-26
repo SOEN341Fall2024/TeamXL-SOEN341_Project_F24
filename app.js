@@ -148,7 +148,7 @@ app.post("/login", async (req, res) => {
 app.get("/create-team", async (req, res) => {
   const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
   try {
-    // Fetch students from the users table where usertype is 'student'
+    // Get students from the users table where usertype is 'student'
     const result = await db.query(
       "SELECT username FROM users WHERE usertype = $1",
       ["student"]
@@ -157,7 +157,7 @@ app.get("/create-team", async (req, res) => {
 
     // Render the create-teams view, passing the instructor username and students
     res.render("create-teams", {
-      instructorUsername: instructorUsername, // Pass the instructor username
+      instructorUsername: instructorUsername, // Pass the instructor username (used to access the instructor who created teams for displaying)
       students: students,
     });
   } catch (error) {

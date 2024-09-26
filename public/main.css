@@ -1,3 +1,22 @@
-body {
-    font-family: 'Source Sans 3', sans-serif;
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Full height of the viewport */
+}
+
+main {
+    flex: 1; /* This allows the main content to take up the available space */
+}
+
+footer {
+    /* Optional styling for footer */
+    background-color: #f8f9fa; /* Example background color */
+    padding: 20px; /* Example padding */
+    text-align: center; /* Center text */
 }
