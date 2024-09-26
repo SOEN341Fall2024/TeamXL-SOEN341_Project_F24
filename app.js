@@ -86,18 +86,31 @@ app.post("/register", async (req, res) => {
 
 // Route to handle user login
 app.post("/login", async (req, res) => {
-  const username = req.body.username;
+  const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const loginPassword = req.body.password;
 
   try {
-    const result = await db.query("SELECT * FROM users WHERE username = $1", [
-      username,
-    ]);
+    // Fetch the user from the database with a case-insensitive query
+    const result = await db.query(
+      "SELECT * FROM users WHERE LOWER(username) = $1",
+      [username]
+    );
+
     if (result.rows.length > 0) {
       const user = result.rows[0];
+
+      // Debugging: Log the result
+      console.log("User found:", user);
+
+      // Compare the password with the hashed password stored in the database
       bcrypt.compare(loginPassword, user.password, (err, match) => {
         if (match) {
-          res.send("Login successful!");
+          // Check if the user is an instructor or student
+          if (user.usertype === "instructor") {
+            res.render("instructor-dashboard.ejs"); // Render instructor dashboard
+          } else {
+            res.render("student-dashboard.ejs"); // Render student dashboard
+          }
         } else {
           res.send("Incorrect password.");
         }
@@ -106,7 +119,8 @@ app.post("/login", async (req, res) => {
       res.send("User not found.");
     }
   } catch (err) {
-    console.log(err);
+    console.log("Error during login query:", err); // Log any query errors for debugging
+    res.send("An error occurred during login.");
   }
 });
 
