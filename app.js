@@ -42,14 +42,31 @@ app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
-// Route for the student dashboard page, render the student_dashboard view
-app.get("/student_dashboard", (req, res) => {
-  res.render("student_dashboard.ejs");
+// Route for the student dashboard page, render the student-dashboard view
+app.get("/student-dashboard", (req, res) => {
+  res.render("student-dashboard.ejs");
 });
 
-// Route for the instructor dashboard page, render the student_dashboard view
-app.get("/instructor_dashboard", (req, res) => {
-  res.render("instructor_dashboard.ejs");
+// Route for the instructor dashboard page, render the instructor-dashboard view
+app.get("/instructor-dashboard", (req, res) => {
+  res.render("instructor-dashboard.ejs");
+});
+
+// Route to handle creating teams and fetching students
+app.get("/create-teams", async (req, res) => {
+  try {
+    // Fetch students from the database
+    const result = await db.query(
+      "SELECT username FROM users WHERE usertype = 'student'"
+    );
+    const students = result.rows; // Array of student objects
+
+    // Render the EJS view with the students array
+    res.render("create-teams", { students }); // Pass students to the EJS file
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching students");
+  }
 });
 
 // Route to handle user registration
@@ -119,7 +136,7 @@ app.post("/login", async (req, res) => {
       res.render("incorrect-pw-un.ejs");
     }
   } catch (err) {
-    console.log("Error during login query:", err); // Log any query errors for debugging
+    console.log("Error during login query:", err);
     res.send("An error occurred during login.");
   }
 });
