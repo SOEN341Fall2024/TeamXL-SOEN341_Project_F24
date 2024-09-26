@@ -19,11 +19,11 @@ app.use(express.static("public"));
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+  user: "postgres",//process.env.DB_USER,
+  host: "localhost",//process.env.DB_HOST,
+  database: "SOEN341",//process.env.DB_NAME,
+  password: "postgres",//process.env.DB_PASSWORD,
+  port: 5432//process.env.DB_PORT,
 });
 db.connect();
 
@@ -40,6 +40,14 @@ app.get("/login", (req, res) => {
 // Route for the register page, render the register.ejs view
 app.get("/register", (req, res) => {
   res.render("register.ejs");
+});
+
+app.get("/instructor-dashboard", (req, res) => {
+  res.render("instuctor-dashboard.ejs");
+});
+
+app.get("/createTeams", (req, res) => {
+  res.render("createTeams.ejs");
 });
 
 // Route to handle user registration
