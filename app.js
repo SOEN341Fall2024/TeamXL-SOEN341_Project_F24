@@ -47,25 +47,23 @@ app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
-// Route for the instructor dashboard page, render the instructor-dashboard view
-app.get("/instructor-dashboard", (req, res) => {
-  res.render("instructor-dashboard.ejs");
-});
+// Route for the instructor dashboard page
+app.get("/instructor-dashboard", async (req, res) => {
+  const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
 
-// Route to handle creating teams and fetching students
-app.get("/create-teams", async (req, res) => {
+  // Make sure to handle the case where instructorUsername is undefined
+  if (!instructorUsername) {
+    return res.status(400).send("Instructor username is required.");
+  }
+
   try {
-    // Fetch students from the database
-    const result = await db.query(
-      "SELECT username FROM users WHERE usertype = 'student'"
-    );
-    const students = result.rows; // Array of student objects
-
-    // Render the EJS view with the students array
-    res.render("create-teams", { students }); // Pass students to the EJS file
+    // Render the instructor-dashboard view, passing the instructor username
+    res.render("instructor-dashboard.ejs", {
+      instructorUsername: instructorUsername,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error fetching students");
+    console.error("Error rendering instructor dashboard:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -124,7 +122,10 @@ app.post("/login", async (req, res) => {
         if (match) {
           // Check if the user is an instructor or student
           if (user.usertype === "instructor") {
-            res.render("instructor-dashboard.ejs"); // Render instructor dashboard
+            // Redirect to the instructor dashboard with the username
+            res.redirect(
+              `/instructor-dashboard?instructorUsername=${username}`
+            );
           } else {
             res.render("student-dashboard.ejs"); // Render student dashboard
           }
@@ -138,6 +139,30 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     console.log("Error during login query:", err);
     res.send("An error occurred during login.");
+  }
+});
+
+//TEAM MANAGEMENT ROUTES :
+
+// Route to render the create teams page
+app.get("/create-team", async (req, res) => {
+  const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
+  try {
+    // Fetch students from the users table where usertype is 'student'
+    const result = await db.query(
+      "SELECT username FROM users WHERE usertype = $1",
+      ["student"]
+    );
+    const students = result.rows;
+
+    // Render the create-teams view, passing the instructor username and students
+    res.render("create-teams", {
+      instructorUsername: instructorUsername, // Pass the instructor username
+      students: students,
+    });
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
