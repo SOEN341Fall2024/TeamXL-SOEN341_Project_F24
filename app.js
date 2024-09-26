@@ -65,7 +65,7 @@ app.post("/register", async (req, res) => {
     );
 
     if (checkResult.rows.length > 0) {
-      res.send("Username already exists. Try logging in.");
+      res.render("username-exists-login.ejs");
     } else {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
@@ -75,7 +75,7 @@ app.post("/register", async (req, res) => {
             "INSERT INTO users (username, password, userType) VALUES ($1, $2, $3)",
             [username, hash, role]
           );
-          res.send("Registration successful!");
+          res.render("registered-now-login.ejs");
         }
       });
     }
@@ -112,11 +112,11 @@ app.post("/login", async (req, res) => {
             res.render("student-dashboard.ejs"); // Render student dashboard
           }
         } else {
-          res.send("Incorrect password.");
+          res.render("incorrect-pw-un.ejs");
         }
       });
     } else {
-      res.send("User not found.");
+      res.render("incorrect-pw-un.ejs");
     }
   } catch (err) {
     console.log("Error during login query:", err); // Log any query errors for debugging
