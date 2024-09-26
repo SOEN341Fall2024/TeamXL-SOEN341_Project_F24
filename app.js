@@ -19,11 +19,11 @@ app.use(express.static("public"));
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
-  user: "postgres",//process.env.DB_USER,
-  host: "localhost",//process.env.DB_HOST,
-  database: "SOEN341",//process.env.DB_NAME,
-  password: "postgres",//process.env.DB_PASSWORD,
-  port: 5432//process.env.DB_PORT,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 db.connect();
 
