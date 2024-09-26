@@ -11,16 +11,15 @@
   <div class="container text-center login-container">
     <h2 class="my-4">Log in</h2>
     <form action="/login" method="POST">
-      
       <!-- Role selection buttons -->
       <div class="role-group">
         <input type="radio" id="student" name="role" value="student" checked>
         <label for="student" class="role-button">Student</label>
-  
+        
         <input type="radio" id="instructor" name="role" value="instructor">
         <label for="instructor" class="role-button">Instructor</label>
       </div>
-  
+    
       <!-- Username and Password inputs -->
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
@@ -30,12 +29,10 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
-  
+    
       <!-- Log in button -->
       <button type="submit" class="btn btn-login">Log in</button>
-      <a href="#">Forgot password?</a>
-      <a href="/register">Don't have an account? Register now!</a>
-    </form>
+    </form>    
   </div>
   
 </body>

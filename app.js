@@ -42,66 +42,69 @@ app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
-// Route to handle user registration
-app.post("/register", async (req, res) => {
+// Route to handle unified login (for both students and instructors)
+app.post("/login", (req, res) => {
   const username = req.body.username;
-  const password = req.body.password;
-  const role = req.body.role;
+  const password = req.body.password; // We're not validating passwords at the moment
+  const role = req.body.role; // Retrieve the selected role from the form
 
-  try {
-    const checkResult = await db.query(
-      "SELECT * FROM users WHERE username = $1",
-      [username]
-    );
-
-    if (checkResult.rows.length > 0) {
-      res.send("Username already exists. Try logging in.");
-    } else {
-      bcrypt.hash(password, saltRounds, async (err, hash) => {
-        if (err) {
-          console.error("Error hashing password:", err);
-        } else {
-          await db.query(
-            "INSERT INTO users (username, password, userType) VALUES ($1, $2, $3)",
-            [username, hash, role]
-          );
-          res.send("Registration successful!");
-        }
-      });
-    }
-  } catch (err) {
-    console.log(err);
+  // Redirect the user to their respective dashboard
+  if (role === "student") {
+    res.redirect(`/student-dashboard?username=${encodeURIComponent(username)}`);
+  } else if (role === "instructor") {
+    res.redirect(`/instructor-dashboard?username=${encodeURIComponent(username)}`);
+  } else {
+    res.render("login.ejs", { errorMessage: "Invalid role selected." });
   }
 });
 
 // Route to handle unified login (for both students and instructors)
-app.post("/login", async (req, res) => {
+app.post("/login", (req, res) => {
   const username = req.body.username;
-  const loginPassword = req.body.password;
+  const password = req.body.password;
+  const role = req.body.role; // Retrieve the selected role from the form
 
-  try {
-    const result = await db.query(
-      "SELECT * FROM users WHERE username = $1",
-      [username]
-    );
-    
-    if (result.rows.length > 0) {
-      const user = result.rows[0];
-      bcrypt.compare(loginPassword, user.password, (err, match) => {
-        if (match) {
-          res.send("Login successful!"); // Handle success (add redirects if needed)
-        } else {
-          res.send("Incorrect password.");
-        }
-      });
-    } else {
-      res.send("User not found.");
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Server error.");
+  // Directly check the role and redirect accordingly
+  if (role === "student") {
+    res.redirect(`/student-dashboard?username=${encodeURIComponent(username)}`);
+  } else if (role === "instructor") {
+    res.redirect(`/instructor-dashboard?username=${encodeURIComponent(username)}`);
+  } else {
+    res.render("login.ejs", { errorMessage: "Invalid role selected." });
   }
 });
+
+
+// Route for the student dashboard
+app.get("/student-dashboard", (req, res) => {
+  const username = req.query.username; // Get the username from the query parameter
+  res.render("student-dashboard.ejs", { username });
+});
+
+// Route for the instructor dashboard
+app.get("/instructor-dashboard", (req, res) => {
+  const username = req.query.username; // Get the username from the query parameter
+  res.render("instructor-dashboard.ejs", { username });
+});
+
+// Route for creating teams
+app.get('/create-teams', (req, res) => {
+  res.render("create-teams.ejs");
+});
+
+// Route to handle saving the team
+app.post('/save-team', (req, res) => {
+  const { teamName, teamSize, members } = req.body;
+
+  // Here, you can save the team information to your database
+  console.log(`Team Name: ${teamName}`);
+  console.log(`Team Size: ${teamSize}`);
+  console.log(`Members: ${members}`);
+
+  // Redirect back to the instructor dashboard with a success message
+  res.redirect('/instructor-dashboard');
+});
+
 
 // Start the Express server. Server listening on port 3000
 app.listen(port, () => {
