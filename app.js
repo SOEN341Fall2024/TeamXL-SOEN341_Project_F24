@@ -19,11 +19,11 @@ app.use(express.static("public"));
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+  user: "postgres",
+  host: "localhost",
+  database: "Oussama341",
+  password: process.env.DB_PASSWORD, 
+  port: 5432, 
 });
 db.connect();
 
@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 });
 
 // Route for the login page, render the login.ejs view
-app.get("/login", (req, res) => {
+app.get("/login", (req, res) => { 
   res.render("login.ejs");
 });
 
