@@ -19,11 +19,11 @@ app.use(express.static("public"));
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "Oussama341",
-  password: process.env.DB_PASSWORD, 
-  port: 5432, 
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 db.connect();
 
@@ -170,3 +170,5 @@ app.get("/create-team", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
 });
+
+
