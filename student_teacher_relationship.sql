@@ -1,6 +1,6 @@
 -- Create table for the instructors
 CREATE TABLE INSTRUCTOR (
-    ID INTEGER PRIMARY KEY,
+    ID SERIAL PRIMARY KEY, --Autoincrement to put unique ID
     NAME VARCHAR(100), 
     PASSWORD VARCHAR(1000) NOT NULL
 );
@@ -13,7 +13,7 @@ CREATE TABLE GROUPS (
 
 -- Create table for the students
 CREATE TABLE STUDENT (
-    ID INTEGER PRIMARY KEY,
+    ID SERIAL PRIMARY KEY, --Autoincrement to put unique ID
     NAME VARCHAR(100),
     ID_GROUP INTEGER,
     PASSWORD VARCHAR(1000) NOT NULL,
