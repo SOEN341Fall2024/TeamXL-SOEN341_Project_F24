@@ -84,17 +84,46 @@
       </div>
     </div>
 
-     <!-- Team Management Section -->
-     <div class="my-5">
+    <!-- Team Management Section with Cards -->
+    <div class="my-5">
       <h2>Team Management</h2>
       <p>Manage student teams for your courses:</p>
-      
-      <div class="btn-group" role="group" aria-label="Team management actions">
-        <a href="/create-teams" class="btn btn-success btn-lg rounded-pill me-3">Create Team</a>
-        <a href="/view-teams" class="btn btn-primary btn-lg rounded-pill me-3">View Teams</a>
-        <a href="/edit-team" class="btn btn-warning btn-lg rounded-pill me-3">Edit Teams</a>
+      <div class="row">
+          <div class="col-md-4 mb-3">
+              <div class="card text-center h-100">
+                  <div class="card-body">
+                      <h5 class="card-title">Create Team</h5>
+                      <p class="card-text">Create a new team for your students.</p>
+                      <a href="/create-teams" class="btn btn-success btn-lg rounded-pill">
+                          <i class="bi bi-plus-circle me-2"></i>Create Team
+                      </a>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-4 mb-3">
+              <div class="card text-center h-100">
+                  <div class="card-body">
+                      <h5 class="card-title">View Teams</h5>
+                      <p class="card-text">View the teams you have created.</p>
+                      <a href="/view-teams" class="btn btn-primary btn-lg rounded-pill">
+                          <i class="bi bi-eye me-2"></i>View Teams
+                      </a>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-4 mb-3">
+              <div class="card text-center h-100">
+                  <div class="card-body">
+                      <h5 class="card-title">Edit Teams</h5>
+                      <p class="card-text">Make changes to existing teams.</p>
+                      <a href="/edit-team" class="btn btn-warning btn-lg rounded-pill">
+                          <i class="bi bi-pencil-square me-2"></i>Edit Teams
+                      </a>
+                  </div>
+              </div>
+          </div>
       </div>
-    </div>
+  </div>
 
     <div class="row align-items-md-stretch">
       <div class="col-md-6">
