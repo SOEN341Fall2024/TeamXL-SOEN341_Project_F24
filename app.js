@@ -56,6 +56,13 @@ app.get("/create-teams", (req, res) => {
   });
 });
 
+app.get("/logout", (req, res) => {
+  delete res.cookie.userID;
+  delete res.cookie.userType;
+
+  res.redirect("/");
+});
+
 // Route to handle user registration
 app.post("/register", async (req, res) => {
   const username = req.body.username;
@@ -114,7 +121,7 @@ app.post("/login", async (req, res) => {
             httpOnly: true,
             secure: true,
             });
-
+            
         } else {
           res.send("Incorrect password.");
         }
