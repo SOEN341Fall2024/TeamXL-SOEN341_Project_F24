@@ -52,7 +52,7 @@ app.get("/instructor-dashboard", (req, res) => {
 app.get("/create-teams", async (req, res) => {
   try{
     const RESULT = await db.query("SELECT * FROM student WHERE id_teacher = $1", 
-      [res.cookie.userID]
+      [req.cookies.userID]
     );
 
     res.render("create-teams.ejs", {
@@ -66,8 +66,8 @@ app.get("/create-teams", async (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  delete res.cookie.userID;
-  delete res.cookie.userType;
+  delete req.cookies.userID;
+  delete req.cookies.userType;
   res.redirect("/");
 });
 
