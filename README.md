@@ -15,4 +15,4 @@
 + This project aims to create a Peer Assessment System for university team projects, where students can evaluate their teammates based on four key dimensions: cooperation, conceptual contribution, practical contribution, and work ethic. This project follows an Agile development methodology, with incremental deliveries over four sprints. By the end of the project, we aim to deliver a middle-fidelity prototype that could serve as a foundation for a fully functional product.
 
 ## Frameworks Used 
-Node.js, Express.js, EJS, Axios, PostgreSQL
+Node.js, Express.js, EJS, Axios, PostgreSQL, Boostrap
