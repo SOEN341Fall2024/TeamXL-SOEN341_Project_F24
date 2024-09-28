@@ -57,29 +57,43 @@
     Notifications
   </a>
   
-  <!-- Dropdown Menu -->
-  <ul class="dropdown-menu p-3" aria-labelledby="notificationsDropdown" style="width: 300px;">
-    <!-- Header Section with Profile Icon and Close Button -->
-    <li class="d-flex justify-content-between align-items-center mb-3">
-      <!-- Profile Icon -->
-      <div class="d-flex align-items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-circle me-2" viewBox="0 0 16 16">
-          <path d="M13.468 12.37C12.758 11.226 11.457 10.5 9.999 10.5c-1.457 0-2.758.726-3.468 1.87-.366.577-.568 1.148-.568 1.63 0 .22.034.431.1.625h7.872a2.23 2.23 0 0 0 .1-.625c0-.482-.202-1.053-.568-1.63z"/>
-          <path fill-rule="evenodd" d="M8 14a6 6 0 1 0 0-12 6 6 0 0 0 0 12zm0 1a7 7 0 1 1 0-14 7 7 0 0 1 0 14z"/>
-          <path fill-rule="evenodd" d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+<!-- Dropdown Menu -->
+<ul class="dropdown-menu p-3" aria-labelledby="notificationsDropdown" style="width: 300px;">
+  <!-- Search Bar -->
+  <li class="mb-3">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search notifications...">
+      <button class="btn btn-outline-secondary" type="button" id="search-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
         </svg>
-        <span>User Profile</span>
-      </div>
-      
-      <!-- Close Button -->
-      <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="dropdown"></button>
-    </li>
-     
-    <!-- Dropdown Items -->
-    <li><a class="dropdown-item" href="/private-messages">Private messages</a></li>
-    <li><a class="dropdown-item" href="/contacts">Contacts</a></li>
-  </ul>
+      </button>
+    </div>
+  </li>
+
+  
+  <!-- Header Section with Profile Icon and Close Button -->
+  <li class="d-flex justify-content-between align-items-center mb-3">
+    <!-- Profile Icon -->
+    <div class="d-flex align-items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-circle me-2" viewBox="0 0 16 16">
+        <path d="M13.468 12.37C12.758 11.226 11.457 10.5 9.999 10.5c-1.457 0-2.758.726-3.468 1.87-.366.577-.568 1.148-.568 1.63 0 .22.034.431.1.625h7.872a2.23 2.23 0 0 0 .1-.625c0-.482-.202-1.053-.568-1.63z"/>
+        <path fill-rule="evenodd" d="M8 14a6 6 0 1 0 0-12 6 6 0 0 0 0 12zm0 1a7 7 0 1 1 0-14 7 7 0 0 1 0 14z"/>
+        <path fill-rule="evenodd" d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+      </svg>
+      <span>User Profile</span>
+    </div>
+    
+    <!-- Close Button -->
+    <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="dropdown"></button>
+  </li>
+  
+  <!-- Dropdown Items -->
+  <li><a class="dropdown-item" href="/private-messages">Private messages</a></li>
+  <li><a class="dropdown-item" href="/contacts">Contacts</a></li>
+</ul>
 </li>
+
 
               <a href="#" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -95,11 +109,6 @@
     </div>
     
   </header>
-
-
-
-
-
 
 
 
