@@ -19,11 +19,11 @@ app.use(express.static("public"));
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "jonathan",
-  password: "1637",
-  port: 5432, // Port should be a number
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 db.connect();
 
@@ -50,7 +50,7 @@ app.post("/register", async (req, res) => {
 
   try {
     const checkResult = await db.query(
-      "SELECT * FROM users WHERE username = $1",
+      `SELECT * FROM ${role} WHERE name = $1`,
       [username]
     );
 
@@ -62,8 +62,8 @@ app.post("/register", async (req, res) => {
           console.error("Error hashing password:", err);
         } else {
           await db.query(
-            "INSERT INTO users (username, password, userType) VALUES ($1, $2, $3)",
-            [username, hash, role]
+            `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
+            [username, hash]
           );
           res.send("Registration successful!");
         }
@@ -80,9 +80,9 @@ app.post("/login", async (req, res) => {
   const loginPassword = req.body.password;
 
   try {
-    const result = await db.query("SELECT * FROM users WHERE username = $1", [
-      username,
-    ]);
+    const result = await db.query(
+      "SELECT S.NAME FROM STUDENT S INNER JOIN INSTRUCTOR I ON S.Name = I.Name;", 
+      [username]);
     if (result.rows.length > 0) {
       const user = result.rows[0];
       bcrypt.compare(loginPassword, user.password, (err, match) => {
