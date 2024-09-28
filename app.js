@@ -81,8 +81,7 @@ app.post("/login", async (req, res) => {
 
   try {
     const result = await db.query(
-      "SELECT S.NAME FROM STUDENT S INNER JOIN INSTRUCTOR I ON S.Name = I.Name;", 
-      [username]);
+      `SELECT NAME,password FROM INSTRUCTOR UNION SELECT NAME,password FROM STUDENT WHERE NAME = '${username}' ;`);
     if (result.rows.length > 0) {
       const user = result.rows[0];
       bcrypt.compare(loginPassword, user.password, (err, match) => {
