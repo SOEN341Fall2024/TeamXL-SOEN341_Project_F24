@@ -6,10 +6,10 @@
         <tr>
             <th>Student name</th><th>Student ID</th><th>Enroll</th></tr>
         </tr>
-    <% for(var i = 0; i < studentArr.length; i++) { %>
+    <% for(var i = 0; i < StudentArr.length; i++) { %>
         <tr>
-            <td><%= studentArr[i] %></td>
-            <td><%= studentIDs[i] %></td>
+            <td><%= StudentArr[i].name %></td>
+            <td><%= StudentArr[i].id %></td>
             <td><input type = "checkbox" name = "studentIDs" value = <%= studentID %></td>
         </tr>
     <% } %>

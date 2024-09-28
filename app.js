@@ -57,8 +57,7 @@ app.get("/create-teams", async (req, res) => {
     );
 
     res.render("create-teams.ejs", {
-      StudentArr : RESULT.name, 
-      StudentIDs : RESULT.id
+      StudentArr : RESULT
     });
 
   } catch(err){
