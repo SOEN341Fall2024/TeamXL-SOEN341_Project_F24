@@ -4,7 +4,8 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
+//import cookieParser from "cookie-parser";
+import session from express-session;
 
 dotenv.config();
 
@@ -12,13 +13,13 @@ dotenv.config();
 const app = express();
 const port = 3000;
 const saltRounds = 10;
-//const cookieParser = require("cookie-parser");
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
-app.use(cookieParser());
+//app.use(cookieParser());
+app.use(session({ secret: "key" }));
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
@@ -52,7 +53,7 @@ app.get("/instructor-dashboard", (req, res) => {
 app.get("/create-teams", async (req, res) => {
   try{
     const RESULT = await db.query("SELECT * FROM student WHERE id_teacher = $1", 
-      [req.cookies.userID]
+      [req.session.userID]
     );
 
     res.render("create-teams.ejs", {
@@ -66,8 +67,8 @@ app.get("/create-teams", async (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
-  delete req.cookies.userID;
-  delete req.cookies.userType;
+  delete req.session.userID;
+  delete req.session.userType;
   res.redirect("/");
 });
 
@@ -118,6 +119,10 @@ app.post("/login", async (req, res) => {
         if (match) {
           res.send("Login successful!");
 
+          req.session.userID =  user.id;
+          req.session.userType = user.type;
+
+          /*  
           res.cookie("userID", user.id, {
             expires: new Date("1 December 2025"),
             httpOnly: true,
@@ -129,7 +134,7 @@ app.post("/login", async (req, res) => {
             httpOnly: true,
             secure: true,
             });
-            
+            */
         } else {
           res.send("Incorrect password.");
         }
