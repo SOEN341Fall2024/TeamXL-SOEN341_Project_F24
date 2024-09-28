@@ -49,17 +49,27 @@ app.get("/instructor-dashboard", (req, res) => {
   res.render("instructor-dashboard.ejs");
 });
 
-app.get("/create-teams", (req, res) => {
-  
-  res.render("create-teams.ejs", {
+app.get("/create-teams", async (req, res) => {
+  try{
+    const RESULT = await db.query("SELECT * FROM student WHERE id_teacher = $1", 
+      [res.cookie.userID]
+    );
 
-  });
+    res.render("create-teams.ejs", {
+      StudentArr : result.name, 
+      StudentIDs : result.id
+    });
+
+  } catch(err){
+    console.log(err);
+  }
+
+
 });
 
 app.get("/logout", (req, res) => {
   delete res.cookie.userID;
   delete res.cookie.userType;
-
   res.redirect("/");
 });
 
