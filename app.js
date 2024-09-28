@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -11,11 +12,13 @@ dotenv.config();
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+//const cookieParser = require("cookie-parser");
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(cookieParser());
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
@@ -43,11 +46,14 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/instructor-dashboard", (req, res) => {
-  res.render("instuctor-dashboard.ejs");
+  res.render("instructor-dashboard.ejs");
 });
 
-app.get("/createTeams", (req, res) => {
-  res.render("createTeams.ejs");
+app.get("/create-teams", (req, res) => {
+  
+  res.render("create-teams.ejs", {
+
+  });
 });
 
 // Route to handle user registration
@@ -96,6 +102,19 @@ app.post("/login", async (req, res) => {
       bcrypt.compare(loginPassword, user.password, (err, match) => {
         if (match) {
           res.send("Login successful!");
+
+          res.cookie("userID", user.id, {
+            expires: new Date("1 December 2025"),
+            httpOnly: true,
+            secure: true,
+            });
+
+          res.cookie("userType", user.type, {
+            expires: new Date("1 December 2025"),
+            httpOnly: true,
+            secure: true,
+            });
+
         } else {
           res.send("Incorrect password.");
         }
