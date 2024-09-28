@@ -56,15 +56,13 @@ app.get("/create-teams", async (req, res) => {
     );
 
     res.render("create-teams.ejs", {
-      StudentArr : result.name, 
-      StudentIDs : result.id
+      StudentArr : RESULT.name, 
+      StudentIDs : RESULT.id
     });
 
   } catch(err){
     console.log(err);
   }
-
-
 });
 
 app.get("/logout", (req, res) => {
