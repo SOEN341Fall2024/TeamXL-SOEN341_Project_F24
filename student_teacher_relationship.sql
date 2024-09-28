@@ -1,22 +1,22 @@
 -- Create table for the instructors
 CREATE TABLE INSTRUCTOR (
     ID INTEGER PRIMARY KEY,
-    NAME VARCHAR(50), 
-    PASSWORD VARCHAR(20) NOT NULL
+    NAME VARCHAR(100), 
+    PASSWORD VARCHAR(1000) NOT NULL
 );
 
 -- Create table for groups
 CREATE TABLE GROUPS (
     ID_GROUP INTEGER PRIMARY KEY,
-    GROUP_NAME VARCHAR(50)  -- Optional: add a name for the group
+    GROUP_NAME VARCHAR(100)  -- Optional: add a name for the group
 );
 
 -- Create table for the students
 CREATE TABLE STUDENT (
     ID INTEGER PRIMARY KEY,
-    NAME VARCHAR(50),
+    NAME VARCHAR(100),
     ID_GROUP INTEGER,
-    PASSWORD VARCHAR(20) NOT NULL,
+    PASSWORD VARCHAR(1000) NOT NULL,
     FOREIGN KEY (ID_GROUP) REFERENCES GROUPS(ID_GROUP)  
 );
 -- Create table for the evaluation
