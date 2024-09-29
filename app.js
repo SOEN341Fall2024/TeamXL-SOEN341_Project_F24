@@ -57,6 +57,7 @@ app.get("/create-teams", async (req, res) => {
     res.render("create-teams.ejs", {
       StudentArr : RESULT
     });
+
   } catch(err){
     console.log(err);
   }
@@ -69,17 +70,18 @@ app.get("/view-teams", async (req, res) => {
 
   } else if (req.session.userType == "student") {
     try{
-      const groupID = await db.query("SELECT id_group FROM student WHERE id = $1"
+
+      const groupID = await db.query("SELECT id_group FROM student WHERE id = $1",
         [req.session.userID]
-      );
+      )
 
-      const studentArr = await db.query("SELECT name FROM student WHERE id = $1",
+      const DATA = await db.query("SELECT group_name, name FROM student, groups WHERE student.id_group = $1 AND student.id_group = groups.id_group"
         [groupID]
       );
 
-      const groupName = await db.query("SELECT group_name FROM groups WHERE id_group = $1",
-        [groupID]
-      );
+      res.render("view-team.ejs", {
+        Team : DATA
+      });
 
    } catch(err){
     console.log(err);
@@ -146,7 +148,7 @@ app.post("/login", async (req, res) => {
 
           req.session.userID =  user.id;
           req.session.userType = user.type;
-
+          
         } else {
           res.send("Incorrect password.");
         }
@@ -160,7 +162,12 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/create-teams", async (req, res) => {
-  
+  const IDs = req.body.studentIDs;
+
+  await db.query("INSERT INTO groups (group_name) VALUES ($1)",
+    [req.body.teamname]
+  );
+
 });
 
 // Start the Express server. Server listening on port 3000
