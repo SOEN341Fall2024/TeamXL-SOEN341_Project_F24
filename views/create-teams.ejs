@@ -6,18 +6,38 @@
   <title>Create Team</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Include any additional CSS files here -->
+  <style>
+    /* Set Arial as the font for the entire body */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    /* Custom styles to increase font size */
+    .large-font {
+      font-size: 1.3rem; /* Increase font size by 30% */
+    }
+    .heading-font {
+      font-size: 2rem; /* Larger font size for the heading */
+    }
+  </style>
 </head>
 <body>
+  <!-- Include the header -->
+  <%- include('partials/header', { title: 'Create Team' }) %>
+
+  <!-- Container to center the form vertically and horizontally -->
   <div class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="row justify-content-center w-100">
-      <div class="col-md-6">
-        <div class="card p-4 bg-light rounded">
-          <h2 class="text-center">Create Team</h2>
-          <form id="createTeamForm">
+      <div class="col-md-8"> <!-- Increased column width -->
+        <!-- Card to create a grey box with rounded edges -->
+        <div class="card p-5 bg-light rounded"> <!-- Increased padding -->
+          <h2 class="text-center heading-font">Create Team</h2> <!-- Added custom class for larger heading font -->
+          <form id="createTeamForm" class="large-font"> <!-- Added custom class for larger font -->
+            <!-- Form group for team name input -->
             <div class="form-group">
               <label for="teamName">Team Name</label>
               <input type="text" class="form-control" id="teamName" placeholder="Enter team name" required>
             </div>
+            <!-- Form group for selecting students -->
             <div class="form-group">
               <label for="students">Select Students</label>
               <select multiple class="form-control" id="students" required>
@@ -27,6 +47,7 @@
                 <!-- Add more students as needed -->
               </select>
             </div>
+            <!-- Submit button -->
             <button type="button" class="btn btn-primary btn-block" onclick="validateForm()">Submit</button>
           </form>
         </div>
@@ -34,19 +55,23 @@
     </div>
   </div>
 
+  <!-- Include the footer -->
   <%- include('partials/footer') %>
 
   <script>
+    // Function to validate the form inputs
     function validateForm() {
       const teamName = document.getElementById('teamName').value;
       const students = document.getElementById('students').selectedOptions;
       const selectedStudents = Array.from(students).map(option => option.value);
 
+      // Check if team name is provided
       if (!teamName) {
         alert('Team name is required.');
         return;
       }
 
+      // Check if at least one student is selected
       if (selectedStudents.length === 0) {
         alert('At least one student must be selected.');
         return;
