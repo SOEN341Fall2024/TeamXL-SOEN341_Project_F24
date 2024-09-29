@@ -7,6 +7,7 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Include any additional CSS files here -->
   <style>
+    /* Set Arial as the font for the entire body */
     body {
       font-family: Arial, sans-serif;
     }
@@ -60,9 +61,22 @@
       padding: 1rem 2rem; 
       font-size: 1.25rem;
     }
+
+    /* Styles for the confirmation message */
+    #confirmationMessage {
+      display: none;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
+  <!-- Include the header -->
   <%- include('partials/header', { title: 'Create Team' }) %>
 
   <!-- Container to center the form vertically and horizontally -->
@@ -123,6 +137,11 @@
                 </div>
               </div>
             </div>
+
+            <!-- Confirmation message -->
+            <div id="confirmationMessage">
+              Team created successfully!
+            </div>
             
             <!-- Submit button -->
             <button type="button" class="btn btn-primary btn-block btn-submit" onclick="validateForm()">Submit</button>
@@ -132,6 +151,7 @@
     </div>
   </div>
 
+  <!-- Include the footer -->
   <%- include('partials/footer') %>
 
   <script>
@@ -201,8 +221,14 @@
         return;
       }
 
-      // If validation passes, submit the form or handle the data as needed
-      alert('Form submitted successfully!');
+      // If validation passes, show confirmation message
+      const confirmationMessage = document.getElementById('confirmationMessage');
+      confirmationMessage.style.display = 'block';
+
+      // Hide the message after 3 seconds
+      setTimeout(() => {
+        confirmationMessage.style.display = 'none';
+      }, 3000);
     }
   </script>
 </body>
