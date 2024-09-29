@@ -45,3 +45,59 @@ function displayTeams() {
     });
   }
 }
+
+<!-- View Details Modal -->
+<div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewDetailsModalLabel">Team Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h5 id="detailTeamName" class="mb-3"></h5>
+          <ul id="detailTeamMembers" class="list-group">
+            <!-- Team members will be dynamically added here -->
+          </ul>
+        </div>
+      </div>
+    </div>
+</div>
+
+// Function to view team details
+function viewDetails(index) {
+  const team = teams[index];
+  document.getElementById('detailTeamName').innerText = `Team Name: ${team.name}`;
+  
+  const membersList = document.getElementById('detailTeamMembers');
+  membersList.innerHTML = ''; // Clear existing members
+  team.members.forEach(member => {
+    const memberItem = document.createElement('li');
+    memberItem.classList.add('list-group-item');
+    memberItem.innerText = member;
+    membersList.appendChild(memberItem);
+  });
+
+  // Show the modal
+  const viewDetailsModal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
+  viewDetailsModal.show();
+}
+
+/* Ensure equal width for Team Name and Actions columns */
+.table th, .table td {
+  vertical-align: middle;
+  text-align: center;
+  width: 50%; /* Ensures both columns are equally wide */
+}
+
+/* Center the action buttons within their column and increase spacing */
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Increased gap between buttons */
+}
+
+/* Apply round edges to buttons */
+.btn-rounded {
+  border-radius: 50px; /* Makes buttons round-edged */
+}
