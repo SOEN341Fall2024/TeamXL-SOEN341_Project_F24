@@ -137,51 +137,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-/*
-// Route to handle user login
-app.post("/login", async (req, res) => {
-  const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
-  const loginPassword = req.body.password;
-
-  try {
-
-    // Fetch the user from the database with a case-insensitive query
-    const result = await db.query(
-      "SELECT * FROM users WHERE LOWER(username) = $1",
-      [username]
-    );
-
-    if (result.rows.length > 0) {
-      const user = result.rows[0];
-
-      // Debugging: Log the result
-      console.log("User found:", user);
-
-      // Compare the password with the hashed password stored in the database
-      bcrypt.compare(loginPassword, user.password, (err, match) => {
-        if (match) {
-          // Check if the user is an instructor or student
-          if (user.usertype === "instructor") {
-            // Redirect to the instructor dashboard with the username
-            res.redirect(
-              `/instructor-dashboard?instructorUsername=${username}`
-            );
-          } else {
-            res.render("student-dashboard.ejs"); // Render student dashboard
-          }
-        } else {
-          res.render("incorrect-pw-un.ejs");
-        }
-      });
-    } else {
-      res.render("incorrect-pw-un.ejs");
-    }
-  } catch (err) {
-    console.log("Error during login query:", err);
-    res.send("An error occurred during login.");
-  }
-});
-*/
 //TEAM MANAGEMENT ROUTES :
 
 // Route to render the create teams page
