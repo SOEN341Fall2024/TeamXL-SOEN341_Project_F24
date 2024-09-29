@@ -1,1 +1,139 @@
-<!--LEAVE THIS EMPTY FOR NOW-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Team</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Edit Team</h1>
+
+    <%
+      // Mock Data
+      const teams = [
+        { id: 1, name: 'Team Alpha' },
+        { id: 2, name: 'Team Bravo' },
+        { id: 3, name: 'Team Charlie' }
+      ];
+
+      const selectedTeam = {
+        id: 1,
+        name: 'Team Alpha',
+        members: [
+          { id: 1, name: 'Kevin' },
+          { id: 2, name: 'Joyal' }
+        ]
+      };
+
+      const availableStudents = [
+        { id: 3, name: 'Aditi' },
+        { id: 4, name: 'Owen' },
+        { id: 5, name: 'Oussama' },
+        { id: 6, name: 'Jonathan' }
+      ];
+    %>
+
+    <div class="row">
+      <!-- Edit Team Form (left side) -->
+      <div class="col-md-6">
+        <form id="editTeamForm" action="/edit-team" method="POST">
+          <!-- Team selection dropdown -->
+          <div class="form-group">
+            <label for="teamSelect">Select Team</label>
+            <select id="teamSelect" name="team" class="form-control">
+              <% teams.forEach(function(team) { %>
+                <option value="<%= team.id %>" <%= team.id === selectedTeam.id ? 'selected' : '' %> >
+                  <%= team.name %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+          
+          <!-- Change Team Name -->
+          <div class="form-group">
+            <label for="teamName">Change Team Name</label>
+            <input type="text" id="teamName" name="teamName" class="form-control" value="<%= selectedTeam.name %>">
+          </div>
+
+          <!-- List of Students (hide currently selected) -->
+          <div class="form-group">
+            <label for="studentList">List of Students</label>
+            <input type="text" id="studentSearch" class="form-control" placeholder="Search for students">
+            <ul id="studentList">
+              <% availableStudents.forEach(function(student) { %>
+                <li>
+                  <input type="checkbox" id="student_<%= student.id %>" name="students[]" value="<%= student.id %>">
+                  <label for="student_<%= student.id %>"><%= student.name %></label>
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+
+      <!-- Selected Team Members (right side) -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">Current Team Members</div>
+          <div class="card-body">
+            <ul id="currentMembersList">
+              <% selectedTeam.members.forEach(function(member) { %>
+                <li data-id="<%= member.id %>">
+                  <%= member.name %> 
+                  <button type="button" class="btn btn-danger btn-sm" onclick="removeMember('<%= member.id %>')">Remove</button>
+                </li>
+              <% }) %>
+            </ul>
+            <button type="button" class="btn btn-warning btn-sm" onclick="removeAllMembers()">Remove All</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Remove a single member
+    function removeMember(memberId) {
+      // Find the member in the current list and remove from the UI
+      let memberElement = document.querySelector('#currentMembersList li[data-id="' + memberId + '"]');
+      if (memberElement) {
+        memberElement.remove();
+      }
+
+      // Add the student back to the available list and mark them as unchecked
+      let studentCheckbox = document.getElementById('student_' + memberId);
+      if (studentCheckbox) {
+        studentCheckbox.checked = false;
+      }
+    }
+
+    // Remove all members from the team
+    function removeAllMembers() {
+      // Uncheck all students and add them back to the available list
+      document.querySelectorAll('#currentMembersList li').forEach(function(memberElement) {
+        let memberId = memberElement.getAttribute('data-id');
+        removeMember(memberId);
+      });
+    }
+
+    // Search filter for students list
+    document.getElementById('studentSearch').addEventListener('keyup', function() {
+      let filter = this.value.toLowerCase();
+      document.querySelectorAll('#studentList li').forEach(function(studentElement) {
+        let studentName = studentElement.textContent.toLowerCase();
+        if (studentName.indexOf(filter) > -1) {
+          studentElement.style.display = '';
+        } else {
+          studentElement.style.display = 'none';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
