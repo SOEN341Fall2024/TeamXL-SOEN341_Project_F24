@@ -35,7 +35,7 @@
     .card {
       flex-grow: 1; /* Allow the card to grow and fill the remaining space */
       width: 100%; /* Ensure the card takes the full width */
-      padding: 5rem;
+      padding: 6rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -48,6 +48,25 @@
     /* Increase the height of the select box */
     .select-students {
       height: 300px; /* Adjusted height to make the select box larger */
+    }
+
+    /* Ensure consistent font for labels */
+    .form-label {
+      font-size: 1.5rem; /* Ensure the same font size as inputs and selects */
+    }
+
+    /* Custom styles for the checkbox list */
+    .checkbox-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ced4da;
+      border-radius: .25rem;
+      padding: .5rem;
+    }
+
+    .checkbox-list label {
+      display: block;
+      margin-bottom: .5rem;
     }
   </style>
 </head>
@@ -65,18 +84,29 @@
           <form id="createTeamForm" class="large-font">
             <!-- Form group for team name input -->
             <div class="form-group">
-              <label for="teamName">Team Name</label>
+              <label for="teamName" class="form-label">Team Name</label>
               <input type="text" class="form-control" id="teamName" placeholder="Enter team name" required>
             </div>
+            
+            <!-- Form group for searching students -->
+            <div class="form-group">
+              <label for="searchStudents" class="form-label">Search Students</label>
+              <input type="text" class="form-control" id="searchStudents" placeholder="Search for students" onkeyup="filterStudents()">
+            </div>
+
             <!-- Form group for selecting students -->
             <div class="form-group">
-              <label for="students">Select Students</label>
-              <select multiple class="form-control select-students" id="students" required>
-                <% for (let i = 1; i <= 7; i++) { %>
-                  <option value="student<%= i %>">Student <%= i %></option>
-                <% } %>
-              </select>
+              <label for="students" class="form-label">List of Students</label>
+              <div class="checkbox-list" id="students">
+                <label><input type="checkbox" value="kevin"> Kevin</label>
+                <label><input type="checkbox" value="joyal"> Joyal</label>
+                <label><input type="checkbox" value="aditi"> Aditi</label>
+                <label><input type="checkbox" value="owen"> Owen</label>
+                <label><input type="checkbox" value="oussama"> Oussama</label>
+                <label><input type="checkbox" value="jonathan"> Jonathan</label>
+              </div>
             </div>
+            
             <!-- Submit button -->
             <button type="button" class="btn btn-primary btn-block" onclick="validateForm()">Submit</button>
           </form>
@@ -88,22 +118,27 @@
   <!-- Include the footer -->
   <%- include('partials/footer') %>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
   <script>
-    $(document).ready(function() {
-      // Initialize Select2 on the select element
-      $('#students').select2({
-        placeholder: 'Select Students',
-        allowClear: true
-      });
-    });
+    // Function to filter students based on search input
+    function filterStudents() {
+      const searchInput = document.getElementById('searchStudents').value.toLowerCase();
+      const studentLabels = document.getElementById('students').getElementsByTagName('label');
+      
+      for (let i = 0; i < studentLabels.length; i++) {
+        const studentName = studentLabels[i].textContent.toLowerCase();
+        if (studentName.includes(searchInput)) {
+          studentLabels[i].style.display = '';
+        } else {
+          studentLabels[i].style.display = 'none';
+        }
+      }
+    }
 
     // Function to validate the form inputs
     function validateForm() {
       const teamName = document.getElementById('teamName').value;
-      const students = document.getElementById('students').selectedOptions;
-      const selectedStudents = Array.from(students).map(option => option.value);
+      const students = document.querySelectorAll('#students input[type="checkbox"]:checked');
+      const selectedStudents = Array.from(students).map(checkbox => checkbox.value);
 
       // Check if team name is provided
       if (!teamName) {
