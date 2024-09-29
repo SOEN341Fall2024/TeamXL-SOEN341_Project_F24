@@ -170,3 +170,8 @@ app.get("/create-team", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
 });
+
+// Route for the create team page, render the create-team.ejs view
+app.get("/create-team", (req, res) => {
+  res.render("create-team.ejs");
+});
