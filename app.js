@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-//import cookieParser from "cookie-parser";
 import session from express-session;
 
 dotenv.config();
@@ -18,7 +17,6 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
-//app.use(cookieParser());
 app.use(session({ secret: "key" }));
 
 // Create a new PostgreSQL client for database connection
@@ -59,10 +57,31 @@ app.get("/create-teams", async (req, res) => {
     res.render("create-teams.ejs", {
       StudentArr : RESULT
     });
-
   } catch(err){
     console.log(err);
   }
+});
+
+app.get("/view-teams", async (req, res) => {
+
+  if(req.session.userType == "instructor"){
+    const RESULT = await db.query("SELECT * FROM groups");
+
+  } else if (req.session.userType == "student") {
+    try{
+      const groupID = await db.query("SELECT id_group FROM student WHERE id = $1"
+        [req.session.userID]
+      );
+
+
+   } catch(err){
+    console.log(err);
+   }
+
+  } else {
+    res.redirect("/");
+  }
+  
 });
 
 app.get("/logout", (req, res) => {
@@ -121,19 +140,6 @@ app.post("/login", async (req, res) => {
           req.session.userID =  user.id;
           req.session.userType = user.type;
 
-          /*  
-          res.cookie("userID", user.id, {
-            expires: new Date("1 December 2025"),
-            httpOnly: true,
-            secure: true,
-            });
-
-          res.cookie("userType", user.type, {
-            expires: new Date("1 December 2025"),
-            httpOnly: true,
-            secure: true,
-            });
-            */
         } else {
           res.send("Incorrect password.");
         }
@@ -144,6 +150,10 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+});
+
+app.post("/create-teams", async (req, res) => {
+
 });
 
 // Start the Express server. Server listening on port 3000
