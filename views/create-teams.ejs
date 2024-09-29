@@ -73,6 +73,14 @@
       margin-top: 20px;
       text-align: center;
     }
+
+    /* Styles for the error messages */
+    .error-message {
+      display: none;
+      color: red;
+      margin-top: 10px;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -93,6 +101,7 @@
             <div class="form-group">
               <label for="teamName" class="form-label">Team Name</label>
               <input type="text" class="form-control" id="teamName" placeholder="Enter team name" required>
+              <div id="teamNameError" class="error-message">Please provide a name for the team</div>
             </div>
 
             <!-- Form group for selecting a random number of students -->
@@ -102,8 +111,8 @@
                 <input type="number" class="form-control d-inline w-25 ml-1 mr-2" id="teamNumber" placeholder="?" min="1">
                 <label class="form-label d-inline">Random Students</label>
               </div>
-              <button type="button" class="btn btn-secondary mt-2 d-inline mr-2" onclick="selectRandomStudents()">Select Random Students</button>
-              <button type="button" class="btn btn-danger mt-2 d-inline" onclick="uncheckSelectedStudents()">Uncheck Selected Students</button>
+              <button type="button" class="btn btn-secondary mt-2 d-inline mr-2" onclick="selectRandomStudents()">Select random students</button>
+              <button type="button" class="btn btn-danger mt-2 d-inline" onclick="uncheckSelectedStudents()">Uncheck selected students</button>
             </div>
 
             <!-- Form group for selecting students -->
@@ -136,6 +145,7 @@
                   <label for="jonathan">Jonathan</label>
                 </div>
               </div>
+              <div id="studentsError" class="error-message">Please assign students to the team</div>
             </div>
 
             <!-- Confirmation message -->
@@ -144,7 +154,7 @@
             </div>
             
             <!-- Submit button -->
-            <button type="button" class="btn btn-primary btn-block btn-submit" onclick="validateForm()">Submit</button>
+            <button type="button" class="btn btn-primary btn-block btn-submit mt-4" onclick="validateForm()">Submit</button>
           </form>
         </div>
       </div>
@@ -211,24 +221,28 @@
 
       // Check if team name is provided
       if (!teamName) {
-        alert('Team name is required.');
-        return;
+        document.getElementById('teamNameError').style.display = 'block';
+      } else {
+        document.getElementById('teamNameError').style.display = 'none';
       }
 
       // Check if at least one student is selected
       if (selectedStudents.length === 0) {
-        alert('At least one student must be selected.');
-        return;
+        document.getElementById('studentsError').style.display = 'block';
+      } else {
+        document.getElementById('studentsError').style.display = 'none';
       }
 
       // If validation passes, show confirmation message
-      const confirmationMessage = document.getElementById('confirmationMessage');
-      confirmationMessage.style.display = 'block';
+      if (teamName && selectedStudents.length > 0) {
+        const confirmationMessage = document.getElementById('confirmationMessage');
+        confirmationMessage.style.display = 'block';
 
-      // Hide the message after 3 seconds
-      setTimeout(() => {
-        confirmationMessage.style.display = 'none';
-      }, 3000);
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+          confirmationMessage.style.display = 'none';
+        }, 3000);
+      }
     }
   </script>
 </body>
