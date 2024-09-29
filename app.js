@@ -167,11 +167,27 @@ app.post("/login", async (req, res) => {
 
 app.post("/create-teams", async (req, res) => {
   const IDs = req.body.studentIDs;
+  const TEAMNAME = req.body.teamname;
+try{
+    await db.query("INSERT INTO groups (group_name) VALUES ($1)",
+      [TEAMNAME]
+    );
 
-  await db.query("INSERT INTO groups (group_name) VALUES ($1)",
-    [req.body.teamname]
-  );
+    if(Array.isArray(IDs)){
+      for(var i = 0; i < IDs.length; i++){
+        await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
+          [TEAMNAME, IDs[i]]
+        );
+      }
+    } else {
+      await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
+        [TEAMNAME, IDs]
+      );
+    }
 
+  } catch(err){
+    console.log(err);
+  }
 });
 
 // Start the Express server. Server listening on port 3000
