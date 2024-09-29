@@ -45,28 +45,22 @@
       margin-bottom: 1.5rem; /* Add margin to form groups */
     }
 
-    /* Increase the height of the select box */
-    .select-students {
-      height: 300px; /* Adjusted height to make the select box larger */
+    /* Increase the height of the checkbox list */
+    .checkbox-group {
+      max-height: 300px;
+      overflow-y: auto; /* Allow scrolling if content exceeds height */
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: white;
     }
 
-    /* Ensure consistent font for labels */
     .form-label {
       font-size: 1.5rem; /* Ensure the same font size as inputs and selects */
     }
 
-    /* Custom styles for the checkbox list */
-    .checkbox-list {
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ced4da;
-      border-radius: .25rem;
-      padding: .5rem;
-    }
-
-    .checkbox-list label {
-      display: block;
-      margin-bottom: .5rem;
+    /* Ensure the font size of the student checkboxes matches other form fields */
+    .checkbox-group label {
+      font-size: 1.1rem; /* Match font size of labels */
     }
   </style>
 </head>
@@ -96,14 +90,32 @@
 
             <!-- Form group for selecting students -->
             <div class="form-group">
-              <label for="students" class="form-label">List of Students</label>
-              <div class="checkbox-list" id="students">
-                <label><input type="checkbox" value="kevin"> Kevin</label>
-                <label><input type="checkbox" value="joyal"> Joyal</label>
-                <label><input type="checkbox" value="aditi"> Aditi</label>
-                <label><input type="checkbox" value="owen"> Owen</label>
-                <label><input type="checkbox" value="oussama"> Oussama</label>
-                <label><input type="checkbox" value="jonathan"> Jonathan</label>
+              <label for="students" class="form-label">List of Students (<span id="selectedCount">0</span> student selected)</label>
+              <div id="checkboxGroup" class="checkbox-group">
+                <div>
+                  <input type="checkbox" id="kevin" value="kevin" onclick="updateSelectedCount()">
+                  <label for="kevin">Kevin</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="joyal" value="joyal" onclick="updateSelectedCount()">
+                  <label for="joyal">Joyal</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="aditi" value="aditi" onclick="updateSelectedCount()">
+                  <label for="aditi">Aditi</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="owen" value="owen" onclick="updateSelectedCount()">
+                  <label for="owen">Owen</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="oussama" value="oussama" onclick="updateSelectedCount()">
+                  <label for="oussama">Oussama</label>
+                </div>
+                <div>
+                  <input type="checkbox" id="jonathan" value="jonathan" onclick="updateSelectedCount()">
+                  <label for="jonathan">Jonathan</label>
+                </div>
               </div>
             </div>
             
@@ -122,23 +134,25 @@
     // Function to filter students based on search input
     function filterStudents() {
       const searchInput = document.getElementById('searchStudents').value.toLowerCase();
-      const studentLabels = document.getElementById('students').getElementsByTagName('label');
+      const checkboxes = document.getElementById('checkboxGroup').querySelectorAll('div');
       
-      for (let i = 0; i < studentLabels.length; i++) {
-        const studentName = studentLabels[i].textContent.toLowerCase();
-        if (studentName.includes(searchInput)) {
-          studentLabels[i].style.display = '';
-        } else {
-          studentLabels[i].style.display = 'none';
-        }
-      }
+      checkboxes.forEach(checkbox => {
+        const label = checkbox.querySelector('label').innerText.toLowerCase();
+        checkbox.style.display = label.includes(searchInput) ? '' : 'none';
+      });
+    }
+
+    // Function to update the count of selected students
+    function updateSelectedCount() {
+      const selectedCount = document.querySelectorAll('#checkboxGroup input:checked').length;
+      document.getElementById('selectedCount').innerText = selectedCount;
     }
 
     // Function to validate the form inputs
     function validateForm() {
       const teamName = document.getElementById('teamName').value;
-      const students = document.querySelectorAll('#students input[type="checkbox"]:checked');
-      const selectedStudents = Array.from(students).map(checkbox => checkbox.value);
+      const checkedStudents = document.querySelectorAll('#checkboxGroup input:checked');
+      const selectedStudents = Array.from(checkedStudents).map(input => input.value);
 
       // Check if team name is provided
       if (!teamName) {
