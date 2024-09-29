@@ -144,6 +144,7 @@ app.post("/login", async (req, res) => {
   const loginPassword = req.body.password;
 
   try {
+
     // Fetch the user from the database with a case-insensitive query
     const result = await db.query(
       "SELECT * FROM users WHERE LOWER(username) = $1",
