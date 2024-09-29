@@ -1,53 +1,86 @@
-<div class="table-responsive">
-    <table class="table table-bordered table-hover table-striped align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th class="text-center">Team Name</th>
-                <th class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody id="teamsTableBody">
-            <!-- Teams will be dynamically inserted here -->
-        </tbody>
-    </table>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    /* Ensure equal width for Team Name and Actions columns */
+    .table th, .table td {
+      vertical-align: middle;
+      text-align: center;
+    }
 
-// Mock data for teams
-const teams = [
-  { name: "Team Alpha", members: ["Kevin", "Joyal", "Aditi"] },
-  { name: "Team Beta", members: ["Owen", "Oussama", "Jonathan"] },
-];
+    /* Set equal width for both columns */
+    .table th, .table td {
+      width: 50%;
+    }
 
-// Function to display teams
-function displayTeams() {
-  const teamsTableBody = document.getElementById('teamsTableBody');
-  const noTeamsPlaceholder = document.getElementById('noTeamsPlaceholder');
+    /* Center the action buttons within their column and increase spacing */
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px; /* Increased gap between buttons */
+    }
 
-  teamsTableBody.innerHTML = ''; // Clear existing rows
+    /* Apply round edges to buttons */
+    .btn-rounded {
+      border-radius: 50px; /* Makes buttons round-edged */
+    }
 
-  if (teams.length === 0) {
-    noTeamsPlaceholder.style.display = 'block';
-  } else {
-    noTeamsPlaceholder.style.display = 'none';
-    teams.forEach((team, index) => {
-      const teamRow = document.createElement('tr');
-      teamRow.innerHTML = `
-        <td>${team.name}</td>
-        <td>
-          <div class="btn-group">
-            <button class="btn btn-info btn-sm btn-rounded" onclick="viewDetails(${index})">View Details</button>
-            <button class="btn btn-warning btn-sm btn-rounded" onclick="editTeam(${index})">Edit</button>
-            <button class="btn btn-danger btn-sm btn-rounded" onclick="deleteTeam(${index})">Delete</button>
-          </div>
-        </td>
-      `;
-      teamsTableBody.appendChild(teamRow);
-    });
-  }
-}
+    /* Ensure container responsiveness */
+    .container {
+      max-width: 1000px;
+    }
 
-<!-- View Details Modal -->
-<div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
+    /* Add some margin to make the table visually appealing */
+    .table-responsive {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/header', { title: 'View Teams' }) %>
+
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">View Teams</h1>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">List of Teams</h5>
+            <p class="card-text">Below is the list of teams you have created:</p>
+            
+            <!-- Table to display the list of teams -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="text-center">Team Name</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teamsTableBody">
+                        <!-- Teams will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Team Button -->
+    <div class="text-center mb-4">
+        <a href="/create-team" class="btn btn-primary btn-lg">Add New Team</a>
+    </div>
+
+    <!-- Placeholder if there are no teams available -->
+    <div class="alert alert-info mt-3" role="alert" id="noTeamsPlaceholder" style="display: none;">
+        No teams have been created yet. Click <a href="/create-team" class="alert-link">here</a> to add a new team.
+    </div>
+  </div>
+
+  <!-- View Details Modal -->
+  <div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -62,67 +95,86 @@ function displayTeams() {
         </div>
       </div>
     </div>
-</div>
+  </div>
 
-// Function to view team details
-function viewDetails(index) {
-  const team = teams[index];
-  document.getElementById('detailTeamName').innerText = `Team Name: ${team.name}`;
-  
-  const membersList = document.getElementById('detailTeamMembers');
-  membersList.innerHTML = ''; // Clear existing members
-  team.members.forEach(member => {
-    const memberItem = document.createElement('li');
-    memberItem.classList.add('list-group-item');
-    memberItem.innerText = member;
-    membersList.appendChild(memberItem);
-  });
+  <%- include('partials/footer') %>
 
-  // Show the modal
-  const viewDetailsModal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
-  viewDetailsModal.show();
-}
+  <script>
+    // Mock data for teams
+    const teams = [
+      { name: "Team Alpha", members: ["Kevin", "Joyal", "Aditi"] },
+      { name: "Team Beta", members: ["Owen", "Oussama", "Jonathan"] },
+      // Add more teams as needed
+    ];
 
-/* Ensure equal width for Team Name and Actions columns */
-.table th, .table td {
-  vertical-align: middle;
-  text-align: center;
-  width: 50%; /* Ensures both columns are equally wide */
-}
+    // Function to display teams
+    function displayTeams() {
+      const teamsTableBody = document.getElementById('teamsTableBody');
+      const noTeamsPlaceholder = document.getElementById('noTeamsPlaceholder');
 
+      teamsTableBody.innerHTML = ''; // Clear existing rows
 
-/* Center the action buttons within their column and increase spacing */
-.btn-group {
-  display: flex;
-  justify-content: center;
-  gap: 15px; /* Increased gap between buttons */
-}
+      if (teams.length === 0) {
+        noTeamsPlaceholder.style.display = 'block';
+      } else {
+        noTeamsPlaceholder.style.display = 'none';
+        teams.forEach((team, index) => {
+          const teamRow = document.createElement('tr');
+          teamRow.innerHTML = `
+            <td>${team.name}</td>
+            <td>
+              <div class="btn-group">
+                <button class="btn btn-info btn-sm btn-rounded" onclick="viewDetails(${index})">View Details</button>
+                <button class="btn btn-warning btn-sm btn-rounded" onclick="editTeam(${index})">Edit</button>
+                <button class="btn btn-danger btn-sm btn-rounded" onclick="deleteTeam(${index})">Delete</button>
+              </div>
+            </td>
+          `;
+          teamsTableBody.appendChild(teamRow);
+        });
+      }
+    }
 
-/* Apply round edges to buttons */
-.btn-rounded {
-  border-radius: 50px; /* Makes buttons round-edged */
-}
+    // Function to view team details
+    function viewDetails(index) {
+      const team = teams[index];
+      document.getElementById('detailTeamName').innerText = `Team Name: ${team.name}`;
+      
+      const membersList = document.getElementById('detailTeamMembers');
+      membersList.innerHTML = ''; // Clear existing members
+      team.members.forEach(member => {
+        const memberItem = document.createElement('li');
+        memberItem.classList.add('list-group-item');
+        memberItem.innerText = member;
+        membersList.appendChild(memberItem);
+      });
 
-/* Center the action buttons within their column and increase spacing */
-.btn-group {
-  display: flex;
-  justify-content: center;
-  gap: 15px; /* Increased gap between buttons */
-}
+      // Show the modal
+      const viewDetailsModal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
+      viewDetailsModal.show();
+    }
 
-/* Adjust the table layout */
-.table {
-  margin: auto; /* Center the table within the container */
-  width: 80%; /* Adjust the width to make it well placed */
-}
+    // Function to delete a team
+    function deleteTeam(index) {
+      teams.splice(index, 1);
+      displayTeams();
+    }
 
+    // Function to edit a team
+    function editTeam(index) {
+      editingTeamIndex = index;
+      const team = teams[index];
+      document.getElementById('editTeamName').value = team.name;
+      document.getElementById('editTeamMembers').value = team.members.join(', ');
+      const editTeamModal = new bootstrap.Modal(document.getElementById('editTeamModal'));
+      editTeamModal.show();
+    }
 
-<!-- Add New Team Button -->
-<div class="text-center mb-4">
-    <a href="/create-team" class="btn btn-primary btn-lg">Add New Team</a>
-</div>
-
-<!-- Placeholder if there are no teams available -->
-<div class="alert alert-info mt-3" role="alert" id="noTeamsPlaceholder" style="display: none;">
-    No teams have been created yet. Click <a href="/create-team" class="alert-link">here</a> to add a new team.
-</div>
+    // Call the function when the page loads
+    window.onload = () => {
+      displayTeams();
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoA6bmi6mB1gWgO3JcrlrdkczTDaBwzC8fm54W/o1eNZB0F" crossorigin="anonymous"></script>
+</body>
+</html>
