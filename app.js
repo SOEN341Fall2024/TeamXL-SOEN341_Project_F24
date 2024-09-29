@@ -73,6 +73,13 @@ app.get("/view-teams", async (req, res) => {
         [req.session.userID]
       );
 
+      const studentArr = await db.query("SELECT name FROM student WHERE id = $1",
+        [groupID]
+      );
+
+      const groupName = await db.query("SELECT group_name FROM groups WHERE id_group = $1",
+        [groupID]
+      );
 
    } catch(err){
     console.log(err);
@@ -153,7 +160,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/create-teams", async (req, res) => {
-
+  
 });
 
 // Start the Express server. Server listening on port 3000
