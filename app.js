@@ -66,7 +66,8 @@ app.get("/create-teams", async (req, res) => {
 app.get("/view-teams", async (req, res) => {
 
   if(req.session.userType == "instructor"){
-    const DATA = await db.query("SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY id_group ASC");
+    const DATA = await db.query("SELECT name, id, group_name FROM student, groups "
+                              + "WHERE student.id_group = groups.id_group ORDER BY id_group ASC");
 
     res.render("view-teams.ejs", {
       Teams : DATA
@@ -79,7 +80,8 @@ app.get("/view-teams", async (req, res) => {
         [req.session.userID]
       )
 
-      const DATA = await db.query("SELECT group_name, name FROM student, groups WHERE student.id_group = $1 AND student.id_group = groups.id_group"
+      const DATA = await db.query("SELECT group_name, name FROM student, groups "
+                                + "WHERE student.id_group = $1 AND student.id_group = groups.id_group",
         [groupID]
       );
 
@@ -168,6 +170,7 @@ app.post("/login", async (req, res) => {
 app.post("/create-teams", async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
+
   try{
       await db.query("INSERT INTO groups (group_name) VALUES ($1)",
         [TEAMNAME]
