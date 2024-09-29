@@ -44,8 +44,29 @@ app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
-app.get("/instructor-dashboard", (req, res) => {
-  res.render("instructor-dashboard.ejs");
+// Route for the student dashboard page, render the student-dashboard view
+app.get("/student-dashboard", (req, res) => {
+  res.render("student-dashboard.ejs");
+});
+
+// Route for the instructor dashboard page
+app.get("/instructor-dashboard", async (req, res) => {
+  const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
+
+  // Make sure to handle the case where instructorUsername is undefined
+  if (!instructorUsername) {
+    return res.status(400).send("Instructor username is required.");
+  }
+
+  try {
+    // Render the instructor-dashboard view, passing the instructor username
+    res.render("instructor-dashboard.ejs", {
+      instructorUsername: instructorUsername,
+    });
+  } catch (error) {
+    console.error("Error rendering instructor dashboard:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.get("/create-teams", async (req, res) => {
@@ -118,7 +139,7 @@ app.post("/register", async (req, res) => {
     );
 
     if (checkResult.rows.length > 0) {
-      res.send("Username already exists. Try logging in.");
+      res.render("username-exists-login.ejs");
     } else {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
@@ -128,7 +149,7 @@ app.post("/register", async (req, res) => {
             "INSERT INTO users (username, password, userType) VALUES ($1, $2, $3)",
             [username, hash, role]
           );
-          res.send("Registration successful!");
+          res.render("registered-now-login.ejs");
         }
       });
     }
@@ -139,28 +160,44 @@ app.post("/register", async (req, res) => {
 
 // Route to handle user login
 app.post("/login", async (req, res) => {
-  const username = req.body.username;
+  const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const loginPassword = req.body.password;
 
   try {
-    const result = await db.query("SELECT * FROM users WHERE username = $1", [
-      username,
-    ]);
+    // Fetch the user from the database with a case-insensitive query
+    const result = await db.query(
+      "SELECT * FROM users WHERE LOWER(username) = $1",
+      [username]
+    );
+
     if (result.rows.length > 0) {
       const user = result.rows[0];
+
+      // Debugging: Log the result
+      console.log("User found:", user);
+
+      // Compare the password with the hashed password stored in the database
       bcrypt.compare(loginPassword, user.password, (err, match) => {
         if (match) {
-          res.send("Login successful!");
+          // Check if the user is an instructor or student
+          if (user.usertype === "instructor") {
+            // Redirect to the instructor dashboard with the username
+            res.redirect(
+              `/instructor-dashboard?instructorUsername=${username}`
+            );
+          } else {
+            res.render("student-dashboard.ejs"); // Render student dashboard
+          }
 
           req.session.userID =  user.id;
           req.session.userType = user.type;
           
         } else {
-          res.send("Incorrect password.");
+          res.render("incorrect-pw-un.ejs");
         }
       });
     } else {
-      res.send("User not found.");
+      res.render("incorrect-pw-un.ejs");
     }
   } catch (err) {
     console.log(err);
@@ -189,10 +226,86 @@ app.post("/create-teams", async (req, res) => {
       }
 
     } catch(err){
-      console.log(err);
-    }
+      console.log("Error during login query:", err);
+      res.send("An error occurred during login.");
+  }
 });
 
+//TEAM MANAGEMENT ROUTES :
+/*
+// Route to render the create teams page
+app.get("/create-team", async (req, res) => {
+  const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
+  try {
+    // Get students from the users table where usertype is 'student'
+    const result = await db.query(
+      "SELECT username FROM users WHERE usertype = $1",
+      ["student"]
+    );
+    const students = result.rows;
+
+    // Render the create-teams view, passing the instructor username and students
+    res.render("create-teams", {
+      instructorUsername: instructorUsername, // Pass the instructor username (used to access the instructor who created teams for displaying)
+      students: students,
+    });
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+*/
+app.post("/create-teams", async (req, res) => {
+  const IDs = req.body.studentIDs;
+  const TEAMNAME = req.body.teamname;
+
+  try{
+      await db.query("INSERT INTO groups (group_name) VALUES ($1)",
+        [TEAMNAME]
+      );
+
+      if(Array.isArray(IDs)){
+        for(var i = 0; i < IDs.length; i++){
+          await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
+            [TEAMNAME, IDs[i]]
+          );
+        }
+      } else {
+        await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
+          [TEAMNAME, IDs]
+        );
+      }
+
+    } catch(err){
+      console.log("Error during login query:", err);
+      res.send("An error occurred during login.");
+  }
+});
+
+//TEAM MANAGEMENT ROUTES :
+/*
+// Route to render the create teams page
+app.get("/create-team", async (req, res) => {
+  const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
+  try {
+    // Get students from the users table where usertype is 'student'
+    const result = await db.query(
+      "SELECT username FROM users WHERE usertype = $1",
+      ["student"]
+    );
+    const students = result.rows;
+
+    // Render the create-teams view, passing the instructor username and students
+    res.render("create-teams", {
+      instructorUsername: instructorUsername, // Pass the instructor username (used to access the instructor who created teams for displaying)
+      students: students,
+    });
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+*/
 // Start the Express server. Server listening on port 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
