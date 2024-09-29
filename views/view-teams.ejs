@@ -39,6 +39,12 @@
     .table-responsive {
       margin-top: 20px;
     }
+
+    /* Style for the back button */
+    .btn-back {
+      margin-top: 10px;
+      border-radius: 50px !important; /* Rounded edges */
+    }
   </style>
 </head>
 <body>
@@ -68,9 +74,14 @@
         </div>
     </div>
 
-    <!-- Add New Team Button with rounded edges -->
+    <!-- Add New Team Button -->
     <div class="text-center mb-4">
         <a href="/create-team" class="btn btn-primary btn-lg btn-rounded">Add New Team</a>
+    </div>
+
+    <!-- Back to Instructor Dashboard Button -->
+    <div class="text-center mb-4">
+        <a href="/instructor-dashboard" class="btn btn-secondary btn-lg btn-back btn-rounded">Back to Instructor Dashboard</a>
     </div>
 
     <!-- Placeholder if there are no teams available -->
