@@ -175,3 +175,8 @@ app.listen(port, () => {
 app.get("/create-team", (req, res) => {
   res.render("create-team.ejs");
 });
+
+// Route for the view team page, render the view-team.ejs view
+app.get("/view-team", (req, res) => {
+  res.render("view-teams.ejs");
+});
