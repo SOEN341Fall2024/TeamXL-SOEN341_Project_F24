@@ -28,6 +28,9 @@
     .form-group {
       margin-bottom: 1.5rem; /* Add margin to form groups */
     }
+    .select-students {
+      height: 200px; /* Adjust height as needed */
+    }
   </style>
 </head>
 <body>
@@ -50,17 +53,14 @@
             <!-- Form group for selecting students -->
             <div class="form-group">
               <label for="students">Select Students</label>
-              <select multiple class="form-control" id="students" required>
-                <option value="student1">Student 1</option>
-                <option value="student2">Student 2</option>
-                <option value="student3">Student 3</option>
-                <!-- Add more students as needed -->
+              <select multiple class="form-control select-students" id="students" required> <!-- Added select-students class -->
+                <% for (let i = 1; i <= 7; i++) { %>
+                  <option value="student<%= i %>">Student <%= i %></option>
+                <% } %>
               </select>
             </div>
             <!-- Submit button -->
-            <div class="form-group">
-              <button type="button" class="btn btn-primary btn-block" onclick="validateForm()">Submit</button>
-            </div>
+            <button type="button" class="btn btn-primary btn-block" onclick="validateForm()">Submit</button>
           </form>
         </div>
       </div>
