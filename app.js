@@ -69,7 +69,7 @@ app.get("/instructor-dashboard", async (req, res) => {
 
 // Route to handle user registration
 app.post("/register", async (req, res) => {
-  const username = req.body.username;
+  const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
 
@@ -105,7 +105,7 @@ app.post("/login", async (req, res) => {
   const loginPassword = req.body.password;
 
   try {
-    const result = await db.query(`SELECT NAME,password,'INSTRUCTOR' AS origin FROM INSTRUCTOR UNION SELECT NAME,password,'STUDENT' AS origin FROM STUDENT WHERE NAME = '${username}' ;`);
+    const result = await db.query(`SELECT NAME,password,'INSTRUCTOR' AS origin FROM INSTRUCTOR WHERE NAME = '${username}' UNION SELECT NAME,password,'STUDENT' AS origin FROM STUDENT WHERE NAME = '${username}' ;`);
     if (result.rows.length > 0) {
       const user = result.rows[0];
 
@@ -137,7 +137,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
+/*
 // Route to handle user login
 app.post("/login", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
@@ -181,7 +181,7 @@ app.post("/login", async (req, res) => {
     res.send("An error occurred during login.");
   }
 });
-
+*/
 //TEAM MANAGEMENT ROUTES :
 
 // Route to render the create teams page
