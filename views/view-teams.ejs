@@ -102,7 +102,19 @@ function viewDetails(index) {
   border-radius: 50px; /* Makes buttons round-edged */
 }
 
+/* Ensure consistent spacing between buttons */
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Adjusted gap between buttons */
+}
+
 <!-- Add New Team Button -->
 <div class="text-center mb-4">
     <a href="/create-team" class="btn btn-primary btn-lg">Add New Team</a>
+</div>
+
+<!-- Placeholder if there are no teams available -->
+<div class="alert alert-info mt-3" role="alert" id="noTeamsPlaceholder" style="display: none;">
+    No teams have been created yet. Click <a href="/create-team" class="alert-link">here</a> to add a new team.
 </div>
