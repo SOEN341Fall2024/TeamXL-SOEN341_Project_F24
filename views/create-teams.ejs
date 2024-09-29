@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Team</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h2>Create Team</h2>
+        <form id="createTeamForm">
+          <div class="form-group">
+            <label for="teamName">Team Name</label>
+            <input type="text" class="form-control" id="teamName" placeholder="Enter team name" required>
+          </div>
+          <div class="form-group">
+            <label for="students">Select Students</label>
+            <select multiple class="form-control" id="students" required>
+              <option value="student1">Student 1</option>
+              <option value="student2">Student 2</option>
+              <option value="student3">Student 3</option>
+              <!-- Add more students as needed -->
+            </select>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="validateForm()">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function validateForm() {
+      const teamName = document.getElementById('teamName').value;
+      const students = document.getElementById('students').selectedOptions;
+      const selectedStudents = Array.from(students).map(option => option.value);
+
+      if (!teamName) {
+        alert('Team name is required.');
+        return;
+      }
+
+      if (selectedStudents.length === 0) {
+        alert('At least one student must be selected.');
+        return;
+      }
+
+      // If validation passes, submit the form or handle the data as needed
+      alert('Form submitted successfully!');
+      // You can add form submission logic here
+    }
+  </script>
+</body>
+</html>
