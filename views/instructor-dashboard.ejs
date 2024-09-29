@@ -39,13 +39,12 @@
                       Peers
                     </button>
                     <ul class="dropdown-menu" style="">
+                       <!-- The Three Buttons for Team Management -->
                       <li><a class="nav-link" href="/create-team?instructorUsername=<%= instructorUsername %>">Create Team</a>
                       </li>
-                      <li><a class="dropdown-item" href="#">null</a></li>
-                      <li><a class="dropdown-item" href="#">null</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">null</a></li>
-                    </ul>
+                      <li><a class="dropdown-item" href="/view-teams">View Teams</a></li>
+                      <li><a class="dropdown-item" href="/peer-assessment">Peer Assessment</a></li>
+                      </ul>
                   </div>
 
             </li>
@@ -75,23 +74,56 @@
   </header>
 
 
-
-
-
-
-
-
-
   <div class="container py-4 my-5 ">
  
 
     <div class="p-5 mb-4 bg-body-tertiary rounded-3">
       <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Custom jumbotron</h1>
-        <p class="col-md-8 fs-4">Using a series of utilities, you can create this jumbotron, just like the one in previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it to your liking.</p>
-        <button class="btn btn-primary btn-lg" type="button">Example button</button>
+        <h1 class="display-5 fw-bold">Instructor Dashboard</h1>
+        <p class="col-md-8 fs-4">Welcome to your dashboard! You can manage your courses, students, and teams.</p>
       </div>
     </div>
+
+    <!-- Team Management Section with Cards -->
+    <div class="my-5">
+      <h2>Team Management</h2>
+      <p>Manage student teams for your courses:</p>
+      <div class="row">
+          <div class="col-md-4 mb-3">
+              <div class="card text-center h-100">
+                  <div class="card-body">
+                      <h5 class="card-title">Create Team</h5>
+                      <p class="card-text">Create a new team for your students.</p>
+                      <a href="/create-teams" class="btn btn-success btn-lg rounded-pill">
+                          <i class="bi bi-plus-circle me-2"></i>Create Team
+                      </a>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-4 mb-3">
+              <div class="card text-center h-100">
+                  <div class="card-body">
+                      <h5 class="card-title">View Teams</h5>
+                      <p class="card-text">View the teams you have created.</p>
+                      <a href="/view-teams" class="btn btn-primary btn-lg rounded-pill">
+                          <i class="bi bi-eye me-2"></i>View Teams
+                      </a>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-4 mb-3">
+              <div class="card text-center h-100">
+                  <div class="card-body">
+                      <h5 class="card-title">Edit Teams</h5>
+                      <p class="card-text">Make changes to existing teams.</p>
+                      <a href="/edit-team" class="btn btn-warning btn-lg rounded-pill">
+                          <i class="bi bi-pencil-square me-2"></i>Edit Teams
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 
     <div class="row align-items-md-stretch">
       <div class="col-md-6">
