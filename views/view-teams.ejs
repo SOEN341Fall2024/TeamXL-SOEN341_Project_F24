@@ -1,0 +1,62 @@
+<%- include('partials/header', { title: 'View Teams' }) %>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">View Teams</h1>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">List of Teams</h5>
+            <p class="card-text">Below is the list of teams you have created along with their members:</p>
+            
+            <!-- Table to display the list of teams and their members -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Team Name</th>
+                            <th>Members</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sample data: Replace this with actual dynamic data when backend is connected -->
+                        <tr>
+                            <td>Team Alpha</td>
+                            <td>
+                                <ul>
+                                    <li>Kevin</li>
+                                    <li>Joyal</li>
+                                    <li>Aditi</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-warning me-2">Edit</button>
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Team Beta</td>
+                            <td>
+                                <ul>
+                                    <li>Owen</li>
+                                    <li>Oussama</li>
+                                    <li>Jonathan</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-warning me-2">Edit</button>
+                                <button class="btn btn-sm btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Placeholder if there are no teams available -->
+    <div class="alert alert-info mt-3" role="alert" id="noTeamsPlaceholder" style="display: none;">
+        No teams have been created yet.
+    </div>
+</div>
+
+<%- include('partials/footer') %>
