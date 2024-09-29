@@ -1,7 +1,5 @@
-
-<%- include('partials/header', { title: 'Log In' }) %>
-
-<header class="mb-5 pb-3">
+<%- include('partials/header', { title: 'Home' }) %>
+<header>
   <div class="px-3 py-2 text-bg-dark border-bottom" style="height: 100px;">
     <div class="mx-2   mt-3 h-100">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -25,29 +23,25 @@
   
 </header>
 
-<div class="container">
-  <div class="d-flex align-items-center justify-content-center py-5 bg-body-tertiary">
-    <form action="/login" method="POST">
-      
-      <div>
-        <h1 class="h3 mb-3 fw-normal">Welcome back, please log in</h1>
-      </div>
 
-      <div class="form-floating my-3">
-        <input type="text" class="form-control" id="floatingInput" name="username" placeholder="Username">
-        <label for="username" for="floatingInput">Username</label>
-      </div>
 
-      <div class="form-floating my-3">
-        <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
-        <label for="floatingPassword">Password</label>
-      </div>
 
-      <div class="my-4">
-      <button class="btn btn-primary w-100 py-2" type="submit">Log in</button>
-      </div>
 
-    </form>
-</div>
-</div>
+<div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <svg class="bi mt-4 mb-3" style="color: var(--bs-indigo);" width="100" height="100"><use xlink:href="#bootstrap"></use></svg>
+      <h1 class="text-body-emphasis">It seems we were unable to find your account in our database!</h1>
+      <p class="col-lg-8 mx-auto fs-5 text-muted">
+        Try logging in again with the correct username and password or choose to register.
+      </p>
+      <div class="d-inline-flex gap-2 mb-5">
+        <div class="text-end">
+            <div class="text-end">
+                <a href="/login" class="btn btn-outline-dark me-2 btn-lg">Log In</a>
+                <a href="/register" class="btn btn-success btn-lg">Register</a>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
 <%- include('partials/footer') %>
