@@ -13,10 +13,20 @@
     }
     /* Custom styles to increase font size */
     .large-font {
-      font-size: 1.3rem; /* Increase font size by 30% */
+      font-size: 1.5rem; /* Increase font size by 30% */
     }
     .heading-font {
-      font-size: 2rem; /* Larger font size for the heading */
+      font-size: 3rem; /* Larger font size for the heading */
+    }
+    .taller-box {
+      min-height: 700px; /* Set a larger minimum height for the card */
+      padding: 2rem; /* Add padding to the card */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .form-group {
+      margin-bottom: 1.5rem; /* Add margin to form groups */
     }
   </style>
 </head>
@@ -29,7 +39,7 @@
     <div class="row justify-content-center w-100">
       <div class="col-md-8"> <!-- Increased column width -->
         <!-- Card to create a grey box with rounded edges -->
-        <div class="card p-5 bg-light rounded"> <!-- Increased padding -->
+        <div class="card bg-light rounded taller-box"> <!-- Added taller-box class -->
           <h2 class="text-center heading-font">Create Team</h2> <!-- Added custom class for larger heading font -->
           <form id="createTeamForm" class="large-font"> <!-- Added custom class for larger font -->
             <!-- Form group for team name input -->
@@ -48,7 +58,9 @@
               </select>
             </div>
             <!-- Submit button -->
-            <button type="button" class="btn btn-primary btn-block" onclick="validateForm()">Submit</button>
+            <div class="form-group">
+              <button type="button" class="btn btn-primary btn-block" onclick="validateForm()">Submit</button>
+            </div>
           </form>
         </div>
       </div>
