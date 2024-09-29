@@ -66,7 +66,11 @@ app.get("/create-teams", async (req, res) => {
 app.get("/view-teams", async (req, res) => {
 
   if(req.session.userType == "instructor"){
-    const RESULT = await db.query("SELECT * FROM groups");
+    const DATA = await db.query("SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY id_group ASC");
+
+    res.render("view-teams.ejs", {
+      Teams : DATA
+    });
 
   } else if (req.session.userType == "student") {
     try{
