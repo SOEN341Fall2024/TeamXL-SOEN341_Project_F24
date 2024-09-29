@@ -5,31 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Team</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
   <!-- Include any additional CSS files here -->
   <style>
     /* Set Arial as the font for the entire body */
     body {
       font-family: Arial, sans-serif;
     }
+
     /* Custom styles to increase font size */
     .large-font {
       font-size: 1.5rem; /* Increase font size by 30% */
     }
+
     .heading-font {
       font-size: 3rem; /* Larger font size for the heading */
     }
+
+    /* Taller box with enough height for content */
     .taller-box {
-      min-height: 700px; /* Set a larger minimum height for the card */
-      padding: 2rem; /* Add padding to the card */
+      min-height: 600px; /* Set a larger minimum height */
+      padding: 3rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
+
+    /* Increase height of the card to fit more content */
+    .card {
+      flex-grow: 1; /* Allow the card to grow and fill the remaining space */
+      width: 100%; /* Ensure the card takes the full width */
+      padding: 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
     .form-group {
       margin-bottom: 1.5rem; /* Add margin to form groups */
     }
+
+    /* Increase the height of the select box */
     .select-students {
-      height: 200px; /* Adjust height as needed */
+      height: 300px; /* Adjusted height to make the select box larger */
     }
   </style>
 </head>
@@ -40,11 +58,11 @@
   <!-- Container to center the form vertically and horizontally -->
   <div class="container vh-100 d-flex justify-content-center align-items-center">
     <div class="row justify-content-center w-100">
-      <div class="col-md-8"> <!-- Increased column width -->
-        <!-- Card to create a grey box with rounded edges -->
-        <div class="card bg-light rounded taller-box"> <!-- Added taller-box class -->
-          <h2 class="text-center heading-font">Create Team</h2> <!-- Added custom class for larger heading font -->
-          <form id="createTeamForm" class="large-font"> <!-- Added custom class for larger font -->
+      <div class="col-md-8">
+        <!-- Card to create a grey box with rounded edges and taller height -->
+        <div class="card bg-light rounded taller-box">
+          <h2 class="text-center heading-font">Create Team</h2>
+          <form id="createTeamForm" class="large-font">
             <!-- Form group for team name input -->
             <div class="form-group">
               <label for="teamName">Team Name</label>
@@ -53,7 +71,7 @@
             <!-- Form group for selecting students -->
             <div class="form-group">
               <label for="students">Select Students</label>
-              <select multiple class="form-control select-students" id="students" required> <!-- Added select-students class -->
+              <select multiple class="form-control select-students" id="students" required>
                 <% for (let i = 1; i <= 7; i++) { %>
                   <option value="student<%= i %>">Student <%= i %></option>
                 <% } %>
@@ -70,7 +88,17 @@
   <!-- Include the footer -->
   <%- include('partials/footer') %>
 
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
   <script>
+    $(document).ready(function() {
+      // Initialize Select2 on the select element
+      $('#students').select2({
+        placeholder: 'Select Students',
+        allowClear: true
+      });
+    });
+
     // Function to validate the form inputs
     function validateForm() {
       const teamName = document.getElementById('teamName').value;
