@@ -5,6 +5,9 @@ import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import session from express-session;
+import multer from "multer"; 
+import csv from "csv-parser"; 
+import fs from "fs"; 
 
 dotenv.config();
 
@@ -202,12 +205,12 @@ app.post("/login", async (req, res) => {
 app.post("/create-teams", async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
-  
+
   try{
       await db.query("INSERT INTO groups (group_name) VALUES ($1)",
         [TEAMNAME]
       );
-        // ?? could simplify this condition code
+
       if(Array.isArray(IDs)){
         for(var i = 0; i < IDs.length; i++){
           await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
