@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import session from express-session;
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(session({ secret: "key" }));
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
@@ -67,15 +69,72 @@ app.get("/instructor-dashboard", async (req, res) => {
   }
 });
 
+app.get("/create-teams", async (req, res) => {
+  try{
+    const RESULT = await db.query("SELECT * FROM student WHERE id_teacher = $1", 
+      [req.session.userID]
+    );
+
+    res.render("create-teams.ejs", {
+      StudentArr : RESULT
+    });
+
+  } catch(err){
+    console.log(err);
+  }
+});
+
+app.get("/view-teams", async (req, res) => {
+
+  if(req.session.userType == "instructor"){
+    const DATA = await db.query("SELECT name, id, group_name FROM student, groups "
+                              + "WHERE student.id_group = groups.id_group ORDER BY id_group ASC");
+
+    res.render("view-teams-instructor.ejs", {
+      Teams : DATA
+    });
+
+  } else if (req.session.userType == "student") {
+    try{
+
+      const groupID = await db.query("SELECT id_group FROM student WHERE id = $1",
+        [req.session.userID]
+      )
+
+      const DATA = await db.query("SELECT group_name, name FROM student, groups "
+                                + "WHERE student.id_group = $1 AND student.id_group = groups.id_group",
+        [groupID]
+      );
+
+      res.render("view-team-student.ejs", {
+        Team : DATA
+      });
+
+   } catch(err){
+    console.log(err);
+   }
+
+  } else {
+    res.redirect("/");
+  }
+  
+});
+
+app.get("/logout", (req, res) => {
+  delete req.session.userID;
+  delete req.session.userType;
+  res.redirect("/");
+});
+
 // Route to handle user registration
 app.post("/register", async (req, res) => {
-  const username = req.body.username;
+  const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
 
   try {
     const checkResult = await db.query(
-      "SELECT * FROM users WHERE username = $1",
+      `SELECT * FROM ${role} WHERE name = $1`,
       [username]
     );
 
@@ -87,8 +146,8 @@ app.post("/register", async (req, res) => {
           console.error("Error hashing password:", err);
         } else {
           await db.query(
-            "INSERT INTO users (username, password, userType) VALUES ($1, $2, $3)",
-            [username, hash, role]
+            `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
+            [username, hash]
           );
           res.render("registered-now-login.ejs");
         }
@@ -99,18 +158,13 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Route to handle user login
+// Route to handle user login Jonathan
 app.post("/login", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const loginPassword = req.body.password;
 
   try {
-    // Fetch the user from the database with a case-insensitive query
-    const result = await db.query(
-      "SELECT * FROM users WHERE LOWER(username) = $1",
-      [username]
-    );
-
+    const result = await db.query(`SELECT NAME,password,'INSTRUCTOR' AS origin FROM INSTRUCTOR WHERE NAME = '${username}' UNION SELECT NAME,password,'STUDENT' AS origin FROM STUDENT WHERE NAME = '${username}' ;`);
     if (result.rows.length > 0) {
       const user = result.rows[0];
 
@@ -121,7 +175,7 @@ app.post("/login", async (req, res) => {
       bcrypt.compare(loginPassword, user.password, (err, match) => {
         if (match) {
           // Check if the user is an instructor or student
-          if (user.usertype === "instructor") {
+          if (user.origin === "instructor") {
             // Redirect to the instructor dashboard with the username
             res.redirect(
               `/instructor-dashboard?instructorUsername=${username}`
@@ -129,6 +183,10 @@ app.post("/login", async (req, res) => {
           } else {
             res.render("student-dashboard.ejs"); // Render student dashboard
           }
+
+          req.session.userID =  user.id;
+          req.session.userType = user.usertype;
+          
         } else {
           res.render("incorrect-pw-un.ejs");
         }
@@ -137,32 +195,33 @@ app.post("/login", async (req, res) => {
       res.render("incorrect-pw-un.ejs");
     }
   } catch (err) {
-    console.log("Error during login query:", err);
-    res.send("An error occurred during login.");
+    console.log(err);
   }
 });
 
-//TEAM MANAGEMENT ROUTES :
+app.post("/create-teams", async (req, res) => {
+  const IDs = req.body.studentIDs;
+  const TEAMNAME = req.body.teamname;
 
-// Route to render the create teams page
-app.get("/create-team", async (req, res) => {
-  const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
-  try {
-    // Get students from the users table where usertype is 'student'
-    const result = await db.query(
-      "SELECT username FROM users WHERE usertype = $1",
-      ["student"]
-    );
-    const students = result.rows;
+  try{
+      await db.query("INSERT INTO groups (group_name) VALUES ($1)",
+        [TEAMNAME]
+      );
 
-    // Render the create-teams view, passing the instructor username and students
-    res.render("create-teams", {
-      instructorUsername: instructorUsername, // Pass the instructor username (used to access the instructor who created teams for displaying)
-      students: students,
-    });
-  } catch (error) {
-    console.error("Error fetching students:", error);
-    res.status(500).send("Internal Server Error");
+      if(Array.isArray(IDs)){
+        for(var i = 0; i < IDs.length; i++){
+          await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
+            [TEAMNAME, IDs[i]]
+          );
+        }
+      } else {
+        await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
+          [TEAMNAME, IDs]
+        );
+      }
+
+    } catch(err){
+      console.log(err);
   }
 });
 
