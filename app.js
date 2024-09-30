@@ -90,7 +90,7 @@ app.get("/view-teams", async (req, res) => {
     const DATA = await db.query("SELECT name, id, group_name FROM student, groups "
                               + "WHERE student.id_group = groups.id_group ORDER BY id_group ASC");
 
-    res.render("view-teams.ejs", {
+    res.render("view-teams-instructor.ejs", {
       Teams : DATA
     });
 
@@ -106,7 +106,7 @@ app.get("/view-teams", async (req, res) => {
         [groupID]
       );
 
-      res.render("view-team.ejs", {
+      res.render("view-team-student.ejs", {
         Team : DATA
       });
 
