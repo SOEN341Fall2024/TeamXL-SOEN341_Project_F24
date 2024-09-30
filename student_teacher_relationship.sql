@@ -1,3 +1,6 @@
+-- Create table for the student with ID starting from 1000
+CREATE SEQUENCE student_id_seq START 1000;  -- Start student IDs from 1000
+
 -- Create table for the instructors
 CREATE TABLE INSTRUCTOR (
     ID SERIAL PRIMARY KEY, --Autoincrement to put unique ID
@@ -13,7 +16,7 @@ CREATE TABLE GROUPS (
 
 -- Create table for the students
 CREATE TABLE STUDENT (
-    ID SERIAL PRIMARY KEY, --Autoincrement to put unique ID
+    ID INTEGER PRIMARY KEY DEFAULT nextval('instructor_id_seq'), --Autoincrement to put unique ID
     NAME VARCHAR(100),
     ID_GROUP INTEGER,
     ID_teacher INTEGER,
