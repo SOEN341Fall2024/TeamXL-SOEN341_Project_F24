@@ -10,7 +10,7 @@ CREATE TABLE INSTRUCTOR (
 
 -- Create table for groups
 CREATE TABLE GROUPS (
-    ID_GROUP INTEGER PRIMARY KEY,
+    ID_GROUP SERIAL PRIMARY KEY,
     GROUP_NAME VARCHAR(100)  -- Optional: add a name for the group
 );
 
