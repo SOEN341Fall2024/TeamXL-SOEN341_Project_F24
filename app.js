@@ -11,6 +11,11 @@ import fs from "fs";
 
 dotenv.config();
 
+// Setup for file uploads (Multer)
+const upload = multer({ dest: "uploads/" }); // Files will be uploaded to the 'uploads' directory
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // Create an instance of an Express application, specify port for the server to listen on, define the number of rounds for bcrypt hashing
 const app = express();
 const port = 3000;
@@ -202,7 +207,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/create-teams", async (req, res) => {
+app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
 
@@ -223,7 +228,7 @@ app.post("/create-teams", async (req, res) => {
         );
       }
 
-          // Step 3: If a CSV file is uploaded, process it
+          // If a CSV file is uploaded, process it
       if (req.file) {
         const filePath = req.file.path; // Path to the uploaded file
 
@@ -251,10 +256,10 @@ app.post("/create-teams", async (req, res) => {
           // Optionally, delete the uploaded file after processing
           fs.unlinkSync(filePath);
         });
-        
+
     }
 
-    // Step 4: Redirect or send a success response
+    //Redirect or send a success response
     res.redirect("/view-teams");
 
     } catch(err){
