@@ -226,86 +226,10 @@ app.post("/create-teams", async (req, res) => {
       }
 
     } catch(err){
-      console.log("Error during login query:", err);
-      res.send("An error occurred during login.");
+      console.log(err);
   }
 });
 
-//TEAM MANAGEMENT ROUTES :
-/*
-// Route to render the create teams page
-app.get("/create-team", async (req, res) => {
-  const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
-  try {
-    // Get students from the users table where usertype is 'student'
-    const result = await db.query(
-      "SELECT username FROM users WHERE usertype = $1",
-      ["student"]
-    );
-    const students = result.rows;
-
-    // Render the create-teams view, passing the instructor username and students
-    res.render("create-teams", {
-      instructorUsername: instructorUsername, // Pass the instructor username (used to access the instructor who created teams for displaying)
-      students: students,
-    });
-  } catch (error) {
-    console.error("Error fetching students:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-*/
-app.post("/create-teams", async (req, res) => {
-  const IDs = req.body.studentIDs;
-  const TEAMNAME = req.body.teamname;
-
-  try{
-      await db.query("INSERT INTO groups (group_name) VALUES ($1)",
-        [TEAMNAME]
-      );
-
-      if(Array.isArray(IDs)){
-        for(var i = 0; i < IDs.length; i++){
-          await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
-            [TEAMNAME, IDs[i]]
-          );
-        }
-      } else {
-        await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
-          [TEAMNAME, IDs]
-        );
-      }
-
-    } catch(err){
-      console.log("Error during login query:", err);
-      res.send("An error occurred during login.");
-  }
-});
-
-//TEAM MANAGEMENT ROUTES :
-/*
-// Route to render the create teams page
-app.get("/create-team", async (req, res) => {
-  const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
-  try {
-    // Get students from the users table where usertype is 'student'
-    const result = await db.query(
-      "SELECT username FROM users WHERE usertype = $1",
-      ["student"]
-    );
-    const students = result.rows;
-
-    // Render the create-teams view, passing the instructor username and students
-    res.render("create-teams", {
-      instructorUsername: instructorUsername, // Pass the instructor username (used to access the instructor who created teams for displaying)
-      students: students,
-    });
-  } catch (error) {
-    console.error("Error fetching students:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-*/
 // Start the Express server. Server listening on port 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
