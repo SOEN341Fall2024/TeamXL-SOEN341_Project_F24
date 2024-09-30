@@ -4,28 +4,30 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import session from express-session;
+import session from "express-session";
 import multer from "multer"; 
 import csv from "csv-parser"; 
 import fs from "fs"; 
 
 dotenv.config();
 
-// Setup for file uploads (Multer)
-const upload = multer({ dest: "uploads/" }); // Files will be uploaded to the 'uploads' directory
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
+
 
 // Create an instance of an Express application, specify port for the server to listen on, define the number of rounds for bcrypt hashing
 const app = express();
 const port = 3000;
 const saltRounds = 10;
 
+
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(session({ secret: "key" }));
+
+// Setup for file uploads (Multer)
+const upload = multer({ dest: "uploads/" }); // Files will be uploaded to the 'uploads' directory
+
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
@@ -210,8 +212,8 @@ app.post("/login", async (req, res) => {
 app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
-
     try{
+      if(IDs != null && TEAMNAME){
       await db.query("INSERT INTO groups (group_name) VALUES ($1)",
         [TEAMNAME]
       );
@@ -227,43 +229,40 @@ app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
           [TEAMNAME, IDs]
         );
       }
-
-          // If a CSV file is uploaded, process it
-      if (req.file) {
-        const filePath = req.file.path; // Path to the uploaded file
+    }
+    // If a CSV file is uploaded, process it
+    if (req.file) {
+      const filePath = req.file.path; // Path to the uploaded file
+      const missingStudents = []; // Array to keep track of missing students
 
       // Parse the CSV file
-        fs.createReadStream(filePath)
-          .pipe(csv()) // Use csv-parser to read the CSV file
-          .on('data', async (row) => {
-        const studentName = row.student_name.trim(); // Extract and trim student name from the row
+      fs.createReadStream(filePath)
+        .pipe(csv()) // Use csv-parser to read the CSV file
+        .on('data', async (row) => {
+          const teamNameArray = [row.team_name.trim()];
+          const studentNameArray = [row.student_name.trim()]; // Extract and trim student name from the row
+          try {
 
-        // Fetch student ID from the database using the student's name
-        const studentResult = await db.query("SELECT id FROM student WHERE name = $1", [studentName]);
 
-        if (studentResult.rows.length > 0) {
-          const studentID = studentResult.rows[0].id;
-
-          // Update the student's group in the database
-          await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [TEAMNAME, studentID]);
-        } else {
-          console.log(`Student ${studentName} not found in the database.`);
-        }
+          } catch (error) {
+            console.error("Error processing student", error);
+          }
         })
-
         .on('end', () => {
           console.log('CSV file successfully processed');
+
           // Optionally, delete the uploaded file after processing
           fs.unlinkSync(filePath);
         });
-
     }
 
-    //Redirect or send a success response
+    // Redirect or send a success response
     res.redirect("/view-teams");
 
-    } catch(err){
-      console.log(err);
+  } catch (err) {
+    console.log(err);
+    // Optionally handle the error response
+    res.status(500).send("An error occurred while creating teams.");
   }
 });
 
