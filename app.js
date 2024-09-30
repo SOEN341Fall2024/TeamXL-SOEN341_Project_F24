@@ -128,13 +128,13 @@ app.get("/logout", (req, res) => {
 
 // Route to handle user registration
 app.post("/register", async (req, res) => {
-  const username = req.body.username;
+  const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
 
   try {
     const checkResult = await db.query(
-      "SELECT * FROM users WHERE username = $1",
+      `SELECT * FROM ${role} WHERE name = $1`,
       [username]
     );
 
@@ -146,8 +146,8 @@ app.post("/register", async (req, res) => {
           console.error("Error hashing password:", err);
         } else {
           await db.query(
-            "INSERT INTO users (username, password, userType) VALUES ($1, $2, $3)",
-            [username, hash, role]
+            `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
+            [username, hash]
           );
           res.render("registered-now-login.ejs");
         }
@@ -158,18 +158,13 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Route to handle user login
+// Route to handle user login Jonathan
 app.post("/login", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const loginPassword = req.body.password;
 
   try {
-    // Fetch the user from the database with a case-insensitive query
-    const result = await db.query(
-      "SELECT * FROM users WHERE LOWER(username) = $1",
-      [username]
-    );
-
+    const result = await db.query(`SELECT NAME,password,'INSTRUCTOR' AS origin FROM INSTRUCTOR WHERE NAME = '${username}' UNION SELECT NAME,password,'STUDENT' AS origin FROM STUDENT WHERE NAME = '${username}' ;`);
     if (result.rows.length > 0) {
       const user = result.rows[0];
 
@@ -180,7 +175,7 @@ app.post("/login", async (req, res) => {
       bcrypt.compare(loginPassword, user.password, (err, match) => {
         if (match) {
           // Check if the user is an instructor or student
-          if (user.usertype === "instructor") {
+          if (user.origin === "instructor") {
             // Redirect to the instructor dashboard with the username
             res.redirect(
               `/instructor-dashboard?instructorUsername=${username}`
