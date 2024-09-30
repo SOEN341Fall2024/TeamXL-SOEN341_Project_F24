@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import session from express-session;
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(session({ secret: "key" }));
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
@@ -65,6 +67,63 @@ app.get("/instructor-dashboard", async (req, res) => {
     console.error("Error rendering instructor dashboard:", error);
     res.status(500).send("Internal Server Error");
   }
+});
+
+app.get("/create-teams", async (req, res) => {
+  try{
+    const RESULT = await db.query("SELECT * FROM student WHERE id_teacher = $1", 
+      [req.session.userID]
+    );
+
+    res.render("create-teams.ejs", {
+      StudentArr : RESULT
+    });
+
+  } catch(err){
+    console.log(err);
+  }
+});
+
+app.get("/view-teams", async (req, res) => {
+
+  if(req.session.userType == "instructor"){
+    const DATA = await db.query("SELECT name, id, group_name FROM student, groups "
+                              + "WHERE student.id_group = groups.id_group ORDER BY id_group ASC");
+
+    res.render("view-teams-instructor.ejs", {
+      Teams : DATA
+    });
+
+  } else if (req.session.userType == "student") {
+    try{
+
+      const groupID = await db.query("SELECT id_group FROM student WHERE id = $1",
+        [req.session.userID]
+      )
+
+      const DATA = await db.query("SELECT group_name, name FROM student, groups "
+                                + "WHERE student.id_group = $1 AND student.id_group = groups.id_group",
+        [groupID]
+      );
+
+      res.render("view-team-student.ejs", {
+        Team : DATA
+      });
+
+   } catch(err){
+    console.log(err);
+   }
+
+  } else {
+    res.redirect("/");
+  }
+  
+});
+
+app.get("/logout", (req, res) => {
+  delete req.session.userID;
+  delete req.session.userType;
+  res.redirect("/");
 });
 
 // Route to handle user registration
@@ -124,6 +183,10 @@ app.post("/login", async (req, res) => {
           } else {
             res.render("student-dashboard.ejs"); // Render student dashboard
           }
+
+          req.session.userID =  user.id;
+          req.session.userType = user.usertype;
+          
         } else {
           res.render("incorrect-pw-un.ejs");
         }
@@ -132,32 +195,33 @@ app.post("/login", async (req, res) => {
       res.render("incorrect-pw-un.ejs");
     }
   } catch (err) {
-    console.log("Error during login query:", err);
-    res.send("An error occurred during login.");
+    console.log(err);
   }
 });
 
-//TEAM MANAGEMENT ROUTES :
+app.post("/create-teams", async (req, res) => {
+  const IDs = req.body.studentIDs;
+  const TEAMNAME = req.body.teamname;
 
-// Route to render the create teams page
-app.get("/create-team", async (req, res) => {
-  const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
-  try {
-    // Get students from the users table where usertype is 'student'
-    const result = await db.query(
-      "SELECT username FROM users WHERE usertype = $1",
-      ["student"]
-    );
-    const students = result.rows;
+  try{
+      await db.query("INSERT INTO groups (group_name) VALUES ($1)",
+        [TEAMNAME]
+      );
 
-    // Render the create-teams view, passing the instructor username and students
-    res.render("create-teams", {
-      instructorUsername: instructorUsername, // Pass the instructor username (used to access the instructor who created teams for displaying)
-      students: students,
-    });
-  } catch (error) {
-    console.error("Error fetching students:", error);
-    res.status(500).send("Internal Server Error");
+      if(Array.isArray(IDs)){
+        for(var i = 0; i < IDs.length; i++){
+          await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
+            [TEAMNAME, IDs[i]]
+          );
+        }
+      } else {
+        await db.query("UPDATE student SET id_group = $1 WHERE id = $2",
+          [TEAMNAME, IDs]
+        );
+      }
+
+    } catch(err){
+      console.log(err);
   }
 });
 

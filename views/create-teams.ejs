@@ -1,0 +1,19 @@
+<%- include('partials/header', { title: 'Instructor Dashboard' }) %>
+<form action="/create-teams" method="POST">
+    <label for="teamname">Team Name</label>
+    <input type="text" name="teamname" required />
+    <table>
+        <tr>
+            <th>Student name</th><th>Student ID</th><th>Enroll</th>
+        </tr>
+    <% for(var i = 0; i < StudentArr.length; i++) { %>
+        <tr>
+            <td><%= StudentArr[i].name %></td>
+            <td><%= StudentArr[i].id %></td>
+            <td><input type = "checkbox" name = "studentIDs" value = <%= studentArr[i].id %></td>
+        </tr>
+    <% } %>
+    </table>
+    <button type="submit">Confirm choice</button>
+</form>
+<%- include('partials/footer') %>
