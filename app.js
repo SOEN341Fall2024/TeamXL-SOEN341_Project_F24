@@ -8,6 +8,7 @@ import session from "express-session";
 import multer from "multer"; 
 import csv from "csv-parser"; 
 import fs from "fs"; 
+import { group } from "console";
 
 dotenv.config();
 
@@ -241,14 +242,26 @@ app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
         .on('data', async (row) => {
           const teamNameArray = [row.team_name.trim()];
           const studentNameArray = [row.student_name.trim()]; // Extract and trim student name from the row
+          const teamIDarray = [];
           try {
 
+            // Query to insert group
             for (var i = 0; i < teamNameArray.length; i++) {
               await db.query("INSERT INTO GROUPS(GROUP_NAME) VALUES ($1) ON CONFLICT (GROUP_NAME) DO NOTHING", [teamNameArray[i]]);
             }
 
+            // Query to find all group ID from group name
+            for (var i = 0; i < teamNameArray.length; i++) {
+              teamIDarray[i] = await db.query("select ID_GROUP from GROUPS where GROUP_NAME = $1 ", [teamNameArray[i]]);
+            }
+
+            for (var i = 0; i < teamNameArray.length; i++) {
+              teamIDarray[i] = await db.query("select ID_GROUP from GROUPS where GROUP_NAME = $1 ", [teamNameArray[i]]);
+            }
+
+            //Query to insert new student or to upadate students 
             for (var i = 0; i < studentNameArray.length; i++) {
-              await db.query("INSERT INTO student(NAME) VALUES ($1) ON CONFLICT (NAME) DO NOTHING", [studentNameArray[i]]);
+              await db.query("INSERT INTO student (NAME, PASSWORD, ID_GROUP ) VALUES ($1 , $2 , $3)", [studentNameArray[i], "!!098764321!!",teamIDarray[i]]);
             }
           
 
