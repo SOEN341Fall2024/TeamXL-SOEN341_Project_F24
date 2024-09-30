@@ -11,7 +11,7 @@ CREATE TABLE INSTRUCTOR (
 -- Create table for groups
 CREATE TABLE GROUPS (
     ID_GROUP SERIAL PRIMARY KEY,
-    GROUP_NAME VARCHAR(100)  -- Optional: add a name for the group
+    GROUP_NAME VARCHAR(100) UNIQUE -- Optional: add a name for the group
 );
 
 -- Create table for the students
