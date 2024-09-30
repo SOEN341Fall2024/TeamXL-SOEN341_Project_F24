@@ -253,6 +253,7 @@ app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
           const teamNameArray = [row.team_name.trim()];
           const studentNameArray = [row.student_name.trim()]; // Extract and trim student name from the row
           const teamIDarray = [];
+          const NameArray = [];
           try {
 
             // Query to insert group
@@ -264,6 +265,27 @@ app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
             for (var i = 0; i < teamNameArray.length; i++) {
               teamIDarray[i] = await db.query("select ID_GROUP from GROUPS where GROUP_NAME = $1 ", [teamNameArray[i]]);
             }
+
+            
+            for (var i = 0; i < studentNameArray.length; i++) {
+              // Query the name from the database
+              let result = await db.query("SELECT NAME FROM student WHERE NAME = $1", [studentNameArray[i]]);
+              
+              // Check if the name already exists in NameArray
+              let baseName = result.rows[0].name;  // Assume the query returns the name in lowercase 'name'
+              let finalName = baseName;
+              let count = 1;
+            
+              // Keep adding numbers to the name if it already exists in NameArray
+              while (NameArray.includes(finalName)) {
+                count++;
+                finalName = `${baseName}${count}`;
+              }
+            
+              // Assign the unique or original name to NameArray
+              NameArray[i] = finalName;
+            }
+
 
             //Query to insert new student or to upadate students 
             for (var i = 0; i < studentNameArray.length; i++) {
