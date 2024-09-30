@@ -190,7 +190,7 @@ app.post("/login", async (req, res) => {
           }
 
           req.session.userID =  user.id;
-          req.session.userType = user.type;
+          req.session.userType = user.usertype;
           
         } else {
           res.render("incorrect-pw-un.ejs");
