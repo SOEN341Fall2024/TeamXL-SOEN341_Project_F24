@@ -5,7 +5,8 @@ CREATE SEQUENCE student_id_seq START 1000;  -- Start student IDs from 1000
 CREATE TABLE INSTRUCTOR (
     ID SERIAL PRIMARY KEY, --Autoincrement to put unique ID
     NAME VARCHAR(100), 
-    PASSWORD VARCHAR(1000) NOT NULL
+    PASSWORD VARCHAR(1000) NOT NULL,
+    course_name varchar(50) UNIQUE
 );
 
 -- Create table for groups

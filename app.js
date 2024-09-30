@@ -131,6 +131,7 @@ app.post("/register", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
+  const course_name = req.body.course_name;
 
   try {
     const checkResult = await db.query(
@@ -149,6 +150,16 @@ app.post("/register", async (req, res) => {
             `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
             [username, hash]
           );
+          if(role == "student"){
+            const id_teach = await db.query(`SELECT ID_TEACHER FROM INSTRUCTOR WHERE course_name $1`,
+              [course_name]) 
+            await db.query(
+              `UPDATE STUDENT SET ID_teacher = $1 WHERE NAME = $2`,
+              [id_teach,username]
+            );
+
+          }
+
           res.render("registered-now-login.ejs");
         }
       });
