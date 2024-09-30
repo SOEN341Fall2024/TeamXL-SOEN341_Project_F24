@@ -243,6 +243,14 @@ app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
           const studentNameArray = [row.student_name.trim()]; // Extract and trim student name from the row
           try {
 
+            for (var i = 0; i < teamNameArray.length; i++) {
+              await db.query("INSERT INTO GROUPS(GROUP_NAME) VALUES ($1) ON CONFLICT (GROUP_NAME) DO NOTHING", [teamNameArray[i]]);
+            }
+
+            for (var i = 0; i < studentNameArray.length; i++) {
+              await db.query("INSERT INTO student(NAME) VALUES ($1) ON CONFLICT (NAME) DO NOTHING", [studentNameArray[i]]);
+            }
+          
 
           } catch (error) {
             console.error("Error processing student", error);
