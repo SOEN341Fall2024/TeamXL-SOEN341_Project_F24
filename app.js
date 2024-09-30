@@ -170,7 +170,6 @@ app.post("/register", async (req, res) => {
             );
 
           }
-
           res.render("registered-now-login.ejs");
         }
       });
@@ -262,10 +261,6 @@ app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
             }
 
             // Query to find all group ID from group name
-            for (var i = 0; i < teamNameArray.length; i++) {
-              teamIDarray[i] = await db.query("select ID_GROUP from GROUPS where GROUP_NAME = $1 ", [teamNameArray[i]]);
-            }
-
             for (var i = 0; i < teamNameArray.length; i++) {
               teamIDarray[i] = await db.query("select ID_GROUP from GROUPS where GROUP_NAME = $1 ", [teamNameArray[i]]);
             }
