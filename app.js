@@ -150,7 +150,7 @@ app.post("/register", async (req, res) => {
             `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
             [username, hash]
           );
-          if(role == "student"){
+          if(role.toLowerCase() == "student"){
             const id_teach = await db.query(`SELECT ID_TEACHER FROM INSTRUCTOR WHERE course_name $1`,
               [course_name]) 
             await db.query(
