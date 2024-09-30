@@ -142,7 +142,7 @@ app.post("/register", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
-  const course_name = req.body.course_name;
+ // const course_name = req.body.course_name;
 
   try {
     const checkResult = await db.query(
@@ -161,7 +161,7 @@ app.post("/register", async (req, res) => {
             `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
             [username, hash]
           );
-          if(role.toLowerCase() == "student"){
+         /* if(role.toLowerCase() == "student"){
             const id_teach = await db.query(`SELECT ID_TEACHER FROM INSTRUCTOR WHERE course_name $1`,
               [course_name]) 
             await db.query(
@@ -169,7 +169,7 @@ app.post("/register", async (req, res) => {
               [id_teach,username]
             );
 
-          }
+          }*/
           res.render("registered-now-login.ejs");
         }
       });
@@ -263,33 +263,20 @@ app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
 
             // Query to find all group ID from group name
             for (var i = 0; i < teamNameArray.length; i++) {
-              teamIDarray[i] = await db.query("select ID_GROUP from GROUPS where GROUP_NAME = $1 ", [teamNameArray[i]]);
-            }
-
-            
-            for (var i = 0; i < studentNameArray.length; i++) {
-              // Query the name from the database
-              let result = await db.query("SELECT NAME FROM student WHERE NAME = $1", [studentNameArray[i]]);
+              const result = await db.query("SELECT ID_GROUP FROM GROUPS WHERE GROUP_NAME = $1", [teamNameArray[i]]);
               
-              // Check if the name already exists in NameArray
-              let baseName = result.rows[0].name;  // Assume the query returns the name in lowercase 'name'
-              let finalName = baseName;
-              let count = 1;
-            
-              // Keep adding numbers to the name if it already exists in NameArray
-              while (NameArray.includes(finalName)) {
-                count++;
-                finalName = `${baseName}${count}`;
+              // Assuming the result.rows is an array and you're interested in the first row
+              if (result.rows.length > 0) {
+                  teamIDarray[i] = result.rows[0].id_group; // Make sure to access the correct field name
+              } else {
+                  teamIDarray[i] = null; // or handle the case where no group is found
               }
-            
-              // Assign the unique or original name to NameArray
-              NameArray[i] = finalName;
-            }
+          }
 
-
+            const password = "!!098764321!!";
             //Query to insert new student or to upadate students 
             for (var i = 0; i < studentNameArray.length; i++) {
-              await db.query("INSERT INTO student (NAME, PASSWORD, ID_GROUP ) VALUES ($1 , $2 , $3)", [studentNameArray[i], "!!098764321!!",teamIDarray[i]]);
+              await db.query("INSERT INTO student (NAME, PASSWORD, ID_GROUP ) VALUES ($1 , $2 , $3)", [studentNameArray[i], password,parseInt(teamIDarray[i])]);
             }
           
 
