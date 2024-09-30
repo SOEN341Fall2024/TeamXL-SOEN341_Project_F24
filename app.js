@@ -206,7 +206,7 @@ app.post("/create-teams", async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
 
-  try{
+    try{
       await db.query("INSERT INTO groups (group_name) VALUES ($1)",
         [TEAMNAME]
       );
@@ -222,6 +222,40 @@ app.post("/create-teams", async (req, res) => {
           [TEAMNAME, IDs]
         );
       }
+
+          // Step 3: If a CSV file is uploaded, process it
+      if (req.file) {
+        const filePath = req.file.path; // Path to the uploaded file
+
+      // Parse the CSV file
+        fs.createReadStream(filePath)
+          .pipe(csv()) // Use csv-parser to read the CSV file
+          .on('data', async (row) => {
+        const studentName = row.student_name.trim(); // Extract and trim student name from the row
+
+        // Fetch student ID from the database using the student's name
+        const studentResult = await db.query("SELECT id FROM student WHERE name = $1", [studentName]);
+
+        if (studentResult.rows.length > 0) {
+          const studentID = studentResult.rows[0].id;
+
+          // Update the student's group in the database
+          await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [TEAMNAME, studentID]);
+        } else {
+          console.log(`Student ${studentName} not found in the database.`);
+        }
+        })
+
+        .on('end', () => {
+          console.log('CSV file successfully processed');
+          // Optionally, delete the uploaded file after processing
+          fs.unlinkSync(filePath);
+        });
+        
+    }
+
+    // Step 4: Redirect or send a success response
+    res.redirect("/view-teams");
 
     } catch(err){
       console.log(err);
