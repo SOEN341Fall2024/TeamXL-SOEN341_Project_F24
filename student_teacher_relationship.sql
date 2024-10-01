@@ -5,13 +5,14 @@ CREATE SEQUENCE student_id_seq START 1000;  -- Start student IDs from 1000
 CREATE TABLE INSTRUCTOR (
     ID SERIAL PRIMARY KEY, --Autoincrement to put unique ID
     NAME VARCHAR(100), 
-    PASSWORD VARCHAR(1000) NOT NULL
+    PASSWORD VARCHAR(1000) NOT NULL,
+    course_name varchar(50) UNIQUE
 );
 
 -- Create table for groups
 CREATE TABLE GROUPS (
-    ID_GROUP INTEGER PRIMARY KEY,
-    GROUP_NAME VARCHAR(100)  -- Optional: add a name for the group
+    ID_GROUP SERIAL PRIMARY KEY,
+    GROUP_NAME VARCHAR(100) UNIQUE -- Optional: add a name for the group
 );
 
 -- Create table for the students
@@ -22,7 +23,7 @@ CREATE TABLE STUDENT (
     ID_teacher INTEGER,
     PASSWORD VARCHAR(1000) NOT NULL,
     FOREIGN KEY (ID_GROUP) REFERENCES GROUPS(ID_GROUP),
-    FOREIGN KEY (ID_teacher) REFERENCES INSTRUCTOR(ID)  
+    FOREIGN KEY (ID_teacher) REFERENCES INSTRUCTOR(ID),
 );
 -- Create table for the evaluation
 CREATE TABLE EVALUATION (
@@ -35,6 +36,19 @@ CREATE TABLE EVALUATION (
     FOREIGN KEY (ID_EVALUATEE) REFERENCES STUDENT(ID),
     UNIQUE (ID_EVALUATOR, ID_EVALUATEE)
 );
+
+
+/*
+-- Create join table for many-to-many relationship between STUDENT and GROUPS
+CREATE TABLE STUDENT_GROUPS (
+    ID_STUDENT INTEGER,
+    ID_GROUP INTEGER,
+    PRIMARY KEY (ID_STUDENT, ID_GROUP), -- Composite primary key to avoid duplicates
+    FOREIGN KEY (ID_STUDENT) REFERENCES STUDENT(ID),
+    FOREIGN KEY (ID_GROUP) REFERENCES GROUPS(ID_GROUP)
+);
+*/
+
 
 -- Create an index to order by STUDENT_NAME
 CREATE INDEX IDX_STUDENT_NAME ON STUDENT(NAME);
