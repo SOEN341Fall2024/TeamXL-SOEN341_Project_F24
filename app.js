@@ -46,7 +46,7 @@ app.get("/", (req, res) => {
 });
 
 // Route for the login page, render the login.ejs view
-app.get("/login", (req, res) => {
+app.get("/login", (req, res) => { 
   res.render("login.ejs");
 });
 
