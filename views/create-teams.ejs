@@ -1,10 +1,13 @@
 <%- include('partials/header', { title: 'Instructor Dashboard' }) %>
-<form action="/create-teams" method="POST">
-    <label for="teamname">Team Name</label>
-    <input type="text" name="teamname" required />
+<form action="/create-teams" method="POST" enctype="multipart/form-data">
+    <label for="teamname">Team Name:</label>
+    <input type="text" name="teamname" id="teamname" />
+
     <table>
         <tr>
-            <th>Student name</th><th>Student ID</th><th>Enroll</th>
+            <th>Student Name</th>
+            <th>Student ID</th>
+            <th>Enroll</th>
         </tr>
     <% for(var i = 0; i < StudentArr.length; i++) { %>
         <tr>
@@ -13,7 +16,22 @@
             <td><input type = "checkbox" name = "studentIDs" value = <%= studentArr[i].id %>></input></td>
         </tr>
     <% } %>
+        <% for (var i = 0; i < StudentArr.length; i++) { %>
+            <tr>
+                <td><%= StudentArr[i].name %></td>
+                <td><%= StudentArr[i].id %></td>
+                <td>
+                    <input type="checkbox" name="studentIDs" value="<%= StudentArr[i].id %>">
+                </td>
+            </tr>
+        <% } %>
     </table>
-    <button type="submit">Confirm choice</button>
+
+    <div>
+        <label for="csvfile">Upload CSV File (Optional):</label>
+        <input type="file" name="csvfile" id="csvfile" accept=".csv" />
+    </div>
+
+    <button type="submit">Create Teams</button>
 </form>
 <%- include('partials/footer') %>
