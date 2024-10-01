@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import session from express-session;
+import session from "express-session";
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
-app.use(session({ secret: "key" }));
+app.use(session({ secret: "key", resave: false, saveUninitialized: true }));
 
 // Create a new PostgreSQL client for database connection
 const db = new pg.Client({
@@ -229,5 +229,7 @@ app.post("/create-teams", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
 });
+
+
 
 
