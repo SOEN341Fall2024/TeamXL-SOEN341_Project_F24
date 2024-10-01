@@ -7,112 +7,197 @@
   <title>Edit Team</title>
   <!-- Add Bootstrap CDN -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  
   <style>
-    
+    /* Set Arial as the font for the entire body */
     body {
       font-family: Arial, sans-serif;
     }
-    
-    .card-custom {
+
+    /* Larger font for text elements */
+    .large-font {
+      font-size: 1.5rem; 
+    }
+
+    /* Heading style to match create-teams */
+    .heading-font {
+      font-size: 3rem; 
+    }
+
+    /* Make the card bigger and have the same styling as create-teams */
+    .card {
+      width: 200%; 
+      max-width: 900px; /* Increase the max-width to make it larger */
+      padding: 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       background-color: #f8f9fa;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 1000px;
-      padding: 40px;
-      min-height: 500px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a shadow for better visibility */
+      margin: 0 auto; /* Centers the card horizontally */
     }
 
-    .student-checkbox {
-      margin-right: 10px;
+    /* Taller box for the whole form area */
+    .taller-box {
+      min-height: 700px;
+      padding: 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .btn-custom {
-      background-color: #007bff;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      cursor: pointer;
+    /* Form group margin */
+    .form-group {
+      margin-bottom: 1.5rem;
     }
 
-    .btn-remove {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      margin-left: 10px;
-    }
-
-    .btn-remove-all {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      margin-top: 10px;
-    }
-
-    .student-list {
-      max-height: 200px;
+    /* Checkbox group styling */
+    .checkbox-group {
+      max-height: 300px;
       overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: white;
     }
 
-    .centered-container {
-      max-width: 800px;
-      margin: 0 auto;
+    /* Larger font for form labels */
+    .form-label {
+      font-size: 1.5rem; 
+    }
+
+    /* Larger font for checkbox labels */
+    .checkbox-group label {
+      font-size: 1.05rem; 
+    }
+
+    /* Custom button styles */
+    .btn-submit {
+      padding: 1rem 2rem;  /* Adjust padding for size */
+      font-size: 1.1rem;    /* Adjust font size */
+      background-color: #007bff; /* Blue background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      border-radius: 5px; /* Rounded corners */
+    }
+
+    /* Same style for the "Save New Students" button */
+    .btn-custom {
+      padding: 1rem 2rem;  /* Adjust padding for size */
+      font-size: 1rem;    /* Adjust font size */
+      background-color: #007bff; /* Blue background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      border-radius: 5px; /* Rounded corners */
+    }
+
+    .btn-submit, .btn-custom {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+
+    /* Styles for the Remove All button */
+    .btn-remove-all {
+      background-color: #dc3545; /* Red background */
+      font-size: 1rem;    /* Adjust font size */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      border-radius: 5px; /* Rounded corners */
+      padding: 1rem 2rem; /* Adjust padding for size */
+    }
+
+    /* Styles for the confirmation message */
+    #confirmationMessage {
+      display: none;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    /* Styles for the error messages */
+    .error-message {
+      display: none;
+      color: red;
+      margin-top: 10px;
+      text-align: left;
     }
 
     .container {
       display: flex;
-      justify-content: center; 
-      align-items: center;     
-      min-height: 100vh;      
+      justify-content: center;    /* Horizontally centers the card */
+      align-items: center;        /* Vertically centers the card */
+      height: 100vh;              /* Takes up the full viewport height */
+      width: 100vw;               /* Takes full width of the viewport */
+      padding: 0 2rem;            /* Add some padding to avoid overflow */
+      box-sizing: border-box;      /* Ensure padding is included in the width calculations */
     }
 
     .centered-container {
-      max-width: 800px;
+      max-width: 1500px;
       width: 100%;
       padding: 20px;
     }
+
+
+    .btn-remove {
+      background-color: #dc3545; /* Red background */
+      color: white; /* White text */
+      border: none; /* Remove border */
+      border-radius: 5px; /* Rounded corners */
+      padding: 0.3rem 1rem; /* Adjust padding */
+    }
   </style>
 </head>
+
 <body>
 
-    <%
-      // Mock Data for Testing
-      const teams = [
-        { id: 1, name: 'Team Alpha', members: [] },
-        { id: 2, name: 'Team Bravo', members: [] },
-        { id: 3, name: 'Team Charlie', members: [] }
-      ];
+  <%
+    // Mock Data for Testing
+    const teams = [
+      { id: 1, name: 'Team Alpha', members: [] },
+      { id: 2, name: 'Team Bravo', members: [] },
+      { id: 3, name: 'Team Charlie', members: [] }
+    ];
 
-      const availableStudents = [
-        { id: 1, name: 'Kevin' }, 
-        { id: 2, name: 'Joyal' }, 
-        { id: 3, name: 'Aditi' },
-        { id: 4, name: 'Owen' }, 
-        { id: 5, name: 'Oussama' }, 
-        { id: 6, name: 'Jonathan' },
-        { id: 7, name: 'Emily' },
-        { id: 8, name: 'Michael' },
-        { id: 9, name: 'Sophia' },
-        { id: 10, name: 'James' },
-        { id: 11, name: 'Olivia' }
-      ];
+    const availableStudents = [
+      { id: 1, name: 'Kevin' }, 
+      { id: 2, name: 'Joyal' }, 
+      { id: 3, name: 'Aditi' },
+      { id: 4, name: 'Owen' }, 
+      { id: 5, name: 'Oussama' }, 
+      { id: 6, name: 'Jonathan' },
+      { id: 7, name: 'Emily' },
+      { id: 8, name: 'Michael' },
+      { id: 9, name: 'Sophia' },
+      { id: 10, name: 'James' },
+      { id: 11, name: 'Olivia' }
+    ];
 
-      // Store removed students to highlight in the available list
-      let removedStudents = [];
-      let newStudents = [];
-    %>
-    
+    // Store removed students to highlight in the available list
+    let removedStudents = [];
+    let newStudents = [];
+  %>
+
   <!-- Center the card using Bootstrap classes -->
   <div class="container mt-5">
     <div class="centered-container">
-      <!-- Custom card with updated background color -->
-      <div class="card card-custom p-6">
-        <h2 class="text-center mb-4">Edit Team</h2>
+      <!-- Custom card with updated background color and padding -->
+      <div class="card taller-box">
+        <h2 class="text-center heading-font">Edit Teams</h2>
 
         <!-- Form to edit the team -->
         <form id="editTeamForm" onsubmit="return showConfirmation()">
           <!-- Dropdown to select team -->
           <div class="form-group">
-            <label for="teamSelect">Select Team</label>
+            <label for="teamSelect" class="form-label">Select Team</label>
             <select id="teamSelect" name="team" class="form-control" onchange="switchTeam()">
               <% teams.forEach(function(team) { %>
                 <option value="<%= team.id %>"><%= team.name %></option>
@@ -122,7 +207,7 @@
 
           <!-- Input to change the team name -->
           <div class="form-group">
-            <label for="teamName">Change Team Name</label>
+            <label for="teamName" class="form-label">Change Team Name</label>
             <input type="text" id="teamName" name="teamName" class="form-control">
           </div>
 
@@ -132,7 +217,7 @@
               <h5>List of Students</h5>
               <!-- Search input for filtering students -->
               <input type="text" id="studentSearch" class="form-control mb-2" placeholder="Search for students">
-              <ul id="studentList" class="list-group student-list">
+              <ul id="studentList" class="list-group student-list checkbox-group">
                 <% availableStudents.forEach(function(student) { %>
                   <li class="list-group-item" id="studentItem_<%= student.id %>">
                     <input type="checkbox" id="student_<%= student.id %>" class="student-checkbox" name="students[]" value="<%= student.id %>">
@@ -145,13 +230,13 @@
             <!-- Current Team Members -->
             <div class="col-md-6">
               <h5>Current Team Members</h5>
-              <ul id="currentMembersList" class="list-group student-list"></ul>
+              <ul id="currentMembersList" class="list-group student-list checkbox-group"></ul>
               <!-- Button to remove all current members -->
-              <button type="button" class="btn btn-remove-all btn-sm" onclick="removeAllMembers()">Remove All</button>
+              <button type="button" class="btn btn-remove-all btn-sm mt-3" onclick="removeAllMembers()">Remove All</button>
 
               <!-- New Students List & Save Button -->
               <h5 class="mt-3">New Students</h5>
-              <ul id="newStudentsList" class="list-group student-list"></ul>
+              <ul id="newStudentsList" class="list-group student-list checkbox-group"></ul>
               <!-- Button to save new students -->
               <button type="button" class="btn btn-custom btn-sm mt-2" onclick="saveNewStudents()">Save New Students</button>
             </div>
@@ -159,7 +244,7 @@
 
           <!-- Save Changes Button -->
           <div class="text-center mt-4">
-            <button type="submit" class="btn btn-custom">Save Changes</button>
+            <button type="submit" class="btn btn-submit">Save Changes</button>
           </div>
         </form>
       </div>
