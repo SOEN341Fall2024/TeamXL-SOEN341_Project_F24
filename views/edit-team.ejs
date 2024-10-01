@@ -232,6 +232,11 @@
           <div class="text-center mt-4">
             <button type="submit" class="btn btn-submit">Save Changes</button>
           </div>
+
+          <!-- Confirmation message -->
+          <div id="confirmationMessage" style="display: none;">
+            Team changes have been successfully saved!
+          </div>
         </form>
       </div>
     </div>
@@ -240,8 +245,19 @@
   <!-- Confirmation message for successfully saving the team -->
   <script>
     function showConfirmation() {
-      alert("Team changes have been successfully saved!");
-      return true; // Allow the form submission
+      // Prevent the form from submitting (for demonstration)
+      event.preventDefault(); 
+
+      // Display the confirmation message
+      document.getElementById('confirmationMessage').style.display = 'block';
+
+      // Optionally, reset the form or perform additional actions here
+      document.getElementById('editTeamForm').reset();
+
+      // Scroll to the top of the page to show the message (optional)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      return false; // Prevent default form submission for now
     }
   </script>
 
