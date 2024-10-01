@@ -196,7 +196,9 @@ app.post("/login", async (req, res) => {
       bcrypt.compare(loginPassword, user.password, (err, match) => {
         if (match) {
           // Check if the user is an instructor or student
-          if (user.origin === "instructor") {
+
+          console.log(user.origin);
+          if (user.origin === "INSTRUCTOR") {
             // Redirect to the instructor dashboard with the username
             res.redirect(
               `/instructor-dashboard?instructorUsername=${username}`
