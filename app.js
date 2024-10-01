@@ -24,7 +24,7 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
-app.use(session({ secret: "key" }));
+app.use(session({ secret: "key", resave: false, saveUninitialized: true }));
 
 // Setup for file uploads (Multer)
 const upload = multer({ dest: "uploads/" }); // Files will be uploaded to the 'uploads' directory
@@ -142,7 +142,7 @@ app.post("/register", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
- // const course_name = req.body.course_name;
+  const course_name = req.body.course_name;
 
   try {
     const checkResult = await db.query(
@@ -196,10 +196,11 @@ app.post("/login", async (req, res) => {
       bcrypt.compare(loginPassword, user.password, (err, match) => {
         if (match) {
           // Check if the user is an instructor or student
-          if (user.origin === "instructor") {
+          if (user.origin === "INSTRUCTOR") {
             // Redirect to the instructor dashboard with the username
-            res.redirect(
-              `/instructor-dashboard?instructorUsername=${username}`
+            res.render(
+              "instructor-dashboard.ejs",
+              { instructorUsername: user.name }
             );
           } else {
             res.render("student-dashboard.ejs"); // Render student dashboard
@@ -306,3 +307,4 @@ app.post("/create-teams", upload.single('csvfile'), async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
 });
+
