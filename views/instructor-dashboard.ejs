@@ -47,17 +47,38 @@
                       </ul>
                   </div>
 
-            </li>
-            <li>
-              <a href="#" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
-                  <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                  <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                </svg>
-                Notifications
-              </a>
-            </li>
-            <li>
+  <li class="nav-item dropdown"></li>
+  <a href="#" class="nav-link text-white dropdown-toggle" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+      <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+      <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+    </svg>
+    Notifications
+  </a>
+  
+  <!-- Dropdown Menu -->
+  <ul class="dropdown-menu p-3" aria-labelledby="notificationsDropdown" style="width: 300px;">
+    <!-- Header Section with Profile Icon and Close Button -->
+    <li class="d-flex justify-content-between align-items-center mb-3">
+      <!-- Profile Icon -->
+      <div class="d-flex align-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-circle me-2" viewBox="0 0 16 16">
+          <path d="M13.468 12.37C12.758 11.226 11.457 10.5 9.999 10.5c-1.457 0-2.758.726-3.468 1.87-.366.577-.568 1.148-.568 1.63 0 .22.034.431.1.625h7.872a2.23 2.23 0 0 0 .1-.625c0-.482-.202-1.053-.568-1.63z"/>
+          <path fill-rule="evenodd" d="M8 14a6 6 0 1 0 0-12 6 6 0 0 0 0 12zm0 1a7 7 0 1 1 0-14 7 7 0 0 1 0 14z"/>
+          <path fill-rule="evenodd" d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+        </svg>
+        <span>User Profile</span>
+      </div>
+      
+      <!-- Close Button -->
+      <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="dropdown"></button>
+    </li>
+     
+    <!-- Dropdown Items -->
+    <li><a class="dropdown-item" href="/private-messages">Private messages</a></li>
+    <li><a class="dropdown-item" href="/contacts">Contacts</a></li>
+  </ul>
+</li>
               <a href="#" class="nav-link text-white">
                 <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -125,22 +146,9 @@
       </div>
   </div>
 
-    <div class="row align-items-md-stretch">
-      <div class="col-md-6">
-        <div class="h-100 p-5 text-bg-dark rounded-3">
-          <h2>Change the background</h2>
-          <p>Swap the background-color utility and add a `.text-*` color utility to mix up the jumbotron look. Then, mix and match with additional component themes and more.</p>
-          <button class="btn btn-outline-light" type="button">Example button</button>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-          <h2>Add borders</h2>
-          <p>Or, keep it light and add a border for some added definition to the boundaries of your content. Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's content for equal-height.</p>
-          <button class="btn btn-outline-secondary" type="button">Example button</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  
+
+  
+
 
   <%- include('partials/footer') %>

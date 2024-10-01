@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "## Team Name > **IterationX**",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -14,9 +14,13 @@
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "bootstrap-icons": "^1.11.3",
+    "cookie-parser": "^1.4.6",
+    "csv-parser": "^3.0.0",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.0",
+    "express-session": "^1.18.0",
+    "multer": "^1.4.5-lts.1",
     "pg": "^8.13.0"
   }
 }
