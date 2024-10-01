@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import session from express-session;
+import session from "express-session";
 
 dotenv.config();
 
