@@ -96,24 +96,36 @@
         <!-- Card to create a grey box with rounded edges and taller height -->
         <div class="card bg-light rounded taller-box">
           <h2 class="text-center heading-font">Create Team</h2>
-          <!-- Form to create teams -->
-          <form action="/create-teams" method="POST" enctype="multipart/form-data">
-            
-            <!-- Team name input -->
+          <form id="createTeamForm" action="/create-teams" method="POST" enctype="multipart/form-data" class="large-font">
+
+            <!-- Form group for team name input -->
             <div class="form-group">
               <label for="teamName" class="form-label">Team Name</label>
               <input type="text" class="form-control" name="teamname" id="teamName" placeholder="Enter team name" required>
               <div id="teamNameError" class="error-message" style="display: none; color: red;">Please provide a name for the team</div>
             </div>
-
-            <!-- Section to select students -->
+          
+            <!-- Form group for selecting a random number of students -->
             <div class="form-group">
-              <label for="students" class="form-label">Select Students</label>
+              <div class="d-inline">
+                <label for="teamNumber" class="form-label">Select</label>
+                <input type="number" class="form-control d-inline w-25 ml-1 mr-2" id="teamNumber" placeholder="?" min="1">
+                <label class="form-label d-inline">Random Students</label>
+              </div>
+              <button type="button" class="btn btn-secondary mt-2 d-inline mr-2" onclick="selectRandomStudents()">Select Random Students</button>
+              <button type="button" class="btn btn-danger mt-2 d-inline" onclick="uncheckSelectedStudents()">Uncheck Selected Students</button>
+              <div id="notEnoughStudentsError" class="error-message" style="display: none; color: red;">Not enough students</div>
+            </div>
+          
+            <!-- Form group for selecting students -->
+            <div class="form-group">
+              <label for="students" class="form-label">List of Students (<span id="selectedCount">0</span> selected)</label>
+              <input type="text" class="form-control mb-2" placeholder="Search for students" id="searchStudents" onkeyup="filterStudents()">
               <div id="checkboxGroup" class="checkbox-group">
                 <% if (StudentArr && StudentArr.length > 0) { %>
                   <% StudentArr.forEach(function(student) { %>
                     <div>
-                      <input type="checkbox" name="studentIDs" value="<%= student.id %>" id="student_<%= student.id %>">
+                      <input type="checkbox" name="studentIDs" value="<%= student.id %>" id="student_<%= student.id %>" onclick="updateSelectedCount()">
                       <label for="student_<%= student.id %>"><%= student.name %></label>
                     </div>
                   <% }) %>
@@ -123,16 +135,21 @@
               </div>
               <div id="studentsError" class="error-message" style="display: none; color: red;">Please assign students to the team</div>
             </div>
-
-            <!-- Option to upload CSV -->
+          
+            <!-- CSV upload option -->
             <div class="form-group">
               <label for="csvfile">Upload CSV File (Optional):</label>
               <input type="file" name="csvfile" id="csvfile" accept=".csv" />
             </div>
-
+          
+            <!-- Confirmation message -->
+            <div id="confirmationMessage" style="display: none;">
+              Team created successfully!
+            </div>
+          
             <!-- Submit button -->
-            <button type="submit" class="btn btn-primary btn-submit mt-4">Create Team</button>
-          </form>
+            <button type="submit" class="btn btn-primary btn-block btn-submit mt-4">Create Teams</button>
+          </form>          
         </div>
       </div>
     </div>
