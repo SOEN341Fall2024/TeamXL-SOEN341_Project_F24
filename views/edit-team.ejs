@@ -9,35 +9,31 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   
   <style>
-    /* Set Arial as the font for the entire body */
+    
     body {
       font-family: Arial, sans-serif;
     }
 
-    /* Larger font for text elements */
     .large-font {
       font-size: 1.5rem; 
     }
 
-    /* Heading style to match create-teams */
     .heading-font {
       font-size: 3rem; 
     }
 
-    /* Make the card bigger and have the same styling as create-teams */
     .card {
       width: 200%; 
-      max-width: 900px; /* Increase the max-width to make it larger */
+      max-width: 900px;
       padding: 5rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
       background-color: #f8f9fa;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a shadow for better visibility */
-      margin: 0 auto; /* Centers the card horizontally */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 0 auto;
     }
 
-    /* Taller box for the whole form area */
     .taller-box {
       min-height: 700px;
       padding: 4rem;
@@ -46,12 +42,10 @@
       justify-content: space-between;
     }
 
-    /* Form group margin */
     .form-group {
       margin-bottom: 1.5rem;
     }
 
-    /* Checkbox group styling */
     .checkbox-group {
       max-height: 300px;
       overflow-y: auto;
@@ -60,38 +54,25 @@
       background-color: white;
     }
 
-    /* Larger font for form labels */
     .form-label {
       font-size: 1.5rem; 
     }
 
-    /* Larger font for checkbox labels */
     .checkbox-group label {
       font-size: 1.05rem; 
     }
 
-    /* Custom button styles */
     .btn-submit {
-      padding: 1rem 2rem;  /* Adjust padding for size */
-      font-size: 1.1rem;    /* Adjust font size */
-      background-color: #007bff; /* Blue background */
-      color: white; /* White text */
-      border: none; /* Remove border */
-      border-radius: 5px; /* Rounded corners */
+      padding: 1rem 2rem; 
+      font-size: 1.1rem; 
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
     }
 
-    /* Same style for the "Save New Students" button */
     .btn-custom {
-      padding: 1rem 2rem;  /* Adjust padding for size */
-      font-size: 1rem;    /* Adjust font size */
-      background-color: #007bff; /* Blue background */
-      color: white; /* White text */
-      border: none; /* Remove border */
-      border-radius: 5px; /* Rounded corners */
-    }
-
-    .btn-submit, .btn-custom {
-      padding: 1rem 2rem;
+      padding: 1rem 1rem;
       font-size: 1rem;
       background-color: #007bff;
       color: white;
@@ -99,18 +80,24 @@
       border-radius: 5px;
     }
 
-
-    /* Styles for the Remove All button */
-    .btn-remove-all {
-      background-color: #dc3545; /* Red background */
-      font-size: 1rem;    /* Adjust font size */
-      color: white; /* White text */
-      border: none; /* Remove border */
-      border-radius: 5px; /* Rounded corners */
-      padding: 1rem 2rem; /* Adjust padding for size */
+    .btn-submit, .btn-custom {
+      padding: 1rem 1rem;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
     }
 
-    /* Styles for the confirmation message */
+    .btn-remove-all {
+      background-color: #dc3545;
+      font-size: 1rem;
+      color: white; 
+      border: none;
+      border-radius: 5px;
+      padding: 1rem 1rem;
+    }
+
     #confirmationMessage {
       display: none;
       background-color: #d4edda;
@@ -122,7 +109,6 @@
       text-align: center;
     }
 
-    /* Styles for the error messages */
     .error-message {
       display: none;
       color: red;
@@ -132,12 +118,12 @@
 
     .container {
       display: flex;
-      justify-content: center;    /* Horizontally centers the card */
-      align-items: center;        /* Vertically centers the card */
-      height: 100vh;              /* Takes up the full viewport height */
-      width: 100vw;               /* Takes full width of the viewport */
-      padding: 0 2rem;            /* Add some padding to avoid overflow */
-      box-sizing: border-box;      /* Ensure padding is included in the width calculations */
+      justify-content: center;
+      align-items: center;
+      height: 100vh; 
+      width: 100vw; 
+      padding: 0 2rem; 
+      box-sizing: border-box; 
     }
 
     .centered-container {
@@ -148,11 +134,11 @@
 
 
     .btn-remove {
-      background-color: #dc3545; /* Red background */
-      color: white; /* White text */
-      border: none; /* Remove border */
-      border-radius: 5px; /* Rounded corners */
-      padding: 0.3rem 1rem; /* Adjust padding */
+      background-color: #dc3545;
+      color: white;
+      border: none; 
+      border-radius: 5px; 
+      padding: 0.2rem 1rem;
     }
   </style>
 </head>
