@@ -1,5 +1,5 @@
 <%- include('partials/header', { title: 'Instructor Dashboard' }) %>
-<form action="/create-teams" method="POST" enctype="multipart/form-data">
+<form action="/create-teams" method="POST">
     <label for="teamname">Team Name:</label>
     <input type="text" name="teamname" id="teamname" />
 
@@ -9,19 +9,19 @@
             <th>Student ID</th>
             <th>Enroll</th>
         </tr>
-    <% for(var i = 0; i < StudentArr.length; i++) { %>
+    <% for(var i = 0; i < StudentArr.rows.length; i++) { %>
         <tr>
-            <td><%= StudentArr[i].name %></td>
-            <td><%= StudentArr[i].id %></td>
-            <td><input type = "checkbox" name = "studentIDs" value = <%= studentArr[i].id %>></input></td>
+            <td><%= StudentArr.rows[i].name %></td>
+            <td><%= StudentArr.rows[i].id %></td>
+            <td><input type = "checkbox" name = "studentIDs" value = <%= StudentArr.rows[i].id %>></input></td>
         </tr>
     <% } %>
         <% for (var i = 0; i < StudentArr.length; i++) { %>
             <tr>
-                <td><%= StudentArr[i].name %></td>
-                <td><%= StudentArr[i].id %></td>
+                <td><%= StudentArr.rows[i].name %></td>
+                <td><%= StudentArr.rows[i].id %></td>
                 <td>
-                    <input type="checkbox" name="studentIDs" value="<%= StudentArr[i].id %>">
+                    <input type="checkbox" name="studentIDs" value="<%= StudentArr.rows[i].id %>">
                 </td>
             </tr>
         <% } %>
