@@ -308,3 +308,6 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
 });
 
+app.get("/edit-team", (req, res) => { 
+  res.render("edit-team.ejs");
+});
