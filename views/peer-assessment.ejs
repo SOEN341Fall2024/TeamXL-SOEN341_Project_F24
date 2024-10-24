@@ -6,39 +6,31 @@
     <title>Peer Assessment</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Set Arial as the font for the entire body */
+        /* Styling the overall body and layout */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f6f9; /* Light grey background */
+            background-color: #f4f6f9;
         }
 
-        /* Style for the heading of the page */
         .heading-font {
-            font-size: 2.5rem; 
+            font-size: 2.5rem;
             font-weight: bold;
             margin-bottom: 1.5rem;
         }
 
-        /* Adjust card style, padding, and shadow for a modern look */
         .card {
             padding: 2rem;
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff; /* White background for the card */
+            background-color: #ffffff;
         }
 
-        /* Increase margin between form groups for spacing */
-        .form-group {
-            margin-bottom: 2rem;
-        }
-
-        /* Increase padding and font size for form input */
+        /* Input and button styling */
         .form-control {
             padding: 1rem;
             font-size: 1.1rem;
         }
 
-        /* Style for the submit button */
         .btn-submit {
             padding: 0.75rem 1.5rem;
             font-size: 1.25rem;
@@ -47,33 +39,26 @@
             transition: background-color 0.3s ease;
         }
 
-        /* Hover effect for submit button */
         .btn-submit:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: #0056b3;
         }
 
-        /* Styling for dropdown menu */
+        /* Dropdown menu styling */
         .dropdown-menu {
             max-height: 300px;
             overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: white;
             width: 100%;
         }
 
-        /* Style for dropdown items */
         .dropdown-item {
             padding: 10px 15px;
-            cursor: pointer;
         }
 
-        /* Hover effect for dropdown items */
         .dropdown-item:hover {
             background-color: #f0f0f0;
         }
 
-        /* Styles for the confirmation message */
+        /* Confirmation message styling */
         #confirmationMessage {
             display: none;
             background-color: #d4edda;
@@ -100,9 +85,9 @@
                         <!-- Form group for peer search input -->
                         <div class="form-group">
                             <label for="peerSearch" class="form-label">Search for a Peer</label>
+                            <!-- Dropdown with search functionality -->
                             <input type="text" class="form-control" id="peerSearch" placeholder="Type to search...">
                             <div class="dropdown mt-2">
-                                <!-- Dropdown to show peer search results -->
                                 <div class="dropdown-menu w-100" id="peerDropdown"></div>
                             </div>
                         </div>
@@ -140,7 +125,7 @@
         function filterPeers() {
             const searchInput = document.getElementById('peerSearch').value.toLowerCase();
             const dropdown = document.getElementById('peerDropdown');
-            dropdown.innerHTML = '';
+            dropdown.innerHTML = ''; // Clear previous results
 
             const filteredPeers = peers.filter(peer => peer.name.toLowerCase().includes(searchInput));
 
