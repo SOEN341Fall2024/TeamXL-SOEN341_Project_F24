@@ -4,18 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Evaluation</title>
+    <!-- Bootstrap CSS for styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .rating {
+            display: flex;
+            justify-content: space-between;
+            max-width: 300px;
+        }
+        .rating label {
+            cursor: pointer;
+        }
+        .rating input {
+            display: none;
+        }
+        .rating label::before {
+            content: "★";
+            font-size: 1.5rem;
+            color: lightgray;
+        }
+        .rating input:checked ~ label::before {
+            color: gold;
+        }
+        .rating input:checked + label::before {
+            color: gold;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1 class="my-4 text-center">Student Peer Evaluation</h1>
         <form action="/submit-evaluation" method="POST">
-            <!-- Rating sections will go here -->
-            <button type="submit" class="btn btn-primary">Submit Evaluation</button>
-        </form>
-        <!-- Cooperation Rating -->
-        <div class="mb-3">
-            <h4>Cooperation</h4>
+            <!-- Cooperation Rating -->
+            <div class="mb-3">
+                <h4>Cooperation</h4>
                 <div class="rating">
                     <input type="radio" id="coop-5" name="cooperation" value="5">
                     <label for="coop-5"></label>
@@ -28,67 +50,71 @@
                     <input type="radio" id="coop-1" name="cooperation" value="1">
                     <label for="coop-1"></label>
                 </div>
-        </div>
-        <!-- Conceptual Contribution Rating -->
-        <div class="mb-3">
-            <h4>Conceptual Contribution</h4>
-            <div class="rating">
-                <input type="radio" id="concept-5" name="conceptual_contribution" value="5">
-                <label for="concept-5"></label>
-                <input type="radio" id="concept-4" name="conceptual_contribution" value="4">
-                <label for="concept-4"></label>
-                <input type="radio" id="concept-3" name="conceptual_contribution" value="3">
-                <label for="concept-3"></label>
-                <input type="radio" id="concept-2" name="conceptual_contribution" value="2">
-                <label for="concept-2"></label>
-                <input type="radio" id="concept-1" name="conceptual_contribution" value="1">
-                <label for="concept-1"></label>
             </div>
-        </div>
 
-        <!-- Practical Contribution Rating -->
-        <div class="mb-3">
-            <h4>Practical Contribution</h4>
-            <div class="rating">
-                <input type="radio" id="practical-5" name="practical_contribution" value="5">
-                <label for="practical-5"></label>
-                <input type="radio" id="practical-4" name="practical_contribution" value="4">
-                <label for="practical-4"></label>
-                <input type="radio" id="practical-3" name="practical_contribution" value="3">
-                <label for="practical-3"></label>
-                <input type="radio" id="practical-2" name="practical_contribution" value="2">
-                <label for="practical-2"></label>
-                <input type="radio" id="practical-1" name="practical_contribution" value="1">
-                <label for="practical-1"></label>
+            <!-- Conceptual Contribution Rating -->
+            <div class="mb-3">
+                <h4>Conceptual Contribution</h4>
+                <div class="rating">
+                    <input type="radio" id="concept-5" name="conceptual_contribution" value="5">
+                    <label for="concept-5"></label>
+                    <input type="radio" id="concept-4" name="conceptual_contribution" value="4">
+                    <label for="concept-4"></label>
+                    <input type="radio" id="concept-3" name="conceptual_contribution" value="3">
+                    <label for="concept-3"></label>
+                    <input type="radio" id="concept-2" name="conceptual_contribution" value="2">
+                    <label for="concept-2"></label>
+                    <input type="radio" id="concept-1" name="conceptual_contribution" value="1">
+                    <label for="concept-1"></label>
+                </div>
             </div>
-        </div>
 
-        <!-- Work Ethic Rating -->
-        <div class="mb-3">
-            <h4>Work Ethic</h4>
-            <div class="rating">
-                <input type="radio" id="ethic-5" name="work_ethic" value="5">
-                <label for="ethic-5"></label>
-                <input type="radio" id="ethic-4" name="work_ethic" value="4">
-                <label for="ethic-4"></label>
-                <input type="radio" id="ethic-3" name="work_ethic" value="3">
-                <label for="ethic-3"></label>
-                <input type="radio" id="ethic-2" name="work_ethic" value="2">
-                <label for="ethic-2"></label>
-                <input type="radio" id="ethic-1" name="work_ethic" value="1">
-                <label for="ethic-1"></label>
+            <!-- Practical Contribution Rating -->
+            <div class="mb-3">
+                <h4>Practical Contribution</h4>
+                <div class="rating">
+                    <input type="radio" id="practical-5" name="practical_contribution" value="5">
+                    <label for="practical-5"></label>
+                    <input type="radio" id="practical-4" name="practical_contribution" value="4">
+                    <label for="practical-4"></label>
+                    <input type="radio" id="practical-3" name="practical_contribution" value="3">
+                    <label for="practical-3"></label>
+                    <input type="radio" id="practical-2" name="practical_contribution" value="2">
+                    <label for="practical-2"></label>
+                    <input type="radio" id="practical-1" name="practical_contribution" value="1">
+                    <label for="practical-1"></label>
+                </div>
             </div>
-        </div>
 
-        <!-- Additional Feedback (Optional Feature) -->
-        <div class="mb-3">
-            <label for="comments" class="form-label">Additional Comments (Optional)</label>
-            <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Write any additional feedback here..."></textarea>
-        </div>
+            <!-- Work Ethic Rating -->
+            <div class="mb-3">
+                <h4>Work Ethic</h4>
+                <div class="rating">
+                    <input type="radio" id="ethic-5" name="work_ethic" value="5">
+                    <label for="ethic-5"></label>
+                    <input type="radio" id="ethic-4" name="work_ethic" value="4">
+                    <label for="ethic-4"></label>
+                    <input type="radio" id="ethic-3" name="work_ethic" value="3">
+                    <label for="ethic-3"></label>
+                    <input type="radio" id="ethic-2" name="work_ethic" value="2">
+                    <label for="ethic-2"></label>
+                    <input type="radio" id="ethic-1" name="work_ethic" value="1">
+                    <label for="ethic-1"></label>
+                </div>
+            </div>
 
+            <!-- Additional Feedback (Optional) -->
+            <div class="mb-3">
+                <label for="comments" class="form-label">Additional Comments (Optional)</label>
+                <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Write any additional feedback here..."></textarea>
+            </div>
 
-        
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Submit Evaluation</button>
+        </form>
+    </div>
 
-</div>
+    <!-- Bootstrap JS for handling UI interactions -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
