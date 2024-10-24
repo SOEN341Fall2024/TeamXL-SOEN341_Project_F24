@@ -7,36 +7,69 @@
     <!-- Bootstrap CSS for styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Centering text and container elements */
+        .text-center {
+            text-align: center;
+        }
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+        }
+        /* Rating system with interactive hover effect */
         .rating {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             max-width: 300px;
+            margin: 0 auto;
         }
         .rating label {
             cursor: pointer;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
         }
         .rating input {
             display: none;
         }
         .rating label::before {
             content: "★";
-            font-size: 1.5rem;
             color: lightgray;
+            transition: color 0.3s ease;
         }
+        /* Change star color when hovering */
+        .rating label:hover::before, 
+        .rating label:hover ~ label::before {
+            color: gold;
+        }
+        /* Change color for selected rating */
         .rating input:checked ~ label::before {
             color: gold;
         }
+        /* Smooth transition for selected rating */
         .rating input:checked + label::before {
             color: gold;
+        }
+        /* Style for form inputs */
+        textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        /* Animation for submit button hover */
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Title -->
         <h1 class="my-4 text-center">Student Peer Evaluation</h1>
+        
+        <!-- Evaluation Form -->
         <form action="/submit-evaluation" method="POST">
+            
             <!-- Cooperation Rating -->
-            <div class="mb-3">
+            <div class="mb-3 text-center">
                 <h4>Cooperation</h4>
                 <div class="rating">
                     <input type="radio" id="coop-5" name="cooperation" value="5">
@@ -53,7 +86,7 @@
             </div>
 
             <!-- Conceptual Contribution Rating -->
-            <div class="mb-3">
+            <div class="mb-3 text-center">
                 <h4>Conceptual Contribution</h4>
                 <div class="rating">
                     <input type="radio" id="concept-5" name="conceptual_contribution" value="5">
@@ -70,7 +103,7 @@
             </div>
 
             <!-- Practical Contribution Rating -->
-            <div class="mb-3">
+            <div class="mb-3 text-center">
                 <h4>Practical Contribution</h4>
                 <div class="rating">
                     <input type="radio" id="practical-5" name="practical_contribution" value="5">
@@ -87,7 +120,7 @@
             </div>
 
             <!-- Work Ethic Rating -->
-            <div class="mb-3">
+            <div class="mb-3 text-center">
                 <h4>Work Ethic</h4>
                 <div class="rating">
                     <input type="radio" id="ethic-5" name="work_ethic" value="5">
@@ -104,13 +137,15 @@
             </div>
 
             <!-- Additional Feedback (Optional) -->
-            <div class="mb-3">
+            <div class="mb-3 text-center">
                 <label for="comments" class="form-label">Additional Comments (Optional)</label>
                 <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Write any additional feedback here..."></textarea>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Submit Evaluation</button>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit Evaluation</button>
+            </div>
         </form>
     </div>
 
