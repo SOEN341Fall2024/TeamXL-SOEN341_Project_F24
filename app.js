@@ -60,7 +60,7 @@ app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
-// Route for the student dashboard page, render the student-dashboard view
+// Route for the student evaluation page, render the student-evaluation view
 app.get("/student-evaluation", (req, res) => {
   res.render("student-evaluation.ejs");
 });
