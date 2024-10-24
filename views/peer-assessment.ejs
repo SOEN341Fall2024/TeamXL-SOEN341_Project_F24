@@ -1,10 +1,194 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peer Assessment</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Set Arial as the font for the entire body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9; /* Light grey background */
+        }
+
+        /* Style for the heading of the page */
+        .heading-font {
+            font-size: 2.5rem; 
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Adjust card style, padding, and shadow for a modern look */
+        .card {
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff; /* White background for the card */
+        }
+
+        /* Increase margin between form groups for spacing */
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        /* Increase padding and font size for form input */
+        .form-control {
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Style for the submit button */
+        .btn-submit {
+            padding: 0.75rem 1.5rem;
+            font-size: 1.25rem;
+            background-color: #007bff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hover effect for submit button */
+        .btn-submit:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Styling for dropdown menu */
+        .dropdown-menu {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: white;
+            width: 100%;
+        }
+
+        /* Style for dropdown items */
+        .dropdown-item {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        /* Hover effect for dropdown items */
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Styles for the confirmation message */
+        #confirmationMessage {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Select a Peer for Assessment</h1>
-    <!-- Add peer selection form or list here -->
+    <!-- Container to center the form vertically and horizontally -->
+    <div class="container vh-100 d-flex justify-content-center align-items-center">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-8">
+                <!-- Card to create a grey box with rounded edges and shadow -->
+                <div class="card bg-light rounded">
+                    <!-- Page title -->
+                    <h2 class="text-center heading-font">Peer Assessment</h2>
+
+                    <!-- Form for peer assessment -->
+                    <form id="peerAssessmentForm" class="large-font">
+                        <!-- Form group for peer search input -->
+                        <div class="form-group">
+                            <label for="peerSearch" class="form-label">Search for a Peer</label>
+                            <input type="text" class="form-control" id="peerSearch" placeholder="Type to search...">
+                            <div class="dropdown mt-2">
+                                <!-- Dropdown to show peer search results -->
+                                <div class="dropdown-menu w-100" id="peerDropdown"></div>
+                            </div>
+                        </div>
+
+                        <!-- Confirmation message -->
+                        <div id="confirmationMessage">
+                            Peer selected successfully!
+                        </div>
+                        
+                        <!-- Select button -->
+                        <button type="button" class="btn btn-primary btn-block btn-submit mt-4" onclick="validateForm()">Select</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data for peers
+        const peers = [
+            { id: 1, name: 'Kevin' },
+            { id: 2, name: 'Joyal' },
+            { id: 3, name: 'Aditi' },
+            { id: 4, name: 'Owen' },
+            { id: 5, name: 'Oussama' },
+            { id: 6, name: 'Jonathan' },
+            { id: 7, name: 'Emily' },
+            { id: 8, name: 'Michael' },
+            { id: 9, name: 'Sophia' },
+            { id: 10, name: 'James' },
+            { id: 11, name: 'Olivia' }
+        ];
+
+        // Function to filter peers based on search input
+        function filterPeers() {
+            const searchInput = document.getElementById('peerSearch').value.toLowerCase();
+            const dropdown = document.getElementById('peerDropdown');
+            dropdown.innerHTML = '';
+
+            const filteredPeers = peers.filter(peer => peer.name.toLowerCase().includes(searchInput));
+
+            filteredPeers.forEach(peer => {
+                const item = document.createElement('a');
+                item.classList.add('dropdown-item');
+                item.href = '#';
+                item.textContent = peer.name;
+                item.onclick = () => selectPeer(peer);
+                dropdown.appendChild(item);
+            });
+
+            // Show the dropdown if there are results, otherwise hide it
+            if (filteredPeers.length > 0) {
+                dropdown.classList.add('show');
+            } else {
+                dropdown.classList.remove('show');
+            }
+        }
+
+        // Function to handle peer selection
+        function selectPeer(peer) {
+            document.getElementById('peerSearch').value = peer.name;
+            document.getElementById('peerDropdown').classList.remove('show');
+        }
+
+        // Function to validate the form inputs
+        function validateForm() {
+            const peerName = document.getElementById('peerSearch').value;
+
+            // Check if peer name is provided
+            if (!peerName) {
+                alert('Please select a peer.');
+                return;
+            }
+
+            // Show confirmation message
+            const confirmationMessage = document.getElementById('confirmationMessage');
+            confirmationMessage.style.display = 'block';
+
+            // Hide the message after 3 seconds
+            setTimeout(() => {
+                confirmationMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Event listener for search input
+        document.getElementById('peerSearch').addEventListener('input', filterPeers);
+    </script>
 </body>
 </html>
