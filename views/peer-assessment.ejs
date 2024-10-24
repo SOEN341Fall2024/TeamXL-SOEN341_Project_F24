@@ -6,7 +6,7 @@
     <title>Peer Assessment</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Styling the overall body and layout */
+        /* Styling for the page and form */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f6f9;
@@ -25,7 +25,6 @@
             background-color: #ffffff;
         }
 
-        /* Input and button styling */
         .form-control {
             padding: 1rem;
             font-size: 1.1rem;
@@ -43,19 +42,25 @@
             background-color: #0056b3;
         }
 
-        /* Dropdown menu styling */
-        .dropdown-menu {
+        /* Scrollable box for the list of students */
+        .scroll-box {
             max-height: 300px;
-            overflow-y: auto;
-            width: 100%;
+            overflow-y: scroll; /* Scrollbar will appear if content exceeds the height */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: white;
         }
 
-        .dropdown-item {
-            padding: 10px 15px;
+        /* Styling for the list items */
+        .student-item {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
         }
 
-        .dropdown-item:hover {
-            background-color: #f0f0f0;
+        .student-item:hover {
+            background-color: #f8f9fa;
         }
 
         /* Confirmation message styling */
@@ -85,11 +90,12 @@
                         <!-- Form group for peer search input -->
                         <div class="form-group">
                             <label for="peerSearch" class="form-label">Search for a Peer</label>
-                            <!-- Dropdown with search functionality -->
                             <input type="text" class="form-control" id="peerSearch" placeholder="Type to search...">
-                            <div class="dropdown mt-2">
-                                <div class="dropdown-menu w-100" id="peerDropdown"></div>
-                            </div>
+                        </div>
+
+                        <!-- Scrollable box for all students -->
+                        <div class="scroll-box" id="peerList">
+                            <!-- Student items will be dynamically generated here -->
                         </div>
 
                         <!-- Confirmation message -->
@@ -121,52 +127,62 @@
             { id: 11, name: 'Olivia' }
         ];
 
+        // Variable to store the temporarily selected peer
+        let selectedPeer = null;
+
+        // Function to render the full list of students in the scrollable box
+        function renderPeerList(filteredPeers = peers) {
+            const peerList = document.getElementById('peerList');
+            peerList.innerHTML = ''; // Clear previous list
+
+            // Generate list of peers
+            filteredPeers.forEach(peer => {
+                const item = document.createElement('div');
+                item.classList.add('student-item');
+                item.textContent = peer.name;
+                item.onclick = () => highlightSelectedPeer(peer, item); // Just highlight the peer
+                peerList.appendChild(item);
+            });
+        }
+
+        // Function to highlight the selected peer and store it in the variable
+        function highlightSelectedPeer(peer, item) {
+            // Remove highlights from all items
+            document.querySelectorAll('.student-item').forEach(el => el.style.backgroundColor = '');
+            
+            // Highlight the selected peer
+            item.style.backgroundColor = '#d4edda'; // Green highlight
+
+            // Temporarily store the selected peer
+            selectedPeer = peer;
+        }
+
         // Function to filter peers based on search input
         function filterPeers() {
             const searchInput = document.getElementById('peerSearch').value.toLowerCase();
-            const dropdown = document.getElementById('peerDropdown');
-            dropdown.innerHTML = ''; // Clear previous results
-
             const filteredPeers = peers.filter(peer => peer.name.toLowerCase().includes(searchInput));
-
-            filteredPeers.forEach(peer => {
-                const item = document.createElement('a');
-                item.classList.add('dropdown-item');
-                item.href = '#';
-                item.textContent = peer.name;
-                item.onclick = () => selectPeer(peer);
-                dropdown.appendChild(item);
-            });
-
-            // Show the dropdown if there are results, otherwise hide it
-            if (filteredPeers.length > 0) {
-                dropdown.classList.add('show');
-            } else {
-                dropdown.classList.remove('show');
-            }
+            renderPeerList(filteredPeers); // Re-render the list with filtered peers
         }
 
-        // Function to handle peer selection
-        function selectPeer(peer) {
-            document.getElementById('peerSearch').value = peer.name;
-            document.getElementById('peerDropdown').classList.remove('show');
-        }
-
-        // Function to validate the form inputs
+        // Function to validate the form inputs and confirm the selected peer
         function validateForm() {
-            const peerName = document.getElementById('peerSearch').value;
-
-            // Check if peer name is provided
-            if (!peerName) {
+            // Check if a peer has been selected
+            if (!selectedPeer) {
                 alert('Please select a peer.');
                 return;
             }
 
+            // Show the selected peer in the input box
+            document.getElementById('peerSearch').value = selectedPeer.name;
+
             // Show confirmation message
+            showConfirmationMessage();
+        }
+
+        // Show confirmation message when a peer is selected
+        function showConfirmationMessage() {
             const confirmationMessage = document.getElementById('confirmationMessage');
             confirmationMessage.style.display = 'block';
-
-            // Hide the message after 3 seconds
             setTimeout(() => {
                 confirmationMessage.style.display = 'none';
             }, 3000);
@@ -174,6 +190,9 @@
 
         // Event listener for search input
         document.getElementById('peerSearch').addEventListener('input', filterPeers);
+
+        // Render the full list of peers when the page loads
+        renderPeerList();
     </script>
 </body>
 </html>
