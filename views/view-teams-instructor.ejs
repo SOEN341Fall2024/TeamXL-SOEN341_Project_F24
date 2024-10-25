@@ -1,5 +1,5 @@
 <% for(var i = 0; i < Teams.rows.length; i++) { %>
-  <% if(i == 0 || Teams.rows[i].group_name != Teams.rows[i - 1]) { %>
+  <% if(i == 0 || Teams.rows[i].group_name != Teams.rows[i - 1].group_name) { %>
       <table>
           <caption> <%= Teams.rows[i].group_name %> </caption>
           <tr>
@@ -9,7 +9,7 @@
       <tr>
           <td><%= Teams.rows[i].name %></td><td><%= Teams.rows[i].id %></td>
       </tr>
-  <% if(i + 1 == Teams.rows.length || Teams.rows[i].group_name != Teams.rows[i + 1]) { %>
+  <% if(i + 1 == Teams.rows.length || Teams.rows[i].group_name != Teams.rows[i + 1].group_name) { %>
   </table>
   <% } %>
 <% } %>

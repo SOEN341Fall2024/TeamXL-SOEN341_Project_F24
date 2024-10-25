@@ -78,7 +78,7 @@ app.get("/instructor-dashboard", async (req, res) => {
 
 app.get("/create-teams", async (req, res) => {
   try {
-    const RESULT = await db.query("SELECT * FROM student");
+    const RESULT = await db.query("SELECT * FROM student WHERE id_group is NULL");
 
     res.render("create-teams.ejs", {
       StudentArr: RESULT,
@@ -91,24 +91,29 @@ app.get("/create-teams", async (req, res) => {
 app.get("/view-teams", async (req, res) => {
   console.log(req.session.userType);
   if (req.session.userType == "INSTRUCTOR") {
-    const DATA = await db.query(
-      "SELECT name, id, group_name FROM student, groups " +
-        "WHERE student.id_group = groups.id_group ORDER BY id_group ASC"
-    );
+    try{
+      const DATA = await db.query(
+        "SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY student.id_group ASC"
+      );
 
-    res.render("view-teams-instructor.ejs", {
-      Teams: DATA,
-    });
+      res.render("view-teams-instructor.ejs", {
+        Teams: DATA,
+      });
+    } catch(err){
+      console.log(err);
+      res.redirect("/");
+    }
   } else if (req.session.userType == "STUDENT") {
     try {
-      const groupID = await db.query(
+      const groupID_QUERY = await db.query(
         "SELECT id_group FROM student WHERE id = $1",
         [req.session.userID]
       );
 
+      const groupID = groupID_QUERY.rows[0].id_group;
+
       const DATA = await db.query(
-        "SELECT group_name, name FROM student, groups " +
-          "WHERE student.id_group = $1 AND student.id_group = groups.id_group",
+        "SELECT group_name, name FROM student, groups WHERE student.id_group = $1 AND student.id_group = groups.id_group",
         [groupID]
       );
 
@@ -131,13 +136,14 @@ app.get("/logout", (req, res) => {
 
 // Route to handle user registration
 app.post("/register", async (req, res) => {
-  const username = req.body.username;
+  const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
+  const course_name = req.body.course_name;
 
   try {
     const checkResult = await db.query(
-      "SELECT * FROM users WHERE username = $1",
+      `SELECT * FROM ${role} WHERE name = $1`,
       [username]
     );
 
@@ -149,9 +155,18 @@ app.post("/register", async (req, res) => {
           console.error("Error hashing password:", err);
         } else {
           await db.query(
-            "INSERT INTO users (username, password, userType) VALUES ($1, $2, $3)",
-            [username, hash, role]
+            `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
+            [username, hash]
           );
+          if(role.toLowerCase() == "student"){
+            const id_teach = await db.query(`SELECT ID_TEACHER FROM INSTRUCTOR WHERE course_name $1`,
+              [course_name]) 
+            await db.query(
+              `UPDATE STUDENT SET ID_teacher = $1 WHERE NAME = $2`,
+              [id_teach,username]
+            );
+
+          }
           res.render("registered-now-login.ejs");
         }
       });
@@ -168,13 +183,10 @@ app.post("/login", async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT NAME,password,'INSTRUCTOR' AS origin FROM INSTRUCTOR WHERE NAME = '${username}' UNION SELECT NAME,password,'STUDENT' AS origin FROM STUDENT WHERE NAME = '${username}' ;`
+      `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = '${username}' UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = '${username}' ;`
     );
 
-    const result2 = await db.query("SELECT * FROM users WHERE username = $1", [
-      username,
-    ]);
-    req.session.userID = result2.username;
+    req.session.userID = result.rows[0].id;
 
     if (result.rows.length > 0) {
       const user = result.rows[0];
@@ -201,6 +213,7 @@ app.post("/login", async (req, res) => {
       });
     } else {
       res.render("incorrect-pw-un.ejs");
+      console.log("incorrect login");
     }
   } catch (err) {
     console.log(err);
@@ -215,16 +228,19 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
     if (IDs != null && TEAMNAME) {
       await db.query("INSERT INTO groups (group_name) VALUES ($1)", [TEAMNAME]);
 
+      const TEAM_ID_QUERY_RESULT = await db.query("SELECT id_group FROM groups WHERE group_name = $1", [TEAMNAME]);
+      const TEAM_ID = TEAM_ID_QUERY_RESULT.rows[0].id_group;
+
       if (Array.isArray(IDs)) {
         for (var i = 0; i < IDs.length; i++) {
           await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
-            TEAMNAME,
+            TEAM_ID,
             IDs[i],
           ]);
         }
       } else {
         await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
-          TEAMNAME,
+          TEAM_ID,
           IDs,
         ]);
       }
