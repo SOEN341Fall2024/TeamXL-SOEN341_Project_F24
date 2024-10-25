@@ -316,3 +316,8 @@ app.listen(port, () => {
 app.get("/edit-team", (req, res) => { 
   res.render("edit-team.ejs");
 });
+
+//Peer assessment page route
+app.get('/peer-assessment', (req, res) => {
+  res.render('peer-assessment');
+});
