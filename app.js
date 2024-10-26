@@ -116,7 +116,7 @@ app.get("/edit-team", (req, res) => {
 });
 
 // Route for the PROFILE page
-app.get("/profile.ejs", (req, res) => {
+app.get("/profile", (req, res) => {
   res.render("profile.ejs");
 });
 
