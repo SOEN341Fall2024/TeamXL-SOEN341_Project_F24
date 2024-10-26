@@ -7,34 +7,56 @@
     <!-- Bootstrap CSS for styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Centering text and container elements */
-        .text-center {
+        /* Black Gradient background for the title banner */
+        .title-banner {
+            background: linear-gradient(135deg, #222529, #222529);
+            color: white; 
+            padding: 30px;
+            margin-bottom: 40px;
             text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
+
+        /* Main container styling */ 
         .container {
             margin-top: 50px;
-            max-width: 600px;
+            max-width: 700px;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-        /* Black background behind the title */
-        .title-banner {
-            background-color: #222529;
-            color: white;
+
+        /* Criterion box styling */
+        .criterion-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
             padding: 20px;
             margin-bottom: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        /* Rating system with interactive hover effect */
+        .criterion-box h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #222529;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Rating system */
         .rating {
             display: flex;
             justify-content: center;
             max-width: 300px;
             margin: 0 auto;
-            flex-direction: row-reverse; 
+            flex-direction: row-reverse;
         }
-        .rating label {
+        .rating label { 
             cursor: pointer;
             font-size: 1.5rem;
-            transition: color 0.3s ease; 
+            transition: color 0.3s ease;
         }
         .rating input {
             display: none;
@@ -44,46 +66,32 @@
             color: lightgray;
             transition: color 0.3s ease;
         }
-        /* Change star color when hovering */
-        .rating label:hover::before, 
-        .rating label:hover ~ label::before {
-            color: gold;
-        }
-        /* Change color for selected rating */
+        .rating label:hover::before,
+        .rating label:hover ~ label::before,
         .rating input:checked ~ label::before {
             color: gold;
         }
-        /* Smooth transition for selected rating */
-        .rating input:checked + label::before {
-            color: gold;
+
+        /* Additional Comments Styling */
+        .form-section {
+            margin-bottom: 50px; /* Adds extra space below the comments box */
         }
-        /* Style for form inputs */
-        textarea:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-        /* Animation for submit button hover */
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transition: background-color 0.3s ease;
-        }
+
         /* Warning message styling */
         .warning {
             color: red;
             font-size: 0.9rem;
-            display: none; /* Initially hidden */
+            display: none;
             margin-top: 5px;
         }
     </style>
     <script>
         function validateForm(event) {
-            // Select all star rating groups
             var cooperation = document.querySelector('input[name="cooperation"]:checked');
             var conceptualContribution = document.querySelector('input[name="conceptual_contribution"]:checked');
             var practicalContribution = document.querySelector('input[name="practical_contribution"]:checked');
             var workEthic = document.querySelector('input[name="work_ethic"]:checked');
 
-            // Hide all warnings initially
             document.getElementById("coop-warning").style.display = "none";
             document.getElementById("concept-warning").style.display = "none";
             document.getElementById("practical-warning").style.display = "none";
@@ -91,7 +99,6 @@
 
             var valid = true;
 
-            // Show warning if no rating is selected for each category
             if (!cooperation) {
                 document.getElementById("coop-warning").style.display = "block";
                 valid = false;
@@ -110,26 +117,26 @@
             }
 
             if (!valid) {
-                event.preventDefault(); // Prevent form submission if any field is not filled
+                event.preventDefault();
             }
         }
     </script>
 </head>
 <body>
 
-    <!-- Black Banner Header for Title -->
+    <!-- Title Banner -->
     <header class="title-banner">
         <h1>Student Peer Evaluation</h1>
     </header>
     
-    <!-- Main Content -->
+    <!-- Evaluation Form Container -->
     <div class="container">
         
         <!-- Evaluation Form -->
         <form action="/submit-evaluation" method="POST" onsubmit="validateForm(event)">
             
-            <!-- Cooperation Rating -->
-            <div class="mb-3 text-center">
+            <!-- Cooperation Criterion Box -->
+            <div class="criterion-box">
                 <h4>Cooperation</h4>
                 <div class="rating">
                     <input type="radio" id="coop-5" name="cooperation" value="5">
@@ -144,10 +151,11 @@
                     <label for="coop-1"></label>
                 </div>
                 <p id="coop-warning" class="warning">Please select a rating for Cooperation.</p>
+                <textarea class="form-control mt-3" name="cooperation_comments" rows="3" placeholder="Comments on cooperation..."></textarea>
             </div>
 
-            <!-- Conceptual Contribution Rating -->
-            <div class="mb-3 text-center">
+            <!-- Conceptual Contribution Criterion Box -->
+            <div class="criterion-box">
                 <h4>Conceptual Contribution</h4>
                 <div class="rating">
                     <input type="radio" id="concept-5" name="conceptual_contribution" value="5">
@@ -162,10 +170,11 @@
                     <label for="concept-1"></label>
                 </div>
                 <p id="concept-warning" class="warning">Please select a rating for Conceptual Contribution.</p>
+                <textarea class="form-control mt-3" name="conceptual_contribution_comments" rows="3" placeholder="Comments on conceptual contribution..."></textarea>
             </div>
 
-            <!-- Practical Contribution Rating -->
-            <div class="mb-3 text-center">
+            <!-- Practical Contribution Criterion Box -->
+            <div class="criterion-box">
                 <h4>Practical Contribution</h4>
                 <div class="rating">
                     <input type="radio" id="practical-5" name="practical_contribution" value="5">
@@ -180,10 +189,11 @@
                     <label for="practical-1"></label>
                 </div>
                 <p id="practical-warning" class="warning">Please select a rating for Practical Contribution.</p>
+                <textarea class="form-control mt-3" name="practical_contribution_comments" rows="3" placeholder="Comments on practical contribution..."></textarea>
             </div>
 
-            <!-- Work Ethic Rating -->
-            <div class="mb-3 text-center">
+            <!-- Work Ethic Criterion Box -->
+            <div class="criterion-box">
                 <h4>Work Ethic</h4>
                 <div class="rating">
                     <input type="radio" id="ethic-5" name="work_ethic" value="5">
@@ -198,22 +208,28 @@
                     <label for="ethic-1"></label>
                 </div>
                 <p id="ethic-warning" class="warning">Please select a rating for Work Ethic.</p>
+                <textarea class="form-control mt-3" name="work_ethic_comments" rows="3" placeholder="Comments on work ethic..."></textarea>
             </div>
 
-            <!-- Additional Feedback (Optional) -->
-            <div class="mb-3 text-center">
+            <!-- Additional Comments (Optional) with extra margin -->
+            <div class="form-section text-center mb-5">
                 <label for="comments" class="form-label">Additional Comments (Optional)</label>
                 <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Write any additional feedback here..."></textarea>
             </div>
 
-            <!-- Submit Button -->
-            <div class="text-center">
+            <!-- Submit Button --> 
+            <div class="text-center mb-5">
                 <button type="submit" class="btn btn-primary">Submit Evaluation</button>
             </div>
         </form>
-    </div>
-
+    </div> 
+ 
     <!-- Bootstrap JS for handling UI interactions -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+ 
+
+ 
+
+
