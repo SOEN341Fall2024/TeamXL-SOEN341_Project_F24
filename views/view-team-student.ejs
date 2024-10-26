@@ -1,13 +1,13 @@
 
 <table>
-    <caption><%= Team[0].group_name %></caption>
+    <caption><%= Team.rows[0].group_name %></caption>
     <tr>
         <th>Student name</th><th>Student ID</th>
     </tr>
-<% for(var i = 0; i < Team.length; i++) { %>
+<% for(var i = 0; i < Team.rows.length; i++) { %>
     <tr>
-        <td><%= StudentArr[i].name %></td>
-        <td><%= StudentArr[i].id %></td>
+        <td><%= Team.rows[i].name %></td>
+        <td><%= Team.rows[i].id %></td>
     </tr>
 <% } %>
 </table>

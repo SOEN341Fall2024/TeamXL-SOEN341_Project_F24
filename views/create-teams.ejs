@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <header>
   <div class="px-3 py-2 text-bg-dark border-bottom">
     <div class="mx-2">
@@ -9,7 +6,6 @@
           <svg class="mx-3" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-puzzle" viewBox="0 0 16 16">
           <h1>InsightSphere</h1>
         </a>
-
         <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
           <li>
             <a href="/instructor-dashboard" class="nav-link text-white">
@@ -162,13 +158,25 @@
               <label for="students" class="form-label">List of Students (<span id="selectedCount">0</span> selected)</label>
               <input type="text" class="form-control mb-2" placeholder="Search for students" id="searchStudents" onkeyup="filterStudents()">
               <div id="checkboxGroup" class="checkbox-group">
-                <% if (StudentArr && StudentArr.length > 0) { %>
-                  <% StudentArr.forEach(function(student) { %>
-                    <div>
-                      <input type="checkbox" name="studentIDs" value="<%= student.id %>" id="student_<%= student.id %>" onclick="updateSelectedCount()">
-                      <label for="student_<%= student.id %>"><%= student.name %></label>
-                    </div>
-                  <% }) %>
+                <% if (StudentArr.rows.length > 0) { %>
+                  <!--<form action="/create-teams" method="POST">-->
+                    <!--<label for="teamname">Team Name:</label>
+                    <input type="text" name="teamname" id="teamname" />-->
+                    <table>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Student ID</th>
+                            <th>Enroll</th>
+                        </tr>
+                        <% for (var i = 0; i < StudentArr.rows.length; i++) { %>
+                            <tr>
+                                <td><label for="student_<%= StudentArr.rows[i].name %>"><%= StudentArr.rows[i].name %></label></td>
+                                <td><%= StudentArr.rows[i].id %></td>
+                                <td><input type="checkbox" name="studentIDs" value="<%= StudentArr.rows[i].id %>">
+                                </td>
+                            </tr>
+                        <% } %>
+                    </table>
                 <% } else { %>
                   <div>No students found</div>
                 <% } %>
