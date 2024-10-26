@@ -56,6 +56,11 @@ app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
+// Route for the student evaluation page, render the student-evaluation view
+app.get("/student-evaluation", (req, res) => {
+  res.render("student-evaluation.ejs");
+});
+
 // Route for the instructor dashboard page
 app.get("/instructor-dashboard", async (req, res) => {
   const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
@@ -314,4 +319,13 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
 // Start the Express server. Server listening on port 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
+});
+
+app.get("/edit-team", (req, res) => { 
+  res.render("edit-team.ejs");
+});
+
+//Peer assessment page route
+app.get('/peer-assessment', (req, res) => {
+  res.render('peer-assessment');
 });
