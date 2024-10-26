@@ -329,3 +329,45 @@ app.get("/edit-team", (req, res) => {
 app.get('/peer-assessment', (req, res) => {
   res.render('peer-assessment');
 });
+
+// Route to render confirmation page with summary of data 
+app.get('/evaluation-confirmation', (req, res) => {
+    const data = req.session.evaluationData;
+    if (data) {
+        res.render('evaluation-confirmation', data);
+    } else {
+        res.redirect('/');
+    }
+});
+
+// Route to handle form submission and save data to session
+app.post('/submit-evaluation', (req, res) => {
+    req.session.evaluationData = {
+        cooperation: req.body.cooperation,
+        cooperation_comments: req.body.cooperation_comments,
+        conceptual_contribution: req.body.conceptual_contribution,
+        conceptual_contribution_comments: req.body.conceptual_contribution_comments,
+        practical_contribution: req.body.practical_contribution,
+        practical_contribution_comments: req.body.practical_contribution_comments,
+        work_ethic: req.body.work_ethic,
+        work_ethic_comments: req.body.work_ethic_comments,
+        additional_comments: req.body.comments
+    };
+    res.redirect('/evaluation-confirmation'); 
+});
+
+// Route to render the form with existing session data if available
+app.get('/submit-evaluation', (req, res) => {
+    const data = req.session.evaluationData || {};
+    res.render('student-evaluation', data);
+}); 
+
+
+// Route to handle final confirmation and show thank-you message
+app.post('/finalize-evaluation', (req, res) => {
+    // Clear session data after confirmation
+    req.session.evaluationData = null;
+
+    // Render the thank-you page with a confirmation message
+    res.render('thank-you', { message: 'Thank you! Your peer evaluation has been submitted.' });
+});
