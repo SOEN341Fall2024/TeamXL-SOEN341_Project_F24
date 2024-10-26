@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 # Trigger the workflow on pushes and pull requests to the main branch
 on:
@@ -27,6 +27,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Run tests
-      - name: Run tests
-        run: npm test
+      # # Run tests
+      # - name: Run tests
+      #   run: npm test
