@@ -10,6 +10,21 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: SOEN341test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: abcd1234
+        options: >-
+          --health-cmd "pg_isready -U postgres -d SOEN341test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -22,14 +37,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Create .env file with secrets
       - name: Create .env file
         run: |
-          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "DB_USER=postgres" >> .env
+          echo "DB_HOST=localhost" >> .env
+          echo "DB_NAME=SOEN341test" >> .env
+          echo "DB_PASSWORD=abcd1234" >> .env
+          echo "DB_PORT=5432" >> .env
+
+      - name: Wait for Postgres to start
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for postgres..."
+            sleep 2
+          done
 
       - name: Run tests
         run: npm test
