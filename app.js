@@ -212,6 +212,14 @@ app.get("/student-evaluation/:id", async (req, res) => {
   }
 });
 
+app.get("/view-my-reviews", async (req, res) => {
+  const RESULT = await db.query("SELECT * FROM evaluation WHERE id_evaluatee = $1", [req.session.userID]);
+
+  res.render("view-my-reviews.ejs", {
+    reviews: RESULT.rows,
+  });
+});
+
 //Route to LOGOUT
 app.get("/logout", (req, res) => {
   delete req.session.userID;
