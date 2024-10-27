@@ -60,11 +60,6 @@ app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
-// Route for the STUDENT DASHBOARD page, render the student-dashboard view
-app.post("/thank-you", (req, res) => {
-  res.render("thank-you.ejs");
-});
-
 
 
 // Route for the INSTRUCTOR DASHBOARD page
@@ -234,7 +229,15 @@ app.get("/cancel-review", async (req, res) => {
 
   delete req.session.peerID;
 
-  res.redirect("/");
+  res.redirect("/student-dashboard");
+});
+
+app.get("/edit-evaluation", async (req, res) => {
+
+  console.log( req.session.userID, 
+    req.session.peerID, );
+
+  res.render("student-evaluation.ejs", {conceptualContribution: 4});
 });
 
 //Route to LOGOUT
@@ -452,6 +455,12 @@ app.post("/submit-evaluation", async (req, res) => {
     work_ethic: req.body.work_ethic, 
     additional_comments: req.body.comments})
 });
+
+// Route for the STUDENT DASHBOARD page, render the student-dashboard view
+app.post("/thank-you", (req, res) => {
+  res.render("thank-you.ejs");
+});
+
 
 //--------START EXPRESS SERVER--------//
 
