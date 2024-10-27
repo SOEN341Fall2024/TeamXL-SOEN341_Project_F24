@@ -200,12 +200,12 @@ async function getStudentById(studentId) {
 
 // Route for the STUDENT EVALUATION page, render the student-evaluation.ejs view
 app.get("/student-evaluation/:id", async (req, res) => {
-  const studentId = req.params.id;
+  const studentId = req.session.peerID = req.params.id;
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   try {
     const student = await getStudentById(studentId);
-    res.render("student-evaluation", { student, userType, instructorUsername });
+    res.render("student-evaluation.ejs", { student, userType, instructorUsername });
   } catch (error) {
     console.error("Error fetching student for evaluation:", error);
     res.status(500).send("Server Error");
@@ -404,6 +404,23 @@ app.post("/student-evaluation", async (req, res) => {
   } else {
     res.status(404).send("Student not found");
   }
+});
+
+app.post("/submit-evaluation", async (req, res) => {
+  await db.query("INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)", 
+    [
+     req.session.userID, 
+     req.session.peerID, 
+     req.body.cooperation,
+     req.body.conceptual_contribution,
+     req.body.practical_contribution,
+     req.body.work_ethic,
+     req.body.comments
+    ]
+  )
+
+  //jonathan can add the /confirm-evaluation route
+  res.redirect("/confirm-evaluation")
 });
 
 //--------START EXPRESS SERVER--------//
