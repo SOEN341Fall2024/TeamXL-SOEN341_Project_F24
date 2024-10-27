@@ -1,4 +1,5 @@
-// Import necessary modules: Express for handling HTTP requests, body-parser for parsing request bodies, pg for PostgreSQL interaction, and bcrypt for password hashing
+// Import necessary modules: Express for handling HTTP requests,body-parser for parsing request bodies,
+//pg for PostgreSQL interaction, and bcrypt for password hashing
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
@@ -12,7 +13,8 @@ import { group } from "console";
 
 dotenv.config();
 
-// Create an instance of an Express application, specify port for the server to listen on, define the number of rounds for bcrypt hashing
+// Create an instance of an Express application, specify port for
+//the server to listen on, define the number of rounds for bcrypt hashing
 const app = express();
 const port = 3000;
 const saltRounds = 10;
@@ -36,44 +38,39 @@ const db = new pg.Client({
 });
 db.connect();
 
-// Route for the home page, render the home.ejs view
+//--------GET REQUESTS TO ROUTE TO ALL WEBPAGES OF THE WEBSITE--------//
+
+// Route for the HOME PAGE, render the home.ejs view
 app.get("/", (req, res) => {
   res.render("home.ejs");
 });
 
-// Route for the login page, render the login.ejs view
+// Route for the LOGIN PAGE, render the login.ejs view
 app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 
-// Route for the register page, render the register.ejs view
+// Route for the REGISTER PAGE, render the register.ejs view
 app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
-// Route for the student dashboard page, render the student-dashboard view
+// Route for the STUDENT DASHBOARD page, render the student-dashboard view
 app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
-// Route for the student evaluation page, render the student-evaluation view
-app.get("/student-evaluation", (req, res) => {
-  res.render("student-evaluation.ejs");
-});
-
-// Route for the instructor dashboard page
+// Route for the INSTRUCTOR DASHBOARD page
 app.get("/instructor-dashboard", async (req, res) => {
   const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
 
-  // Make sure to handle the case where instructorUsername is undefined
   if (!instructorUsername) {
-    return res.status(400).send("Instructor username is required.");
+    return res.status(400).send("Instructor username is required."); // Make sure to handle the case where instructorUsername is undefined
   }
 
   try {
-    // Render the instructor-dashboard view, passing the instructor username
     res.render("instructor-dashboard.ejs", {
-      instructorUsername: instructorUsername,
+      instructorUsername: instructorUsername, // Render the instructor-dashboard view, passing the instructor username
     });
   } catch (error) {
     console.error("Error rendering instructor dashboard:", error);
@@ -81,9 +78,12 @@ app.get("/instructor-dashboard", async (req, res) => {
   }
 });
 
+// Route for the CREATE TEAMS page
 app.get("/create-teams", async (req, res) => {
   try {
-    const RESULT = await db.query("SELECT * FROM student WHERE id_group is NULL");
+    const RESULT = await db.query(
+      "SELECT * FROM student WHERE id_group is NULL"
+    );
 
     res.render("create-teams.ejs", {
       StudentArr: RESULT,
@@ -93,53 +93,104 @@ app.get("/create-teams", async (req, res) => {
   }
 });
 
+// Route for the VIEW TEAMS page
 app.get("/view-teams", async (req, res) => {
-  console.log(req.session.userType);
-  if (req.session.userType == "INSTRUCTOR") {
-    try{
-      const DATA = await db.query(
-        "SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY student.id_group ASC"
-      );
-
-      res.render("view-teams-instructor.ejs", {
-        Teams: DATA,
-      });
-    } catch(err){
-      console.log(err);
-      res.redirect("/");
-    }
-  } else if (req.session.userType == "STUDENT") {
-    try {
-      const groupID_QUERY = await db.query(
-        "SELECT id_group FROM student WHERE id = $1",
-        [req.session.userID]
-      );
-
-      const groupID = groupID_QUERY.rows[0].id_group;
-
-      const DATA = await db.query(
-        "SELECT group_name, name FROM student, groups WHERE student.id_group = $1 AND student.id_group = groups.id_group",
-        [groupID]
-      );
-
-      res.render("view-team-student.ejs", {
-        Team: DATA,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  } else {
-    res.redirect("/");
+  try {
+    const Teams = await db.query("SELECT * FROM groups");
+    const StudentArr = await db.query("SELECT * FROM student");
+    res.render("view-teams-instructor", { Teams, StudentArr });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while fetching teams.");
   }
 });
 
+//Route for EDIT TEAMS page
+app.get("/edit-team", (req, res) => {
+  res.render("edit-team.ejs");
+});
+
+// Route for the PROFILE page
+app.get("/profile", (req, res) => {
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+
+  if (userType) {
+    res.render("profile.ejs", {
+      userType,
+      instructorUsername,
+    });
+  } else {
+    res.redirect("/login");
+  }
+});
+
+// Route for the PEER ASSESSMENT page
+app.get("/peer-assessment", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+
+  try {
+    if (userType) {
+      const result = await db.query(
+        "SELECT * FROM student WHERE LOWER(name) LIKE $1",
+        [`%${query}%`]
+      );
+      res.render("peer-assessment.ejs", {
+        query,
+        studentsList: result.rows, // Matching students
+        userType,
+        instructorUsername,
+        peers: result.rows, // Same as studentsList for clarity
+      });
+    } else {
+      res.redirect("/student-dashboard");
+      console.log("error");
+    }
+  } catch (error) {
+    console.error("Error during peer assessment search:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+//function to fetch student by ID
+async function getStudentById(studentId) {
+  try {
+    const result = await db.query("SELECT * FROM STUDENT WHERE ID = $1", [
+      studentId,
+    ]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    throw error;
+  }
+}
+
+// Route for the STUDENT EVALUATION page, render the student-evaluation.ejs view
+app.get("/student-evaluation/:id", async (req, res) => {
+  const studentId = req.params.id;
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+  try {
+    const student = await getStudentById(studentId);
+    res.render("student-evaluation", { student, userType, instructorUsername });
+  } catch (error) {
+    console.error("Error fetching student for evaluation:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+//Route to LOGOUT
 app.get("/logout", (req, res) => {
   delete req.session.userID;
   delete req.session.userType;
   res.redirect("/");
 });
 
-// Route to handle user registration
+//----POST REQUESTS FOR ALL THE WEBPAGES ----//
+
+// Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
@@ -163,15 +214,7 @@ app.post("/register", async (req, res) => {
             `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
             [username, hash]
           );
-          if(role.toLowerCase() == "student"){
-            const id_teach = await db.query(`SELECT ID_TEACHER FROM INSTRUCTOR WHERE course_name $1`,
-              [course_name]) 
-            await db.query(
-              `UPDATE STUDENT SET ID_teacher = $1 WHERE NAME = $2`,
-              [id_teach,username]
-            );
 
-          }
           res.render("registered-now-login.ejs");
         }
       });
@@ -181,7 +224,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Route to handle user login Jonathan
+// Route to handle user LOGIN
 app.post("/login", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const loginPassword = req.body.password;
@@ -197,20 +240,20 @@ app.post("/login", async (req, res) => {
       const user = result.rows[0];
       req.session.userType = user.origin;
 
-      // Debugging: Log the result
-      console.log("User found:", user);
+      console.log("User found:", user); // Debugging: Log the result
 
-      // Compare the password with the hashed password stored in the database
       bcrypt.compare(loginPassword, user.password, (err, match) => {
+        // Compare the password with the hashed password stored in the database
         if (match) {
           // Check if the user is an instructor or student
           if (user.origin === "INSTRUCTOR") {
             // Redirect to the instructor dashboard with the username
             res.render("instructor-dashboard.ejs", {
               instructorUsername: user.name,
+              userType: user.origin,
             });
           } else {
-            res.render("student-dashboard.ejs"); // Render student dashboard
+            res.render("student-dashboard.ejs", { userType: user.origin }); // Render student dashboard
           }
         } else {
           res.render("incorrect-pw-un.ejs");
@@ -226,6 +269,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Route to handle CREATE TEAMS form data
 app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
@@ -233,7 +277,10 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
     if (IDs != null && TEAMNAME) {
       await db.query("INSERT INTO groups (group_name) VALUES ($1)", [TEAMNAME]);
 
-      const TEAM_ID_QUERY_RESULT = await db.query("SELECT id_group FROM groups WHERE group_name = $1", [TEAMNAME]);
+      const TEAM_ID_QUERY_RESULT = await db.query(
+        "SELECT id_group FROM groups WHERE group_name = $1",
+        [TEAMNAME]
+      );
       const TEAM_ID = TEAM_ID_QUERY_RESULT.rows[0].id_group;
 
       if (Array.isArray(IDs)) {
@@ -316,21 +363,21 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
   }
 });
 
+// Route to handle PEER_ASSESSMENTS (SELECTED PEER) data
+app.post("/student-evaluation", async (req, res) => {
+  const studentId = req.body.studentRadio;
+  const student = await getStudentById(studentId);
+
+  if (student) {
+    res.redirect(`/student-evaluation/${studentId}`);
+  } else {
+    res.status(404).send("Student not found");
+  }
+});
+
+//--------START EXPRESS SERVER--------//
+
 // Start the Express server. Server listening on port 3000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
-});
-
-app.get("/edit-team", (req, res) => { 
-  res.render("edit-team.ejs");
-});
-
-//Peer assessment page route
-app.get('/peer-assessment', (req, res) => {
-  res.render('peer-assessment');
-}); 
-
-//View Reviews page route
-app.get('/view-reviews', (req, res) => {
-  res.render('view-reviews');
 });

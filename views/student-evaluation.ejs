@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Evaluation</title>
-    <!-- Bootstrap CSS for styling -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<%- include('partials/header-2', { title: 'Evaluate Student' , userType, instructorUsername  }) %>
     <style>
         /* Black Gradient background for the title banner */
         .title-banner {
@@ -124,12 +117,7 @@
 </head>
 <body>
 
-    <!-- Title Banner -->
-    <header class="title-banner">
-        <h1>Student Peer Evaluation</h1>
-    </header>
-    
-    <!-- Evaluation Form Container -->
+    <!-- Main Content -->
     <div class="container">
         
         <!-- Evaluation Form -->
@@ -218,10 +206,10 @@
                 <button type="submit" class="btn btn-primary">Submit Evaluation</button>
             </div>
         </form>
-    </div> 
- 
-    <!-- Bootstrap JS for handling UI interactions -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    </div>
+
+ <
+   
+<%- include('partials/footer') %>
+
 

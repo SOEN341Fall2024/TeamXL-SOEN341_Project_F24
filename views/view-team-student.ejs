@@ -1,13 +1,17 @@
+<h1>Teams</h1>
 
-<table>
-    <caption><%= Team.rows[0].group_name %></caption>
-    <tr>
-        <th>Student name</th><th>Student ID</th>
-    </tr>
-<% for(var i = 0; i < Team.rows.length; i++) { %>
-    <tr>
-        <td><%= Team.rows[i].name %></td>
-        <td><%= Team.rows[i].id %></td>
-    </tr>
-<% } %>
-</table>
+  <% for (const [groupName, members] of Object.entries(Teams)) { %>
+    <table>
+      <caption><%= groupName %></caption>
+      <tr>
+        <th>Student Name</th>
+        <th>Student ID</th>
+      </tr>
+      <% members.forEach(member => { %>
+        <tr>
+          <td><%= member.name %></td>
+          <td><%= member.id %></td>
+        </tr>
+      <% }) %>
+    </table>
+  <% } %>
