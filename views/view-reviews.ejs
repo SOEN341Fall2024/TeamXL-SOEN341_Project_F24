@@ -47,14 +47,16 @@
             max-width: 300px;
             margin: 0 auto;
             flex-direction: row-reverse;
+            position: relative;
         }
-        .rating .fa-star {
+        .fa-star {
             font-size: 1rem;
             color: lightgray;
             margin: 0 2px;
             transition: color 0.3s ease;
+            position: relative;
         }
-        .rating .fa-star.filled {
+        .fa-star.filled {
             color: gold;
         }
     </style>
@@ -147,17 +149,25 @@
     <!-- Font Awesome and JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" crossorigin="anonymous"></script>
     <script>
-        // Function to generate static stars based on rating
+        // Function to generate static stars based on rating, filling the last star only if the decimal is >= 0.5
         function generateStars(elementId) {
             const ratingElement = document.getElementById(elementId);
             const rating = parseFloat(ratingElement.getAttribute('data-rating'));
             ratingElement.innerHTML = ''; // Clear existing stars
 
-            // Generate star icons based on rating
+            // Determine full stars, and whether to fill the last star based on decimal part
+            const fullStars = Math.floor(rating);
+            const shouldFillLastStar = (rating % 1) >= 0.5;
+
+            // Loop to create full and conditionally filled stars based on rating
             for (let i = 5; i >= 1; i--) {
                 const star = document.createElement('i');
-                star.className = 'fa fa-star' + (i <= rating ? ' filled' : '');
-                ratingElement.appendChild(star);
+                star.className = 'fa fa-star';
+
+                if (i <= fullStars || (i === fullStars + 1 && shouldFillLastStar)) {
+                    star.classList.add('filled'); // Full or conditionally filled star
+                }
+                ratingElement.appendChild(star); // Append star to element
             }
         }
 
