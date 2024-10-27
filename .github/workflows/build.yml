@@ -12,6 +12,22 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    services:
+      # Set up a PostgreSQL database service
+      postgres:
+        image: postgres:13  # Use the appropriate PostgreSQL version
+        env:
+          POSTGRES_DB: testdb  # Use a test database name
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U testuser -d testdb"  # Wait for the database to be ready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       # Check out the code
       - name: Checkout repository
@@ -23,10 +39,36 @@ jobs:
         with:
           node-version: '14'  # Use the Node.js version that matches your project
 
+      # Set up environment variables for database
+      - name: Set up environment variables
+        run: |
+          echo "DB_USER=testuser" >> $GITHUB_ENV
+          echo "DB_PASSWORD=testpassword" >> $GITHUB_ENV
+          echo "DB_NAME=testdb" >> $GITHUB_ENV
+          echo "DB_HOST=localhost" >> $GITHUB_ENV
+          echo "DB_PORT=5432" >> $GITHUB_ENV
+
       # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # # Run tests
-      # - name: Run tests
-      #   run: npm test
+      # Run database migrations or setup (if necessary)
+      - name: Set up test database
+        run: |
+          npx sequelize-cli db:migrate  # Or your database setup command if using a migration tool
+        env:
+          DB_USER: testuser
+          DB_PASSWORD: testpassword
+          DB_NAME: testdb
+          DB_HOST: localhost
+          DB_PORT: 5432
+
+      # Run tests
+      - name: Run tests
+        run: npm test
+        env:
+          DB_USER: testuser
+          DB_PASSWORD: testpassword
+          DB_NAME: testdb
+          DB_HOST: localhost
+          DB_PORT: 5432
