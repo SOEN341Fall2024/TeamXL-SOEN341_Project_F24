@@ -60,6 +60,8 @@ app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
+
+
 // Route for the INSTRUCTOR DASHBOARD page
 app.get("/instructor-dashboard", async (req, res) => {
   const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
@@ -437,8 +439,14 @@ app.post("/submit-evaluation", async (req, res) => {
     ]
   )
 
+  const data = {cooperation: req.body.cooperation,  
+    conceptual_contribution: req.body.conceptual_contribution,
+    practical_contribution: req.body.practical_contribution, 
+    work_ethic: req.body.work_ethic, 
+    additional_comments: req.body.comments};
+
   //jonathan can add the /confirm-evaluation route
-  res.redirect("/confirm-evaluation")
+  res.render("evaluation-confirmation.ejs" , data)
 });
 
 //--------START EXPRESS SERVER--------//
