@@ -94,14 +94,44 @@ app.get("/create-teams", async (req, res) => {
 });
 
 // Route for the VIEW TEAMS page
+
 app.get("/view-teams", async (req, res) => {
-  try {
-    const Teams = await db.query("SELECT * FROM groups");
-    const StudentArr = await db.query("SELECT * FROM student");
-    res.render("view-teams-instructor", { Teams, StudentArr });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while fetching teams.");
+  console.log(req.session.userType);
+  if (req.session.userType == "INSTRUCTOR") {
+    try{
+      const DATA = await db.query(
+        "SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY student.id_group ASC"
+      );
+
+      res.render("view-teams-instructor.ejs", {
+        Teams: DATA,
+      });
+    } catch(err){
+      console.log(err);
+      res.redirect("/");
+    }
+  } else if (req.session.userType == "STUDENT") {
+    try {
+      const groupID_QUERY = await db.query(
+        "SELECT id_group FROM student WHERE id = $1",
+        [req.session.userID]
+      );
+
+      const groupID = groupID_QUERY.rows[0].id_group;
+
+      const DATA = await db.query(
+        "SELECT group_name, name FROM student, groups WHERE student.id_group = $1 AND student.id_group = groups.id_group",
+        [groupID]
+      );
+
+      res.render("view-team-student.ejs", {
+        Team: DATA,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    res.redirect("/");
   }
 });
 
