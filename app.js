@@ -220,6 +220,10 @@ app.get("/view-my-reviews", async (req, res) => {
   });
 });
 
+app.get("/cancel-review", async (req, res) => {
+
+});
+
 //Route to LOGOUT
 app.get("/logout", (req, res) => {
   delete req.session.userID;
