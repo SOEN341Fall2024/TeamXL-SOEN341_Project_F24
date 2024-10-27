@@ -1,37 +1,317 @@
-<%- include('partials/header', { title: 'Instructor Dashboard' }) %>
-<form action="/create-teams" method="POST" enctype="multipart/form-data">
-    <label for="teamname">Team Name:</label>
-    <input type="text" name="teamname" id="teamname" />
-
-    <table>
-        <tr>
-            <th>Student Name</th>
-            <th>Student ID</th>
-            <th>Enroll</th>
-        </tr>
-    <% for(var i = 0; i < StudentArr.length; i++) { %>
-        <tr>
-            <td><%= StudentArr[i].name %></td>
-            <td><%= StudentArr[i].id %></td>
-            <td><input type = "checkbox" name = "studentIDs" value = <%= studentArr[i].id %>></input></td>
-        </tr>
-    <% } %>
-        <% for (var i = 0; i < StudentArr.length; i++) { %>
-            <tr>
-                <td><%= StudentArr[i].name %></td>
-                <td><%= StudentArr[i].id %></td>
-                <td>
-                    <input type="checkbox" name="studentIDs" value="<%= StudentArr[i].id %>">
-                </td>
-            </tr>
-        <% } %>
-    </table>
-
-    <div>
-        <label for="csvfile">Upload CSV File (Optional):</label>
-        <input type="file" name="csvfile" id="csvfile" accept=".csv" />
+<header>
+  <div class="px-3 py-2 text-bg-dark border-bottom">
+    <div class="mx-2">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/instructor-dashboard" class="d-flex align-items-center justify-content-start my-lg-0 me-lg-auto text-white text-decoration-none">
+          <svg class="mx-3" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-puzzle" viewBox="0 0 16 16">
+          <h1>InsightSphere</h1>
+        </a>
+        <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+          <li>
+            <a href="/instructor-dashboard" class="nav-link text-white">
+              <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
+                <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z"/>
+                <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3"/>
+                </svg>
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="/view-teams" class="nav-link text-white">
+              <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0"/>
+              </svg>
+              View Teams
+            </a>
+          </li>
+          <li>
+            <a href="/create-teams" class="nav-link text-primary">
+              <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+              </svg>
+              Create Teams
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </div>
+</header>
 
-    <button type="submit">Create Teams</button>
-</form>
-<%- include('partials/footer') %>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Teams</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Include any additional CSS files here -->
+  <style>
+    /* Set Arial as the font for the entire body */
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .large-font {
+      font-size: 1.5rem; 
+    }
+
+    .heading-font {
+      font-size: 3rem; 
+    }
+
+    .taller-box {
+      min-height: 600px;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card {
+      flex-grow: 1; 
+      width: 100%; 
+      padding: 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-group {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: white;
+    }
+
+    .form-label {
+      font-size: 1.5rem; 
+    }
+
+    .checkbox-group label {
+      font-size: 1.05rem; 
+    }
+
+    .btn-submit {
+      padding: 2rem 4rem; 
+      font-size: 4rem;
+    }
+
+    /* Styles for the confirmation message */
+    #confirmationMessage {
+      display: none;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    /* Styles for the error messages */
+    .error-message {
+      display: none;
+      color: red;
+      margin-top: 10px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <!-- Include the header -->
+  <%- include('partials/header', { title: 'Create Teams' }) %>
+
+  <!-- Container to center the form vertically and horizontally -->
+  <div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="row justify-content-center w-100">
+      <div class="col-md-8">
+
+        <!-- Card to create a grey box with rounded edges and taller height -->
+        <div class="card bg-light rounded taller-box">
+          <h2 class="text-center heading-font">Create Teams</h2>
+          <form id="createTeamForm" action="/create-teams" method="POST" enctype="multipart/form-data" class="large-font">
+
+            <!-- Form group for team name input -->
+            <div class="form-group">
+              <label for="teamName" class="form-label">Team Name</label>
+              <input type="text" name="teamname" class="form-control" id="teamname" placeholder="Enter team name" pattern="[A-Za-z0-9 ]+" title="Please provide a valid name for the team (only letters, numbers, and spaces are allowed)" >
+            </div>
+          
+            <!-- Form group for selecting a random number of students -->
+            <div class="form-group">
+              <div class="d-inline">
+                <label for="teamNumber" class="form-label">Select</label>
+                <input type="number" class="form-control d-inline w-25 ml-1 mr-2" id="teamNumber" placeholder="?" min="1">
+                <label class="form-label d-inline">Random Students</label>
+              </div>
+              <button type="button" class="btn btn-secondary mt-2 d-inline mr-2" onclick="selectRandomStudents()">Select Random Students</button>
+              <button type="button" class="btn btn-danger mt-2 d-inline" onclick="uncheckSelectedStudents()">Uncheck Selected Students</button>
+              <div id="notEnoughStudentsError" class="error-message" style="display: none; color: red;">Not enough students</div>
+            </div>
+          
+            <!-- Form group for selecting students -->
+            <div class="form-group">
+              <label for="students" class="form-label">List of Students (<span id="selectedCount">0</span> selected)</label>
+              <input type="text" class="form-control mb-2" placeholder="Search for students" id="searchStudents" onkeyup="filterStudents()">
+              <div id="checkboxGroup" class="checkbox-group">
+                <% if (StudentArr.rows.length > 0) { %>
+                  <!--<form action="/create-teams" method="POST">-->
+                    <!--<label for="teamname">Team Name:</label>
+                    <input type="text" name="teamname" id="teamname" />-->
+                    <table>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Student ID</th>
+                            <th>Enroll</th>
+                        </tr>
+                        <% for (var i = 0; i < StudentArr.rows.length; i++) { %>
+                            <tr>
+                                <td><label for="student_<%= StudentArr.rows[i].name %>"><%= StudentArr.rows[i].name %></label></td>
+                                <td><%= StudentArr.rows[i].id %></td>
+                                <td><input type="checkbox" name="studentIDs" value="<%= StudentArr.rows[i].id %>">
+                                </td>
+                            </tr>
+                        <% } %>
+                    </table>
+                <% } else { %>
+                  <div>No students found</div>
+                <% } %>
+              </div>
+
+                <!-- Error message for no students selected -->
+              <div id="studentsError" class="error-message" style="display: none; color: red;">Please assign students to the team</div>
+            </div>
+          
+            <!-- CSV upload option -->
+            <div class="form-group">
+              <label for="csvfile">Upload CSV File (Optional):</label>
+              <input type="file" name="csvfile" id="csvfile" accept=".csv" />
+            </div>
+          
+            <!-- Confirmation message -->
+            <div id="confirmationMessage" style="display: none;">
+              Team created successfully!
+            </div>
+          
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block btn-submit mt-4">Submit</button>
+          </form>          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Include the footer -->
+  <%- include('partials/footer') %>
+
+  <script>
+    // Function to filter students based on search input
+    function filterStudents() {
+      const searchInput = document.getElementById('searchStudents').value.toLowerCase();
+      const checkboxes = document.getElementById('checkboxGroup').querySelectorAll('div');
+      
+      checkboxes.forEach(checkbox => {
+        const label = checkbox.querySelector('label').innerText.toLowerCase();
+        checkbox.style.display = label.includes(searchInput) ? '' : 'none';
+      });
+    }
+
+    // Function to update the count of selected students
+    function updateSelectedCount() {
+      const selectedCount = document.querySelectorAll('#checkboxGroup input:checked').length;
+      document.getElementById('selectedCount').innerText = selectedCount;
+    }
+
+    // Function to randomly select the specified number of students
+    function selectRandomStudents() {
+      const teamNumber = parseInt(document.getElementById('teamNumber').value, 10);
+      const checkboxes = document.querySelectorAll('#checkboxGroup input');
+      const uncheckedBoxes = Array.from(checkboxes);
+
+      // Uncheck all students first
+      uncheckedBoxes.forEach(box => box.checked = false);
+
+      if (isNaN(teamNumber) || teamNumber < 1 || teamNumber > uncheckedBoxes.length) {
+        document.getElementById('notEnoughStudentsError').style.display = 'block';
+        return;
+      } else {
+        document.getElementById('notEnoughStudentsError').style.display = 'none';
+      }
+
+      // Shuffle the checkboxes and select the specified number of students
+      uncheckedBoxes.sort(() => Math.random() - 0.5);
+      uncheckedBoxes.slice(0, teamNumber).forEach(box => box.checked = true);
+
+      // Update the selected count
+      updateSelectedCount();
+    }
+
+    // Function to uncheck all selected students
+    function uncheckSelectedStudents() {
+      const checkboxes = document.querySelectorAll('#checkboxGroup input:checked');
+      checkboxes.forEach(box => box.checked = false);
+
+      // Update the selected count
+      updateSelectedCount();
+    }
+
+    // Function to validate the form inputs
+    function validateForm() {
+      const teamName = document.getElementById('teamName').value;
+      const checkedStudents = document.querySelectorAll('#checkboxGroup input:checked');
+      const selectedStudents = Array.from(checkedStudents).map(input => input.value);
+
+      // Check if team name is provided
+      if (!teamName) {
+        document.getElementById('teamNameError').style.display = 'block';
+      } else {
+        document.getElementById('teamNameError').style.display = 'none';
+      }
+
+      // Check if at least one student is selected
+      if (selectedStudents.length === 0) {
+        document.getElementById('studentsError').style.display = 'block';
+      } else {
+        document.getElementById('studentsError').style.display = 'none';
+      }
+
+      // If validation passes, show confirmation message
+      if (teamName && selectedStudents.length > 0) {
+        const confirmationMessage = document.getElementById('confirmationMessage');
+        confirmationMessage.style.display = 'block';
+
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+          confirmationMessage.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    // // Disable the submit button if no students are available
+    // document.addEventListener("DOMContentLoaded", function() {
+    //       document.querySelector('button[type="submit"]').disabled = true;
+    // });
+
+    // Handle empty team name input
+    document.addEventListener("DOMContentLoaded", function() {
+    const teamNameInput = document.getElementById("teamname");
+
+    // Listen for the 'input' event to reset the message once the user starts typing
+    teamNameInput.addEventListener("input", function() {
+      teamNameInput.setCustomValidity("");
+    });
+
+    // Listen for the 'invalid' event to set the custom message
+    teamNameInput.addEventListener("invalid", function() {
+      if (!teamNameInput.validity.valid) {
+        teamNameInput.setCustomValidity("Please provide a name for the team");
+      }
+    });
+  });
+  </script>
+</body>
+</html>
