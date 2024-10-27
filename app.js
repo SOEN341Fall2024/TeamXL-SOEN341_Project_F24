@@ -232,14 +232,6 @@ app.get("/cancel-review", async (req, res) => {
   res.redirect("/student-dashboard");
 });
 
-app.get("/edit-evaluation", async (req, res) => {
-
-  console.log( req.session.userID, 
-    req.session.peerID, );
-
-  res.render("student-evaluation.ejs", {conceptualContribution: 4});
-});
-
 //Route to LOGOUT
 app.get("/logout", (req, res) => {
   delete req.session.userID;
