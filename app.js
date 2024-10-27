@@ -330,3 +330,8 @@ app.get('/peer-assessment', (req, res) => {
   res.render('peer-assessment');
 }); 
 
+//Peer assessment page route
+app.get('/evaluation-confirmation', (req, res) => {
+  res.render('evaluation-confirmation');
+}); 
+
