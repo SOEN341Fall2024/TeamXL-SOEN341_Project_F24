@@ -3,34 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Reviews</title>
+    <title>View my Reviews</title>
     <!-- Bootstrap CSS for styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for star icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Black Gradient background for the title banner */
         .title-banner {
             background: linear-gradient(135deg, #222529, #222529);
-            color: white; 
+            color: white;
             padding: 30px;
             margin-bottom: 40px;
             text-align: center;
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
-
-        /* Main container styling */ 
         .container {
             margin-top: 50px;
-            max-width: 700px;
+            max-width: 900px;
             padding: 30px;
             background-color: #f9f9f9;
             border-radius: 10px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-
-        /* Criterion box styling */
         .criterion-box {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -46,8 +41,6 @@
             color: #222529;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
-
-        /* Star rating styling to match "Student Evaluation" */
         .rating {
             display: flex;
             justify-content: center;
@@ -64,83 +57,115 @@
         .rating .fa-star.filled {
             color: gold;
         }
-
-        /* Additional Comments Styling */
-        .form-section {
-            margin-bottom: 50px; /* Adds extra space below the comments box */
-        }
     </style>
 </head>
 <body>
+
+    <!-- Header Include -->
+    <%- include('partials/header', { title: 'View my Reviews' }) %>
 
     <!-- Title Banner -->
     <header class="title-banner">
         <h1>View Reviews</h1>
     </header>
-    
-    <!-- Evaluation Form Container -->
+
     <div class="container">
-        
-        <!-- Cooperation Criterion Box -->
+
+        <!-- Calculate Average Ratings in EJS -->
+        <% let totalCooperation = 0, totalConceptual = 0, totalPractical = 0, totalEthic = 0; %>
+        <% reviews.forEach((review) => { %>
+            <% totalCooperation += review.cooperation; %>
+            <% totalConceptual += review.conceptual_contribution; %>
+            <% totalPractical += review.practical_contribution; %>
+            <% totalEthic += review.work_ethic; %>
+        <% }); %>
+        <% let averageRatings = {
+            cooperation: totalCooperation / reviews.length || 0,
+            conceptual: totalConceptual / reviews.length || 0,
+            practical: totalPractical / reviews.length || 0,
+            ethic: totalEthic / reviews.length || 0
+        }; %>
+
+        <!-- Display Average Ratings with Stars -->
         <div class="criterion-box">
             <h4>Cooperation</h4>
-            <div class="rating" id="cooperation-rating"></div>
+            <div class="rating" id="cooperation-rating" data-rating="<%= averageRatings.cooperation %>"></div>
         </div>
 
-        <!-- Conceptual Contribution Criterion Box -->
         <div class="criterion-box">
             <h4>Conceptual Contribution</h4>
-            <div class="rating" id="conceptual-rating"></div>
+            <div class="rating" id="conceptual-rating" data-rating="<%= averageRatings.conceptual %>"></div>
         </div>
 
-        <!-- Practical Contribution Criterion Box -->
         <div class="criterion-box">
             <h4>Practical Contribution</h4>
-            <div class="rating" id="practical-rating"></div>
+            <div class="rating" id="practical-rating" data-rating="<%= averageRatings.practical %>"></div>
         </div>
 
-        <!-- Work Ethic Criterion Box -->
         <div class="criterion-box">
             <h4>Work Ethic</h4>
-            <div class="rating" id="ethic-rating"></div>
+            <div class="rating" id="ethic-rating" data-rating="<%= averageRatings.ethic %>"></div>
         </div>
 
-        <!-- Additional Comments (Optional) -->
-        <div class="form-section text-center mb-5">
-            <label for="comments" class="form-label">Overall Comments </label>
-            <p class="form-control-static">No comments yet.</p>
-        </div>
+        <% if (reviews.length > 0) { %>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Review Number</th>
+                        <th>Review Comments</th>
+                        <th>Grades</th>
+                        <th>Average</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reviews.forEach((review, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= review.comments %></td>
+                            <td>
+                                Cooperation: <%= review.cooperation %><br>
+                                Conceptual Contribution: <%= review.conceptual_contribution %><br>
+                                Practical Contribution: <%= review.practical_contribution %><br>
+                                Work Ethic: <%= review.work_ethic %>
+                            </td>
+                            <td>
+                                <% let average = (review.cooperation + review.conceptual_contribution + review.practical_contribution + review.work_ethic) / 4 %>
+                                <%= average.toFixed(1) %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <h4>Could not find any reviews</h4>
+        <% } %>
     </div>
 
-    <!-- Font Awesome for star icons -->
+    <!-- Footer Include -->
+    <%- include('partials/footer') %>
+
+    <!-- Font Awesome and JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" crossorigin="anonymous"></script>
-
-    <!-- JavaScript to Generate Stars -->
     <script>
-        // Mock data for ratings
-        const ratings = {
-            cooperation: 3,
-            conceptual: 3,
-            practical: 3,
-            ethic: 3
-        };
-
         // Function to generate static stars based on rating
-        function generateStars(rating, elementId) {
+        function generateStars(elementId) {
             const ratingElement = document.getElementById(elementId);
-            ratingElement.innerHTML = ''; // Clear any existing stars
-            for (let i = 5; i >= 1; i--) { // Reverse order for right alignment
+            const rating = parseFloat(ratingElement.getAttribute('data-rating'));
+            ratingElement.innerHTML = ''; // Clear existing stars
+
+            // Generate star icons based on rating
+            for (let i = 5; i >= 1; i--) {
                 const star = document.createElement('i');
                 star.className = 'fa fa-star' + (i <= rating ? ' filled' : '');
                 ratingElement.appendChild(star);
             }
         }
 
-        // Generate stars for each criterion
-        generateStars(ratings.cooperation, 'cooperation-rating');
-        generateStars(ratings.conceptual, 'conceptual-rating');
-        generateStars(ratings.practical, 'practical-rating');
-        generateStars(ratings.ethic, 'ethic-rating');
+        // Generate stars for each criterion based on actual data
+        generateStars('cooperation-rating');
+        generateStars('conceptual-rating');
+        generateStars('practical-rating');
+        generateStars('ethic-rating');
     </script>
 </body>
 </html>
