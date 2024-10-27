@@ -1,213 +1,199 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peer Assessment</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Styling for the page and form */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
+<%- include('partials/header-2', { title: 'Student Search Results', headerTitle: 'Student Search Results' , userType, instructorUsername  }) %>
+
+
+<style>
+    /* Styling for the page and form */
+    /* body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f6f9;
+    }
+
+    .heading-font {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+
+    .card {
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+    }
+
+    .form-control {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .btn-submit {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.25rem;
+        background-color: #007bff;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+   
+    .scroll-box {
+        max-height: 300px;
+        overflow-y: scroll; 
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: white;
+    }
+    
+    .student-item {
+        padding: 10px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+    }
+
+    .student-item:hover {
+        background-color: #f8f9fa;
+    }
+
+  
+    #confirmationMessage {
+        display: none;
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        border-radius: 5px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    
+    .title-banner {
+        background-color: #222529;
+        color: white;
+        padding: 20px;
+        margin-bottom: 30px;
+        text-align: center;
+    } */
+</style>
+
+
+<div class="container mt-5">
+    <div>
+<form action="/peer-assessment" method="get" class="d-flex search-form" role="search">
+    
+    <input class="form-control me-2" name="query" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</div>
+
+</form>
+<div>
+    <h2 class="mt-4">Search Results for "<%= query %>"</h2>
+    <% if (studentsList.length > 0) { %>
+        <form action="/student-evaluation" method="POST"> 
+            <ul class="list-group">
+                <% studentsList.forEach((student, index) => { %>
+                    <li class="list-group-item">
+                        <input class="form-check-input me-1" type="radio" name="studentRadio" value="<%= student.id %>" id="studentRadio<%= index %>">
+                        <label class="form-check-label" for="studentRadio<%= index %>"><%= student.name %></label>
+                    </li>
+                <% }) %>
+            </ul>
+            <button type="submit" class="btn btn-primary mt-3">Submit</button> 
+        </form>
+    <% } else { %>
+        <p>No students found matching your query.</p>
+    <% } %>
+</div>
+
+</div>
+
+
+
+
+<script>
+    // Mock data for peers
+    const peers = [
+        { id: 1, name: 'Kevin' },
+        { id: 2, name: 'Joyal' },
+        { id: 3, name: 'Aditi' },
+        { id: 4, name: 'Owen' },
+        { id: 5, name: 'Oussama' },
+        { id: 6, name: 'Jonathan' },
+        { id: 7, name: 'Emily' },
+        { id: 8, name: 'Michael' },
+        { id: 9, name: 'Sophia' },
+        { id: 10, name: 'James' },
+        { id: 11, name: 'Olivia' }
+    ];
+
+    // Variable to store the temporarily selected peer
+    let selectedPeer = null;
+
+    // Function to render the full list of students in the scrollable box
+    function renderPeerList(filteredPeers = peers) {
+        const peerList = document.getElementById('peerList');
+        peerList.innerHTML = ''; // Clear previous list
+
+        // Generate list of peers
+        filteredPeers.forEach(peer => {
+            const item = document.createElement('div');
+            item.classList.add('student-item');
+            item.textContent = peer.name;
+            item.onclick = () => highlightSelectedPeer(peer, item); // Just highlight the peer
+            peerList.appendChild(item);
+        });
+    }
+
+    // Function to highlight the selected peer and store it in the variable
+    function highlightSelectedPeer(peer, item) {
+        // Remove highlights from all items
+        document.querySelectorAll('.student-item').forEach(el => el.style.backgroundColor = '');
+        
+        // Highlight the selected peer
+        item.style.backgroundColor = '#d4edda'; // Green highlight
+
+        // Temporarily store the selected peer
+        selectedPeer = peer;
+    }
+
+    // Function to filter peers based on search input
+    function filterPeers() {
+        const searchInput = document.getElementById('peerSearch').value.toLowerCase();
+        const filteredPeers = peers.filter(peer => peer.name.toLowerCase().includes(searchInput));
+        renderPeerList(filteredPeers); // Re-render the list with filtered peers
+    }
+
+    // Function to validate the form inputs and confirm the selected peer
+    function validateForm() {
+        // Check if a peer has been selected
+        if (!selectedPeer) {
+            alert('Please select a peer.');
+            return;
         }
 
-        .heading-font {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-        }
+        // Show the selected peer in the input box
+        document.getElementById('peerSearch').value = selectedPeer.name;
 
-        .card {
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff;
-        }
+        // Show confirmation message
+        showConfirmationMessage();
+    }
 
-        .form-control {
-            padding: 1rem;
-            font-size: 1.1rem;
-        }
+    // Show confirmation message when a peer is selected
+    function showConfirmationMessage() {
+        const confirmationMessage = document.getElementById('confirmationMessage');
+        confirmationMessage.style.display = 'block';
+        setTimeout(() => {
+            confirmationMessage.style.display = 'none';
+        }, 3000);
+    }
 
-        .btn-submit {
-            padding: 0.75rem 1.5rem;
-            font-size: 1.25rem;
-            background-color: #007bff;
-            border: none;
-            transition: background-color 0.3s ease;
-        }
+    // Event listener for search input
+    document.getElementById('peerSearch').addEventListener('input', filterPeers);
 
-        .btn-submit:hover {
-            background-color: #0056b3;
-        }
-
-        /* Scrollable box for the list of students */
-        .scroll-box {
-            max-height: 300px;
-            overflow-y: scroll; /* Scrollbar will appear if content exceeds the height */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            background-color: white;
-        }
-
-        /* Styling for the list items */
-        .student-item {
-            padding: 10px;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-        }
-
-        .student-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        /* Confirmation message styling */
-        #confirmationMessage {
-            display: none;
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        /* Black background behind the title */
-        .title-banner {
-            background-color: #222529;
-            color: white;
-            padding: 20px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Black Banner Header for Title -->
-    <header class="title-banner">
-        <h1>Student Peer Assessment</h1>
-    </header>
-
-    <!-- Container to center the form vertically and horizontally -->
-    <div class="container vh-100 d-flex justify-content-center align-items-center">
-        <div class="row justify-content-center w-100">
-            <div class="col-md-8">
-                <!-- Card to create a grey box with rounded edges and shadow -->
-                <div class="card bg-light rounded">
-                    <!-- Page title -->
-                    <h2 class="text-center heading-font">Peer Assessment</h2>
-
-                    <!-- Form for peer assessment -->
-                    <form id="peerAssessmentForm" class="large-font">
-                        <!-- Form group for peer search input -->
-                        <div class="form-group">
-                            <label for="peerSearch" class="form-label">Search for a Peer</label>
-                            <input type="text" class="form-control" id="peerSearch" placeholder="Type to search...">
-                        </div>
-
-                        <!-- Scrollable box for all students -->
-                        <div class="scroll-box" id="peerList">
-                            <!-- Student items will be dynamically generated here -->
-                        </div>
-
-                        <!-- Confirmation message -->
-                        <div id="confirmationMessage">
-                            Peer selected successfully!
-                        </div>
-                        
-                        <!-- Select button -->
-                        <button type="button" class="btn btn-primary btn-block btn-submit mt-4" onclick="validateForm()">Review Peer</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Mock data for peers
-        const peers = [
-            { id: 1, name: 'Kevin' },
-            { id: 2, name: 'Joyal' },
-            { id: 3, name: 'Aditi' },
-            { id: 4, name: 'Owen' },
-            { id: 5, name: 'Oussama' },
-            { id: 6, name: 'Jonathan' },
-            { id: 7, name: 'Emily' },
-            { id: 8, name: 'Michael' },
-            { id: 9, name: 'Sophia' },
-            { id: 10, name: 'James' },
-            { id: 11, name: 'Olivia' }
-        ];
-
-        // Variable to store the temporarily selected peer
-        let selectedPeer = null;
-
-        // Function to render the full list of students in the scrollable box
-        function renderPeerList(filteredPeers = peers) {
-            const peerList = document.getElementById('peerList');
-            peerList.innerHTML = ''; // Clear previous list
-
-            // Generate list of peers
-            filteredPeers.forEach(peer => {
-                const item = document.createElement('div');
-                item.classList.add('student-item');
-                item.textContent = peer.name;
-                item.onclick = () => highlightSelectedPeer(peer, item); // Just highlight the peer
-                peerList.appendChild(item);
-            });
-        }
-
-        // Function to highlight the selected peer and store it in the variable
-        function highlightSelectedPeer(peer, item) {
-            // Remove highlights from all items
-            document.querySelectorAll('.student-item').forEach(el => el.style.backgroundColor = '');
-            
-            // Highlight the selected peer
-            item.style.backgroundColor = '#d4edda'; // Green highlight
-
-            // Temporarily store the selected peer
-            selectedPeer = peer;
-        }
-
-        // Function to filter peers based on search input
-        function filterPeers() {
-            const searchInput = document.getElementById('peerSearch').value.toLowerCase();
-            const filteredPeers = peers.filter(peer => peer.name.toLowerCase().includes(searchInput));
-            renderPeerList(filteredPeers); // Re-render the list with filtered peers
-        }
-
-        // Function to validate the form inputs and confirm the selected peer
-        function validateForm() {
-            // Check if a peer has been selected
-            if (!selectedPeer) {
-                alert('Please select a peer.');
-                return;
-            }
-
-            // Show the selected peer in the input box
-            document.getElementById('peerSearch').value = selectedPeer.name;
-
-            // Show confirmation message
-            showConfirmationMessage();
-        }
-
-        // Show confirmation message when a peer is selected
-        function showConfirmationMessage() {
-            const confirmationMessage = document.getElementById('confirmationMessage');
-            confirmationMessage.style.display = 'block';
-            setTimeout(() => {
-                confirmationMessage.style.display = 'none';
-            }, 3000);
-        }
-
-        // Event listener for search input
-        document.getElementById('peerSearch').addEventListener('input', filterPeers);
-
-        // Render the full list of peers when the page loads
-        renderPeerList();
-    </script>
-</body>
-</html>
+    // Render the full list of peers when the page loads
+    renderPeerList();
+</script>
+<%- include('partials/footer') %>

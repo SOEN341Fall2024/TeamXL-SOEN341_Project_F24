@@ -60,11 +60,6 @@ app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
-// Route for the STUDENT EVALUATION page, render the student-evaluation.ejs view
-app.get("/student-evaluation", (req, res) => {
-  res.render("student-evaluation.ejs");
-});
-
 // Route for the INSTRUCTOR DASHBOARD page
 app.get("/instructor-dashboard", async (req, res) => {
   const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
@@ -131,10 +126,62 @@ app.get("/profile", (req, res) => {
 });
 
 // Route for the PEER ASSESSMENT page
-app.get("/peer-assessment", (req, res) => {
-  res.render("peer-assessment");
+app.get("/peer-assessment", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+
+  try {
+    if (userType) {
+      const result = await db.query(
+        "SELECT * FROM student WHERE LOWER(name) LIKE $1",
+        [`%${query}%`]
+      );
+      res.render("peer-assessment.ejs", {
+        query,
+        studentsList: result.rows, // Matching students
+        userType,
+        instructorUsername,
+        peers: result.rows, // Same as studentsList for clarity
+      });
+    } else {
+      res.redirect("/student-dashboard");
+      console.log("error");
+    }
+  } catch (error) {
+    console.error("Error during peer assessment search:", error);
+    res.status(500).send("Server Error");
+  }
 });
 
+//function to fetch student by ID
+async function getStudentById(studentId) {
+  try {
+    const result = await db.query("SELECT * FROM STUDENT WHERE ID = $1", [
+      studentId,
+    ]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    throw error;
+  }
+}
+
+// Route for the STUDENT EVALUATION page, render the student-evaluation.ejs view
+app.get("/student-evaluation/:id", async (req, res) => {
+  const studentId = req.params.id;
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+  try {
+    const student = await getStudentById(studentId);
+    res.render("student-evaluation", { student, userType, instructorUsername });
+  } catch (error) {
+    console.error("Error fetching student for evaluation:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+//Route to LOGOUT
 app.get("/logout", (req, res) => {
   delete req.session.userID;
   delete req.session.userType;
@@ -313,6 +360,18 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
     console.log(err);
     // Optionally handle the error response
     res.status(500).send("An error occurred while creating teams.");
+  }
+});
+
+// Route to handle PEER_ASSESSMENTS (SELECTED PEER) data
+app.post("/student-evaluation", async (req, res) => {
+  const studentId = req.body.studentRadio;
+  const student = await getStudentById(studentId);
+
+  if (student) {
+    res.redirect(`/student-evaluation/${studentId}`);
+  } else {
+    res.status(404).send("Student not found");
   }
 });
 
