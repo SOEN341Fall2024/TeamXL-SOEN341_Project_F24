@@ -221,7 +221,13 @@ app.get("/view-my-reviews", async (req, res) => {
 });
 
 app.get("/cancel-review", async (req, res) => {
+  await db.query("DELETE * FROM evalution WHERE id_evaluator = $1 AND id_evaluatee = $2", 
+    [req.session.userID, req.session.peerID]
+  );
 
+  delete req.session.peerID;
+
+  res.redirect("/");
 });
 
 //Route to LOGOUT
