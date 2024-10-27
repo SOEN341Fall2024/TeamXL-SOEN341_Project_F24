@@ -1,5 +1,6 @@
 <!--cooperation, conceptual_contribution, practical_contribution, work_ethic, additional_comments   -->
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,7 +51,7 @@
 
     <div class="confirmation-container">
         <h1>Review Your Submission</h1>
-        <p>Below is a summary of your evaluation. Please confirm or go back to make changes.</p>
+        <p>Below is a summary of your evaluation. Please confirm, go back to edit, or cancel.</p>
 
         <!-- Review Summary Section -->
         <div class="review-summary">
@@ -68,9 +69,11 @@
             <!-- Button to go back to edit the evaluation -->
             <a href="/submit-evaluation" class="btn btn-secondary">Go Back to Edit</a>
             <!-- Button to confirm the submission and display thank you message -->
-            <form action="/finalize-evaluation" method="POST">
+            <form action="/finalize-evaluation" method="POST" style="display: inline;">
                 <button type="submit" class="btn btn-primary">Confirm Submission</button>
             </form>
+            <!-- Cancel Button to discard evaluation and redirect to dashboard -->
+            <a href="/" class="btn btn-danger">Cancel</a>
         </div>
     </div>
 
