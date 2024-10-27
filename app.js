@@ -120,7 +120,7 @@ app.get("/view-teams", async (req, res) => {
       const groupID = groupID_QUERY.rows[0].id_group;
 
       const DATA = await db.query(
-        "SELECT group_name, name FROM student, groups WHERE student.id_group = $1 AND student.id_group = groups.id_group",
+        "SELECT group_name, name, id FROM student, groups WHERE student.id_group = $1 AND student.id_group = groups.id_group",
         [groupID]
       );
 
