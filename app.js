@@ -60,6 +60,8 @@ app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
+
+
 // Route for the INSTRUCTOR DASHBOARD page
 app.get("/instructor-dashboard", async (req, res) => {
   const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
@@ -425,6 +427,7 @@ app.post("/student-evaluation", async (req, res) => {
 });
 
 app.post("/submit-evaluation", async (req, res) => {
+  console.log("agfgf");
   await db.query("INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)", 
     [
      req.session.userID, 
@@ -437,8 +440,14 @@ app.post("/submit-evaluation", async (req, res) => {
     ]
   )
 
+  const data = {cooperation: req.body.cooperation,  
+    conceptual_contribution: req.body.conceptual_contribution,
+    practical_contribution: req.body.practical_contribution, 
+    work_ethic: req.body.work_ethic, 
+    additional_comments: req.body.comments};
+
   //jonathan can add the /confirm-evaluation route
-  res.redirect("/confirm-evaluation")
+  res.render("evaluation-confirmation.ejs" , data)
 });
 
 //--------START EXPRESS SERVER--------//
