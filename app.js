@@ -381,3 +381,5 @@ app.post("/student-evaluation", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
 });
+
+export default app;
