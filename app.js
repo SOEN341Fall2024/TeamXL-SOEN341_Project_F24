@@ -232,6 +232,37 @@ app.get("/cancel-review", async (req, res) => {
   res.redirect("/student-dashboard");
 });
 
+//------------------------------------------------------------------
+app.get("/edit-evaluation", async (req, res) => {
+  const studentId = req.params.id;
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+
+  try {
+
+    await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 AND id_evaluatee = $2", 
+      [req.session.userID, req.session.peerID]
+    );
+  
+    delete req.session.peerID;
+
+    const student = await getStudentById(studentId);
+
+
+    res.render("edit-evaluation.ejs", { 
+      student, 
+      userType, 
+      instructorUsername,
+      conceptualContributionValue : 10 // Pass this to the view
+    });
+  } catch (error) {
+    console.error("Error fetching student for evaluation:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+
 //Route to LOGOUT
 app.get("/logout", (req, res) => {
   delete req.session.userID;
