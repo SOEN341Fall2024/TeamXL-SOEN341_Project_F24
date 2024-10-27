@@ -125,7 +125,8 @@ app.get("/view-teams", async (req, res) => {
       );
 
       res.render("view-team-student.ejs", {
-        Team: DATA,
+        groupName: DATA.rows[0].group_name,
+        members: DATA,
       });
     } catch (err) {
       console.log(err);
