@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Evaluation</title>
+    <title>View Reviews</title>
     <!-- Bootstrap CSS for styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -45,182 +45,97 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        /* Rating system */
-        .rating {
-            display: flex;
-            justify-content: center;
-            max-width: 300px;
-            margin: 0 auto;
-            flex-direction: row-reverse;
-        }
-        .rating label { 
-            cursor: pointer;
+        /* Static star rating */
+        .fa-star {
             font-size: 1.5rem;
-            transition: color 0.3s ease;
-        }
-        .rating input {
-            display: none;
-        }
-        .rating label::before {
-            content: "★";
-            color: lightgray;
-            transition: color 0.3s ease;
-        }
-        .rating label:hover::before,
-        .rating label:hover ~ label::before,
-        .rating input:checked ~ label::before {
-            color: gold;
+            color: #ddd;
         }
 
-        /* Additional Comments Styling */
-        .form-section {
-            margin-bottom: 50px; /* Adds extra space below the comments box */
+        .fa-star.checked {
+            color: #007bff; /* Same blue as the Review Peer button */
         }
 
-        /* Warning message styling */
-        .warning {
-            color: red;
-            font-size: 0.9rem;
-            display: none;
-            margin-top: 5px;
+        /* Read-only comments */
+        .form-control-static {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            color: #333;
+            text-align: left;
         }
     </style>
-    <script>
-        function validateForm(event) {
-            var cooperation = document.querySelector('input[name="cooperation"]:checked');
-            var conceptualContribution = document.querySelector('input[name="conceptual_contribution"]:checked');
-            var practicalContribution = document.querySelector('input[name="practical_contribution"]:checked');
-            var workEthic = document.querySelector('input[name="work_ethic"]:checked');
-
-            document.getElementById("coop-warning").style.display = "none";
-            document.getElementById("concept-warning").style.display = "none";
-            document.getElementById("practical-warning").style.display = "none";
-            document.getElementById("ethic-warning").style.display = "none";
-
-            var valid = true;
-
-            if (!cooperation) {
-                document.getElementById("coop-warning").style.display = "block";
-                valid = false;
-            }
-            if (!conceptualContribution) {
-                document.getElementById("concept-warning").style.display = "block";
-                valid = false;
-            }
-            if (!practicalContribution) {
-                document.getElementById("practical-warning").style.display = "block";
-                valid = false;
-            }
-            if (!workEthic) {
-                document.getElementById("ethic-warning").style.display = "block";
-                valid = false;
-            }
-
-            if (!valid) {
-                event.preventDefault();
-            }
-        }
-    </script>
 </head>
 <body>
 
     <!-- Title Banner -->
     <header class="title-banner">
-        <h1>Student Peer Evaluation</h1>
+        <h1>View Reviews</h1>
     </header>
     
     <!-- Evaluation Form Container -->
     <div class="container">
         
-        <!-- Evaluation Form -->
-        <form action="/submit-evaluation" method="POST" onsubmit="validateForm(event)">
-            
-            <!-- Cooperation Criterion Box -->
-            <div class="criterion-box">
-                <h4>Cooperation</h4>
-                <div class="rating">
-                    <input type="radio" id="coop-5" name="cooperation" value="5">
-                    <label for="coop-5"></label>
-                    <input type="radio" id="coop-4" name="cooperation" value="4">
-                    <label for="coop-4"></label>
-                    <input type="radio" id="coop-3" name="cooperation" value="3">
-                    <label for="coop-3"></label>
-                    <input type="radio" id="coop-2" name="cooperation" value="2">
-                    <label for="coop-2"></label>
-                    <input type="radio" id="coop-1" name="cooperation" value="1">
-                    <label for="coop-1"></label>
-                </div>
-                <p id="coop-warning" class="warning">Please select a rating for Cooperation.</p>
+        <!-- Cooperation Criterion Box -->
+        <div class="criterion-box">
+            <h4>Cooperation</h4>
+            <div class="rating">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
             </div>
+            <p id="coop-warning" class="warning">Cooperation: 3/5</p>
+        </div>
 
-            <!-- Conceptual Contribution Criterion Box -->
-            <div class="criterion-box">
-                <h4>Conceptual Contribution</h4>
-                <div class="rating">
-                    <input type="radio" id="concept-5" name="conceptual_contribution" value="5">
-                    <label for="concept-5"></label>
-                    <input type="radio" id="concept-4" name="conceptual_contribution" value="4">
-                    <label for="concept-4"></label>
-                    <input type="radio" id="concept-3" name="conceptual_contribution" value="3">
-                    <label for="concept-3"></label>
-                    <input type="radio" id="concept-2" name="conceptual_contribution" value="2">
-                    <label for="concept-2"></label>
-                    <input type="radio" id="concept-1" name="conceptual_contribution" value="1">
-                    <label for="concept-1"></label>
-                </div>
-                <p id="concept-warning" class="warning">Please select a rating for Conceptual Contribution.</p>
+        <!-- Conceptual Contribution Criterion Box -->
+        <div class="criterion-box">
+            <h4>Conceptual Contribution</h4>
+            <div class="rating">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
             </div>
+            <p id="concept-warning" class="warning">Conceptual Contribution: 3/5</p>
+        </div>
 
-            <!-- Practical Contribution Criterion Box -->
-            <div class="criterion-box">
-                <h4>Practical Contribution</h4>
-                <div class="rating">
-                    <input type="radio" id="practical-5" name="practical_contribution" value="5">
-                    <label for="practical-5"></label>
-                    <input type="radio" id="practical-4" name="practical_contribution" value="4">
-                    <label for="practical-4"></label>
-                    <input type="radio" id="practical-3" name="practical_contribution" value="3">
-                    <label for="practical-3"></label>
-                    <input type="radio" id="practical-2" name="practical_contribution" value="2">
-                    <label for="practical-2"></label>
-                    <input type="radio" id="practical-1" name="practical_contribution" value="1">
-                    <label for="practical-1"></label>
-                </div>
-                <p id="practical-warning" class="warning">Please select a rating for Practical Contribution.</p>
+        <!-- Practical Contribution Criterion Box -->
+        <div class="criterion-box">
+            <h4>Practical Contribution</h4>
+            <div class="rating">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
             </div>
+            <p id="practical-warning" class="warning">Practical Contribution: 3/5</p>
+        </div>
 
-            <!-- Work Ethic Criterion Box -->
-            <div class="criterion-box">
-                <h4>Work Ethic</h4>
-                <div class="rating">
-                    <input type="radio" id="ethic-5" name="work_ethic" value="5">
-                    <label for="ethic-5"></label>
-                    <input type="radio" id="ethic-4" name="work_ethic" value="4">
-                    <label for="ethic-4"></label>
-                    <input type="radio" id="ethic-3" name="work_ethic" value="3">
-                    <label for="ethic-3"></label>
-                    <input type="radio" id="ethic-2" name="work_ethic" value="2">
-                    <label for="ethic-2"></label>
-                    <input type="radio" id="ethic-1" name="work_ethic" value="1">
-                    <label for="ethic-1"></label>
-                </div>
-                <p id="ethic-warning" class="warning">Please select a rating for Work Ethic.</p>
+        <!-- Work Ethic Criterion Box -->
+        <div class="criterion-box">
+            <h4>Work Ethic</h4>
+            <div class="rating">
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star checked"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
             </div>
+            <p id="ethic-warning" class="warning">Work Ethic: 3/5</p>
+        </div>
 
-            <!-- Additional Comments (Optional) -->
-            <div class="form-section text-center mb-5">
-                <label for="comments" class="form-label">Overall Comments </label>
-                <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Write any feedback here..."></textarea>
-            </div>
+        <!-- Additional Comments (Optional) -->
+        <div class="form-section text-center mb-5">
+            <label for="comments" class="form-label">Overall Comments </label>
+            <p class="form-control-static">No comments yet.</p>
+        </div>
+    </div>
 
-            <!-- Submit Button --> 
-            <div class="text-center mb-5">
-                <button type="submit" class="btn btn-primary">Submit Evaluation</button>
-            </div>
-        </form>
-    </div> 
- 
-    <!-- Bootstrap JS for handling UI interactions -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome for star icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </body>
 </html>
