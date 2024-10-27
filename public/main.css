@@ -7,16 +7,15 @@ html, body {
 .wrapper {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Full height of the viewport */
+    min-height: 100vh;
 }
 
 main {
-    flex: 1; /* This allows the main content to take up the available space */
+    flex: 1;
 }
 
 footer {
-    /* Optional styling for footer */
-    background-color: #f8f9fa; /* Example background color */
-    padding: 20px; /* Example padding */
-    text-align: center; /* Center text */
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center; 
 }
