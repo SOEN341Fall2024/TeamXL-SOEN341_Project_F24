@@ -1,5 +1,7 @@
-<%- include('partials/header-2', { title: 'Profile' }) %>
-<div class="container m-5">
+<%- include('partials/header-2', { title: 'Profile', userType, instructorUsername }) %>
+
+
+<div class="container m-5" style="width:50%">
 <div class="row g-5">
     <div class="col-md-9 col-lg-8">
       <h4 class="mb-3">Profile</h4>
@@ -94,6 +96,7 @@
   </div>
   </div>
 
+  <button type="button" class="btn btn-success mt-4">Save</button>
 
 
   <script>
@@ -113,7 +116,7 @@
             stateContainer.style.display = 'none'; 
     }});
 </script>
-
+</div>
 
 
 <%- include('partials/footer') %>

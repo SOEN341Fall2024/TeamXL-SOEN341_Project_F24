@@ -117,7 +117,17 @@ app.get("/edit-team", (req, res) => {
 
 // Route for the PROFILE page
 app.get("/profile", (req, res) => {
-  res.render("profile.ejs");
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+
+  if (userType) {
+    res.render("profile.ejs", {
+      userType,
+      instructorUsername,
+    });
+  } else {
+    res.redirect("/login");
+  }
 });
 
 // Route for the PEER ASSESSMENT page
@@ -193,9 +203,10 @@ app.post("/login", async (req, res) => {
             // Redirect to the instructor dashboard with the username
             res.render("instructor-dashboard.ejs", {
               instructorUsername: user.name,
+              userType: user.origin,
             });
           } else {
-            res.render("student-dashboard.ejs"); // Render student dashboard
+            res.render("student-dashboard.ejs", { userType: user.origin }); // Render student dashboard
           }
         } else {
           res.render("incorrect-pw-un.ejs");
