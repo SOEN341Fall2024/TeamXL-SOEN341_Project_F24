@@ -60,6 +60,11 @@ app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
+// Route for the STUDENT DASHBOARD page, render the student-dashboard view
+app.post("/thank-you", (req, res) => {
+  res.render("thank-you.ejs");
+});
+
 
 
 // Route for the INSTRUCTOR DASHBOARD page
@@ -439,14 +444,13 @@ app.post("/submit-evaluation", async (req, res) => {
     ]
   )
 
-  const data = {cooperation: req.body.cooperation,  
+
+  //The /confirm-evaluation route
+  res.render("evaluation-confirmation.ejs" , { cooperation: req.body.cooperation,  
     conceptual_contribution: req.body.conceptual_contribution,
     practical_contribution: req.body.practical_contribution, 
     work_ethic: req.body.work_ethic, 
-    additional_comments: req.body.comments};
-
-  //jonathan can add the /confirm-evaluation route
-  res.render("evaluation-confirmation.ejs" , data)
+    additional_comments: req.body.comments})
 });
 
 //--------START EXPRESS SERVER--------//
