@@ -2,9 +2,9 @@
 
 
 <style>
-    /* Styling for the page and form */
-    /* body {
-        font-family: Arial, sans-serif;
+    /*Styling for the page and form */
+     body {
+    
         background-color: #f4f6f9;
     }
 
@@ -76,7 +76,7 @@
         padding: 20px;
         margin-bottom: 30px;
         text-align: center;
-    } */
+    }
 </style>
 
 
@@ -86,9 +86,10 @@
     
     <input class="form-control me-2" name="query" type="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-success" type="submit">Search</button>
-</div>
+
 
 </form>
+</div>
 <div>
     <h2 class="mt-4">Search Results for "<%= query %>"</h2>
     <% if (studentsList.length > 0) { %>
@@ -109,9 +110,6 @@
 </div>
 
 </div>
-
-
-
 
 <script>
     // Mock data for peers
