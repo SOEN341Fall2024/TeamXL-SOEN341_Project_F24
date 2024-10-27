@@ -79,63 +79,68 @@
         <!-- Cooperation Criterion Box -->
         <div class="criterion-box">
             <h4>Cooperation</h4>
-            <div class="rating">
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-            </div>
-            <p id="coop-warning" class="warning">Cooperation: 3/5</p>
+            <div class="rating" id="cooperation-rating"></div>
+            <p id="coop-warning" class="warning">Cooperation: <span id="cooperation-score">3</span>/5</p>
         </div>
 
         <!-- Conceptual Contribution Criterion Box -->
         <div class="criterion-box">
             <h4>Conceptual Contribution</h4>
-            <div class="rating">
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-            </div>
-            <p id="concept-warning" class="warning">Conceptual Contribution: 3/5</p>
+            <div class="rating" id="conceptual-rating"></div>
+            <p id="concept-warning" class="warning">Conceptual Contribution: <span id="conceptual-score">3</span>/5</p>
         </div>
 
         <!-- Practical Contribution Criterion Box -->
         <div class="criterion-box">
             <h4>Practical Contribution</h4>
-            <div class="rating">
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-            </div>
-            <p id="practical-warning" class="warning">Practical Contribution: 3/5</p>
+            <div class="rating" id="practical-rating"></div>
+            <p id="practical-warning" class="warning">Practical Contribution: <span id="practical-score">3</span>/5</p>
         </div>
 
         <!-- Work Ethic Criterion Box -->
         <div class="criterion-box">
             <h4>Work Ethic</h4>
-            <div class="rating">
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star checked"></span>
-                <span class="fa fa-star"></span>
-                <span class="fa fa-star"></span>
-            </div>
-            <p id="ethic-warning" class="warning">Work Ethic: 3/5</p>
+            <div class="rating" id="ethic-rating"></div>
+            <p id="ethic-warning" class="warning">Work Ethic: <span id="ethic-score">3</span>/5</p>
         </div>
 
         <!-- Additional Comments (Optional) -->
         <div class="form-section text-center mb-5">
             <label for="comments" class="form-label">Overall Comments </label>
-            <p class="form-control-static">No comments yet.</p>
+            <p class="form-control-static">This is the feedback comment.</p>
         </div>
     </div>
 
     <!-- Font Awesome for star icons -->
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script>
+        // Mock data for ratings
+        const ratings = {
+            cooperation: 3,
+            conceptual: 3,
+            practical: 3,
+            ethic: 3
+        };
+
+        // Function to generate stars based on rating
+        function generateStars(rating, elementId) {
+            const ratingElement = document.getElementById(elementId);
+            ratingElement.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('span');
+                star.classList.add('fa', 'fa-star');
+                if (i <= rating) {
+                    star.classList.add('checked');
+                }
+                ratingElement.appendChild(star);
+            }
+        }
+
+        // Generate stars for each criterion
+        generateStars(ratings.cooperation, 'cooperation-rating');
+        generateStars(ratings.conceptual, 'conceptual-rating');
+        generateStars(ratings.practical, 'practical-rating');
+        generateStars(ratings.ethic, 'ethic-rating');
+    </script>
 </body>
 </html>
