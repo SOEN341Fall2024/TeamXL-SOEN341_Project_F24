@@ -240,9 +240,9 @@ app.get("/edit-evaluation", async (req, res) => {
 
   try {
 
-    await db.query("SELECT cooperation, conceptual_contribution, practical_contribution, work_ethic, comments FROM EVALUATION WHERE" + 
-    " ID_EVALUATOR = ? AND " +
-    " ID_EVALUATEE = ?; ", 
+    const answers = await db.query("SELECT cooperation, conceptual_contribution, practical_contribution, work_ethic, comments FROM EVALUATION WHERE" + 
+    " ID_EVALUATOR = $1 AND " +
+    " ID_EVALUATEE = $2; ", 
       [req.session.userID, req.session.peerID]
     );
 
