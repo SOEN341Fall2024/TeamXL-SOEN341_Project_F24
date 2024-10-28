@@ -199,7 +199,7 @@
             <!-- Additional Comments (Optional) -->
             <div class="form-section text-center mb-5">
                 <label for="comments" class="form-label">Overall Comments </label>
-                <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="<%= commentsValue === null ? 'Write any feedback here...' : commentsValue %>"></textarea>
+                <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Write any feedback here..."><%= commentsValue === null ? '' : commentsValue %></textarea>
             </div>
 
             <!-- Submit Button --> 
