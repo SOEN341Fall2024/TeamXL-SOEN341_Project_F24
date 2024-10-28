@@ -240,6 +240,12 @@ app.get("/edit-evaluation", async (req, res) => {
 
   try {
 
+    await db.query("SELECT cooperation, conceptual_contribution, practical_contribution, work_ethic, comments FROM EVALUATION WHERE" + 
+    " ID_EVALUATOR = ? AND " +
+    " ID_EVALUATEE = ?; ", 
+      [req.session.userID, req.session.peerID]
+    );
+
     await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 AND id_evaluatee = $2", 
       [req.session.userID, req.session.peerID]
     );
