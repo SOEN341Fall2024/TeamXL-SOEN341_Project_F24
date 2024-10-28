@@ -122,7 +122,7 @@
         
         <!-- Evaluation Form -->
        <form action="/submit-evaluation" method="POST" onsubmit="validateForm(event)">
-            
+        <p>Edit your evaluation</p>
             <!-- Cooperation Criterion Box -->
             <div class="criterion-box">
                 <h4>Cooperation</h4>
@@ -145,19 +145,20 @@
             <div class="criterion-box">
                 <h4>Conceptual Contribution</h4>
                 <div class="rating">
-                    <input type="radio" id="concept-5" name="conceptual_contribution" value="5" <%= conceptualContributionValue >= 5 ? 'checked' : '' %> >
+                    <input type="radio" id="concept-5" name="conceptual_contribution" value="5" <%= conceptualContributionValue == 5 ? 'checked' : '' %>>
                     <label for="concept-5"></label>
-                    <input type="radio" id="concept-4" name="conceptual_contribution" value="4" <%= conceptualContributionValue >= 4 ? 'checked' : '' %>>
+                    <input type="radio" id="concept-4" name="conceptual_contribution" value="4" <%= conceptualContributionValue == 4 ? 'checked' : '' %>>
                     <label for="concept-4"></label>
-                    <input type="radio" id="concept-3" name="conceptual_contribution" value="3" <%= conceptualContributionValue >= 3 ? 'checked' : '' %>>
+                    <input type="radio" id="concept-3" name="conceptual_contribution" value="3" <%= conceptualContributionValue == 3 ? 'checked' : '' %>>
                     <label for="concept-3"></label>
-                    <input type="radio" id="concept-2" name="conceptual_contribution" value="2" <%= conceptualContributionValue >= 2 ? 'checked' : '' %>>
+                    <input type="radio" id="concept-2" name="conceptual_contribution" value="2" <%= conceptualContributionValue == 2 ? 'checked' : '' %>>
                     <label for="concept-2"></label>
-                    <input type="radio" id="concept-1" name="conceptual_contribution" value="1" <%= conceptualContributionValue >= 1 ? 'checked' : '' %>>
+                    <input type="radio" id="concept-1" name="conceptual_contribution" value="1" <%= conceptualContributionValue == 1 ? 'checked' : '' %>>
                     <label for="concept-1"></label>
                 </div>
                 <p id="concept-warning" class="warning">Please select a rating for Conceptual Contribution.</p>
             </div>
+            
 
             <!-- Practical Contribution Criterion Box -->
             <div class="criterion-box">
