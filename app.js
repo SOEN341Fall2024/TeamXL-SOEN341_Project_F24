@@ -214,10 +214,10 @@ app.get("/student-evaluation/:id", async (req, res) => {
   }
 });
 
-app.get("/view-my-reviews", async (req, res) => {
+app.get("/view-reviews", async (req, res) => {
   const RESULT = await db.query("SELECT * FROM evaluation WHERE id_evaluatee = $1", [req.session.userID]);
 
-  res.render("view-my-reviews.ejs", {
+  res.render("view-reviews.ejs", {
     reviews: RESULT.rows,
   });
 });
@@ -229,7 +229,7 @@ app.get("/cancel-review", async (req, res) => {
 
   delete req.session.peerID;
 
-  res.redirect("/");
+  res.redirect("/student-dashboard");
 });
 
 //Route to LOGOUT
@@ -439,15 +439,20 @@ app.post("/submit-evaluation", async (req, res) => {
     ]
   )
 
-  const data = {cooperation: req.body.cooperation,  
+
+  //The /confirm-evaluation route
+  res.render("evaluation-confirmation.ejs" , { cooperation: req.body.cooperation,  
     conceptual_contribution: req.body.conceptual_contribution,
     practical_contribution: req.body.practical_contribution, 
     work_ethic: req.body.work_ethic, 
-    additional_comments: req.body.comments};
-
-  //jonathan can add the /confirm-evaluation route
-  res.render("evaluation-confirmation.ejs" , data)
+    additional_comments: req.body.comments})
 });
+
+// Route for the STUDENT DASHBOARD page, render the student-dashboard view
+app.post("/thank-you", (req, res) => {
+  res.render("thank-you.ejs");
+});
+
 
 //--------START EXPRESS SERVER--------//
 
