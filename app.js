@@ -243,17 +243,17 @@ app.get("/edit-evaluation", async (req, res) => {
     await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 AND id_evaluatee = $2", 
       [req.session.userID, req.session.peerID]
     );
-  
-    delete req.session.peerID;
 
     const student = await getStudentById(studentId);
 
+    console.log(req.session.userID);
+    console.log(req.session.peerID);
 
     res.render("edit-evaluation.ejs", { 
       student, 
       userType, 
       instructorUsername,
-      conceptualContributionValue : 10 // Pass this to the view
+      conceptualContributionValue : 5 // Pass this to the view
     });
   } catch (error) {
     console.error("Error fetching student for evaluation:", error);
