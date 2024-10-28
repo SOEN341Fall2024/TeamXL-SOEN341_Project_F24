@@ -1,4 +1,4 @@
-<%- include('partials/header-2', { title: 'Evaluate Student' , userType, instructorUsername, conceptualContributionValue  }) %>
+<%- include('partials/header-2', { title: 'Evaluate Student' , userType, instructorUsername, cooperationValue, conceptualContributionValue, practical_contributionValue, work_ethicValue  }) %>
     <style>
         /* Black Gradient background for the title banner */
         .title-banner {
@@ -127,15 +127,15 @@
             <div class="criterion-box">
                 <h4>Cooperation</h4>
                 <div class="rating">
-                    <input type="radio" id="coop-5" name="cooperation" value="5">
+                    <input type="radio" id="coop-5" name="cooperation" value="5" <%= cooperationValue == 5 ? 'checked' : '' %>>
                     <label for="coop-5"></label>
-                    <input type="radio" id="coop-4" name="cooperation" value="4">
+                    <input type="radio" id="coop-4" name="cooperation" value="4" <%= cooperationValue == 5 ? 'checked' : '' %>>
                     <label for="coop-4"></label>
-                    <input type="radio" id="coop-3" name="cooperation" value="3">
+                    <input type="radio" id="coop-3" name="cooperation" value="3" <%= cooperationValue == 5 ? 'checked' : '' %>>
                     <label for="coop-3"></label>
-                    <input type="radio" id="coop-2" name="cooperation" value="2">
+                    <input type="radio" id="coop-2" name="cooperation" value="2" <%= cooperationValue == 5 ? 'checked' : '' %>>
                     <label for="coop-2"></label>
-                    <input type="radio" id="coop-1" name="cooperation" value="1">
+                    <input type="radio" id="coop-1" name="cooperation" value="1" <%= cooperationValue == 5 ? 'checked' : '' %>>
                     <label for="coop-1"></label>
                 </div>
                 <p id="coop-warning" class="warning">Please select a rating for Cooperation.</p>
@@ -164,15 +164,15 @@
             <div class="criterion-box">
                 <h4>Practical Contribution</h4>
                 <div class="rating">
-                    <input type="radio" id="practical-5" name="practical_contribution" value="5">
+                    <input type="radio" id="practical-5" name="practical_contribution" value="5" <%= practical_contributionValue == 5 ? 'checked' : '' %>>
                     <label for="practical-5"></label>
-                    <input type="radio" id="practical-4" name="practical_contribution" value="4">
+                    <input type="radio" id="practical-4" name="practical_contribution" value="4" <%= practical_contributionValue == 5 ? 'checked' : '' %>>
                     <label for="practical-4"></label>
-                    <input type="radio" id="practical-3" name="practical_contribution" value="3">
+                    <input type="radio" id="practical-3" name="practical_contribution" value="3" <%= practical_contributionValue == 5 ? 'checked' : '' %>>
                     <label for="practical-3"></label>
-                    <input type="radio" id="practical-2" name="practical_contribution" value="2">
+                    <input type="radio" id="practical-2" name="practical_contribution" value="2" <%= practical_contributionValue == 5 ? 'checked' : '' %>>
                     <label for="practical-2"></label>
-                    <input type="radio" id="practical-1" name="practical_contribution" value="1">
+                    <input type="radio" id="practical-1" name="practical_contribution" value="1" <%= practical_contributionValue == 5 ? 'checked' : '' %>>
                     <label for="practical-1"></label>
                 </div>
                 <p id="practical-warning" class="warning">Please select a rating for Practical Contribution.</p>
@@ -182,15 +182,15 @@
             <div class="criterion-box">
                 <h4>Work Ethic</h4>
                 <div class="rating">
-                    <input type="radio" id="ethic-5" name="work_ethic" value="5">
+                    <input type="radio" id="ethic-5" name="work_ethic" value="5" <%= work_ethicValue == 5 ? 'checked' : '' %>>
                     <label for="ethic-5"></label>
-                    <input type="radio" id="ethic-4" name="work_ethic" value="4">
+                    <input type="radio" id="ethic-4" name="work_ethic" value="4" <%= work_ethicValue == 5 ? 'checked' : '' %>>
                     <label for="ethic-4"></label>
-                    <input type="radio" id="ethic-3" name="work_ethic" value="3">
+                    <input type="radio" id="ethic-3" name="work_ethic" value="3" <%= work_ethicValue == 5 ? 'checked' : '' %>>
                     <label for="ethic-3"></label>
-                    <input type="radio" id="ethic-2" name="work_ethic" value="2">
+                    <input type="radio" id="ethic-2" name="work_ethic" value="2" <%= work_ethicValue == 5 ? 'checked' : '' %>>
                     <label for="ethic-2"></label>
-                    <input type="radio" id="ethic-1" name="work_ethic" value="1">
+                    <input type="radio" id="ethic-1" name="work_ethic" value="1" <%= work_ethicValue == 5 ? 'checked' : '' %>>
                     <label for="ethic-1"></label>
                 </div>
                 <p id="ethic-warning" class="warning">Please select a rating for Work Ethic.</p>
