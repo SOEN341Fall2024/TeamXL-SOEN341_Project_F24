@@ -245,7 +245,7 @@ app.get("/edit-evaluation", async (req, res) => {
     " ID_EVALUATEE = $2; ", 
       [req.session.userID, req.session.peerID]
     );
-    result.rows[0].id
+    
     await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 AND id_evaluatee = $2", 
       [req.session.userID, req.session.peerID]
     );
