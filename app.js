@@ -252,14 +252,16 @@ app.get("/edit-evaluation", async (req, res) => {
 
     const student = await getStudentById(studentId);
 
-    console.log(req.session.userID);
-    console.log(req.session.peerID);
 
     res.render("edit-evaluation.ejs", { 
       student, 
       userType, 
       instructorUsername,
-      conceptualContributionValue : 5 // Pass this to the view
+      cooperationValue :answers[0],
+      conceptualContributionValue : answers[1],
+      practical_contributionValue: answers[3] ,
+      work_ethicValue : answers[4],
+      commentsValue : answers[5]
     });
   } catch (error) {
     console.error("Error fetching student for evaluation:", error);
