@@ -12,7 +12,7 @@
         }
 
         /* Main container styling */ 
-        .container {
+        .container2 {
             margin-top: 50px;
             max-width: 700px;
             padding: 30px;
@@ -78,47 +78,11 @@
             margin-top: 5px;
         }
     </style>
-    <script>
-        function validateForm(event) {
-            var cooperation = document.querySelector('input[name="cooperation"]:checked');
-            var conceptualContribution = document.querySelector('input[name="conceptual_contribution"]:checked');
-            var practicalContribution = document.querySelector('input[name="practical_contribution"]:checked');
-            var workEthic = document.querySelector('input[name="work_ethic"]:checked');
 
-            document.getElementById("coop-warning").style.display = "none";
-            document.getElementById("concept-warning").style.display = "none";
-            document.getElementById("practical-warning").style.display = "none";
-            document.getElementById("ethic-warning").style.display = "none";
 
-            var valid = true;
-
-            if (!cooperation) {
-                document.getElementById("coop-warning").style.display = "block";
-                valid = false;
-            }
-            if (!conceptualContribution) {
-                document.getElementById("concept-warning").style.display = "block";
-                valid = false;
-            }
-            if (!practicalContribution) {
-                document.getElementById("practical-warning").style.display = "block";
-                valid = false;
-            }
-            if (!workEthic) {
-                document.getElementById("ethic-warning").style.display = "block";
-                valid = false;
-            }
-
-            if (!valid) {
-                event.preventDefault();
-            }
-        }
-    </script>
-</head>
-<body>
-
+<div class=" d-flex justify-content-center" >
     <!-- Main Content -->
-    <div class="container">
+    <div class="container2">
         
         <!-- Evaluation Form -->
         <form action="/submit-evaluation" method="POST" onsubmit="validateForm(event)">
@@ -207,9 +171,46 @@
             </div>
         </form>
     </div>
+</div>
+</div>
 
- <
-   
+<script>
+    function validateForm(event) {
+        var cooperation = document.querySelector('input[name="cooperation"]:checked');
+        var conceptualContribution = document.querySelector('input[name="conceptual_contribution"]:checked');
+        var practicalContribution = document.querySelector('input[name="practical_contribution"]:checked');
+        var workEthic = document.querySelector('input[name="work_ethic"]:checked');
+
+        document.getElementById("coop-warning").style.display = "none";
+        document.getElementById("concept-warning").style.display = "none";
+        document.getElementById("practical-warning").style.display = "none";
+        document.getElementById("ethic-warning").style.display = "none";
+
+        var valid = true;
+
+        if (!cooperation) {
+            document.getElementById("coop-warning").style.display = "block";
+            valid = false;
+        }
+        if (!conceptualContribution) {
+            document.getElementById("concept-warning").style.display = "block";
+            valid = false;
+        }
+        if (!practicalContribution) {
+            document.getElementById("practical-warning").style.display = "block";
+            valid = false;
+        }
+        if (!workEthic) {
+            document.getElementById("ethic-warning").style.display = "block";
+            valid = false;
+        }
+
+        if (!valid) {
+            event.preventDefault();
+        }
+    }
+</script>
+
 <%- include('partials/footer') %>
 
 
