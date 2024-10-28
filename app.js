@@ -245,7 +245,7 @@ app.get("/edit-evaluation", async (req, res) => {
     " ID_EVALUATEE = $2; ", 
       [req.session.userID, req.session.peerID]
     );
-
+    result.rows[0].id
     await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 AND id_evaluatee = $2", 
       [req.session.userID, req.session.peerID]
     );
@@ -257,11 +257,11 @@ app.get("/edit-evaluation", async (req, res) => {
       student, 
       userType, 
       instructorUsername,
-      cooperationValue :answers[0],
-      conceptualContributionValue : answers[1],
-      practical_contributionValue: answers[3] ,
-      work_ethicValue : answers[4],
-      commentsValue : answers[5]
+      cooperationValue :answers.rows[0].cooperation ,
+      conceptualContributionValue : answers.rows[0].conceptual_contribution,
+      practical_contributionValue: answers.rows[0].practical_contribution ,
+      work_ethicValue : answers.rows[0].work_ethic,
+      commentsValue : answers.rows[0].comments
     });
   } catch (error) {
     console.error("Error fetching student for evaluation:", error);
