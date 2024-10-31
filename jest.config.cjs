@@ -1,8 +1,7 @@
-// jest.config.js
-export default {
-    transform: {
-      "^.+\\.jsx?$": "babel-jest"
-    },
-    testEnvironment: "node"
-  };
-  
+// jest.config.cjs
+module.exports = {
+  transform: {
+    "^.+\\.jsx?$": "babel-jest"
+  },
+  testEnvironment: "node"
+};
