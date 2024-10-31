@@ -1,4 +1,4 @@
-import { isLoggedIn, isInstructor, isStudent } from '../middleware';
+import { isLoggedIn, isInstructor, isStudent } from '../middleware.js';
 
 describe('Middleware Tests', () => {
   test('isLoggedIn middleware should call next() if user is authenticated', () => {

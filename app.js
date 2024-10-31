@@ -457,9 +457,11 @@ app.post("/thank-you", (req, res) => {
 //--------START EXPRESS SERVER--------//
 
 // Start the Express server. Server listening on port 3000
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`); // Log that the server is running
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
 
 // Export the app and db connection for testing purposes
 export { app, db };
