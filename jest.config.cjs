@@ -1,5 +1,5 @@
 // jest.config.js
-module.exports = {
+export default {
     transform: {
       "^.+\\.jsx?$": "babel-jest"
     },
