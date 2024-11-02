@@ -232,7 +232,7 @@ app.get("/cancel-review", async (req, res) => {
   res.redirect("/student-dashboard");
 });
 
-//------------------------------------------------------------------
+
 app.get("/edit-evaluation", async (req, res) => {
   const studentId = req.params.id;
   const instructorUsername = req.query.instructorUsername;
@@ -246,12 +246,7 @@ app.get("/edit-evaluation", async (req, res) => {
       [req.session.userID, req.session.peerID]
     );
     
-    await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 AND id_evaluatee = $2", 
-      [req.session.userID, req.session.peerID]
-    );
-
     const student = await getStudentById(studentId);
-
 
     res.render("edit-evaluation.ejs", { 
       student, 
@@ -465,6 +460,7 @@ app.post("/student-evaluation", async (req, res) => {
   }
 });
 
+//Route to handle the submission of the evaluation
 app.post("/submit-evaluation", async (req, res) => {
   await db.query("INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)", 
     [
@@ -478,6 +474,31 @@ app.post("/submit-evaluation", async (req, res) => {
     ]
   )
 
+
+  //The confirm-evaluation route
+  res.render("evaluation-confirmation.ejs" , { cooperation: req.body.cooperation,  
+    conceptual_contribution: req.body.conceptual_contribution,
+    practical_contribution: req.body.practical_contribution, 
+    work_ethic: req.body.work_ethic, 
+    additional_comments: req.body.comments})
+});
+
+// The edition of an evaluation route ----------------------------------
+app.post("/edit-submition", async (req, res) => {
+
+  await db.query(
+    "UPDATE evaluation SET cooperation = $3, conceptual_contribution = $4, practical_contribution = $5, work_ethic = $6, comments = $7 WHERE id_evaluator = $1 AND id_evaluatee = $2",
+    [
+      req.session.userID, 
+      req.session.peerID, 
+      req.body.cooperation,
+      req.body.conceptual_contribution,
+      req.body.practical_contribution,
+      req.body.work_ethic,
+      req.body.comments
+    ]
+  );
+  
 
   //The /confirm-evaluation route
   res.render("evaluation-confirmation.ejs" , { cooperation: req.body.cooperation,  
