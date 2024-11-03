@@ -1,4 +1,5 @@
 <% for(var i = 0, j = 0, k = -1; i < student_info.length; i++) { %>
+    <% if(i + 1 < student_info.length && i > 0  && student_info[i].id == student_info[i - 1].id) {i++;}%>
     <%  if(k != j) { k++; %>
         <b>Team Name: <%= groups[j].group_name; %></b>
         <table>
@@ -11,7 +12,7 @@
                 <th>Average Across All</th>
             </tr>
     <% } %>
-    <% if(groups[j].id_group != student_info[i].id_group) { j++; %>
+    <% if(groups[j].id_group != student_info[i].id_group) { j++; i--; %>
         </table>
     <% } else { %>
     <tr>
