@@ -10,6 +10,7 @@ import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
 import { group } from "console";
+import {getCooperation, getConceptual, getPractical, getWorkEthic, getPeers} from "./helper.js"
 
 dotenv.config();
 
@@ -266,12 +267,38 @@ app.get("/edit-evaluation", async (req, res) => {
   }
 });
 
-app.get("/view-reviews-summary", (req, res) => {
-  
+app.get("/view-reviews-summary", async (req, res) => {
+  const result1 = await db.query("SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC");
+  const result2 = await db.query("SELECT group_name, id_group FROM groups ORDER BY id_group ASC");
+  const student_info = result1.rows;
+  const groups = result2.rows;
+
+  res.render("view-reviews-summary.ejs", {
+    getCooperation, 
+    getConceptual, 
+    getPractical, 
+    getWorkEthic, 
+    getPeers,
+    student_info,
+    groups
+  });
 });
 
-app.get("/view-reviews-detailed", (req, res) => {
-
+app.get("/view-reviews-detailed", async (req, res) => {
+  const result1 = await db.query("SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC");
+  const result2 = await db.query("SELECT group_name, id_group FROM groups ORDER BY id_group ASC");
+  const student_info = result1.rows;
+  const groups = result2.rows;
+  
+  res.render("view-reviews-detailed.ejs", {
+    getCooperation, 
+    getConceptual, 
+    getPractical, 
+    getWorkEthic, 
+    getPeers,
+    student_info,
+    groups
+  });
 });
 
 //Route to LOGOUT

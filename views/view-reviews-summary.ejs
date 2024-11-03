@@ -1,0 +1,27 @@
+<table>
+    <tr>
+        <th>Student ID</th>
+        <th>Name</th>
+        <th>Team</th>
+        <th>Cooperation</th>
+        <th>Conceptual contribution</th>
+        <th>Practical Contribution</th>
+        <th>Work Ethic</th>
+        <th>Average</th>
+        <th>Peers who responded</th>
+    </tr>
+        <% for(var i = 0, j = 0; i < student_info.length; i++) { %>
+            <% if(groups[j].id_group != student_info[i].id_group) {j++;}%>
+            <tr>
+                <td><%= student_info[i].id %></td>
+                <td><%= student_info[i].name %></td>
+                <td><%= groups[j].group_name %></td>
+                <td><%- getCooperation(student_info, i) %></td>
+                <td><%- getConceptual(student_info, i) %></td>
+                <td><%- getPractical(student_info, i) %></td>
+                <td><%- getWorkEthic(student_info, i) %></td>
+                <td><%- (getCooperation(student_info, i) + getConceptual(student_info, i) + getPractical(student_info, i) + getWorkEthic(student_info, i)) / 4.0 %></td>
+                <td><%- getPeers(student_info, i) %></td>
+            </tr>
+        <% } %>
+</table>
