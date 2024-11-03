@@ -68,3 +68,7 @@ export function getPeers(student_info, idx){
 
     return peerIDs;
 }
+
+export function getAverage(student_info, idx){
+    return (getCooperation(student_info, idx) + getConceptual(student_info, idx) + getPractical(student_info, idx) + getWorkEthic(student_info, idx)) / 4.0 ;
+}

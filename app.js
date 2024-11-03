@@ -10,7 +10,7 @@ import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
 import { group } from "console";
-import {getCooperation, getConceptual, getPractical, getWorkEthic, getPeers} from "./helper.js"
+import {getCooperation, getConceptual, getPractical, getWorkEthic, getPeers, getAverage} from "./helper.js"
 
 dotenv.config();
 
@@ -279,6 +279,7 @@ app.get("/view-reviews-summary", async (req, res) => {
     getPractical, 
     getWorkEthic, 
     getPeers,
+    getAverage,
     student_info,
     groups
   });
@@ -296,6 +297,7 @@ app.get("/view-reviews-detailed", async (req, res) => {
     getPractical, 
     getWorkEthic, 
     getPeers,
+    getAverage,
     student_info,
     groups
   });
