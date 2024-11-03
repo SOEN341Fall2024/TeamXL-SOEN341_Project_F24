@@ -166,9 +166,11 @@ app.get("/peer-assessment", async (req, res) => {
 
   try {
     if (userType) {
+      const r_temp = await db.query("SELECT id_group FROM student WHERE id = $1", [req.session.userID]);
+      const groupID = r_temp.rows[0].id_group;
       const result = await db.query(
-        "SELECT * FROM student WHERE LOWER(name) LIKE $1",
-        [`%${query}%`]
+        "SELECT * FROM student WHERE LOWER(name) LIKE $1 AND id != $2 AND id_group = $3",
+        [`%${query}%`, req.session.userID, groupID]
       );
       res.render("peer-assessment.ejs", {
         query,
@@ -264,7 +266,13 @@ app.get("/edit-evaluation", async (req, res) => {
   }
 });
 
+app.get("/view-reviews-summary", (req, res) => {
+  
+});
 
+app.get("/view-reviews-detailed", (req, res) => {
+
+});
 
 //Route to LOGOUT
 app.get("/logout", (req, res) => {
