@@ -21,7 +21,7 @@
                 <td><%- getConceptual(student_info, i) %></td>
                 <td><%- getPractical(student_info, i) %></td>
                 <td><%- getWorkEthic(student_info, i) %></td>
-                <td><%- (getCooperation(student_info, i) + getConceptual(student_info, i) + getPractical(student_info, i) + getWorkEthic(student_info, i)) / 4.0 %></td>
+                <td><%- getAverage(student_info, i)%></td>
                 <td><%- getPeers(student_info, i) %></td>
             </tr>
         <% } %>
