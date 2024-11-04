@@ -1,4 +1,4 @@
-<%- include('partials/header-2', { title: 'Evaluate Student' , userType, instructorUsername  }) %>
+<%- include('partials/header-2', { title: 'Evaluate Student' , userType, instructorUsername}) %>
     <style>
         /* Black Gradient background for the title banner */
         .title-banner {
@@ -111,13 +111,13 @@
                 <div class="rating">
                     <input type="radio" id="concept-5" name="conceptual_contribution" value="5" >
                     <label for="concept-5"></label>
-                    <input type="radio" id="concept-4" name="conceptual_contribution" value="4">
+                    <input type="radio" id="concept-4" name="conceptual_contribution" value="4" >
                     <label for="concept-4"></label>
-                    <input type="radio" id="concept-3" name="conceptual_contribution" value="3">
+                    <input type="radio" id="concept-3" name="conceptual_contribution" value="3" >
                     <label for="concept-3"></label>
-                    <input type="radio" id="concept-2" name="conceptual_contribution" value="2">
+                    <input type="radio" id="concept-2" name="conceptual_contribution" value="2" >
                     <label for="concept-2"></label>
-                    <input type="radio" id="concept-1" name="conceptual_contribution" value="1">
+                    <input type="radio" id="concept-1" name="conceptual_contribution" value="1" >
                     <label for="concept-1"></label>
                 </div>
                 <p id="concept-warning" class="warning">Please select a rating for Conceptual Contribution.</p>
@@ -171,46 +171,7 @@
             </div>
         </form>
     </div>
-</div>
-</div>
-
-<script>
-    function validateForm(event) {
-        var cooperation = document.querySelector('input[name="cooperation"]:checked');
-        var conceptualContribution = document.querySelector('input[name="conceptual_contribution"]:checked');
-        var practicalContribution = document.querySelector('input[name="practical_contribution"]:checked');
-        var workEthic = document.querySelector('input[name="work_ethic"]:checked');
-
-        document.getElementById("coop-warning").style.display = "none";
-        document.getElementById("concept-warning").style.display = "none";
-        document.getElementById("practical-warning").style.display = "none";
-        document.getElementById("ethic-warning").style.display = "none";
-
-        var valid = true;
-
-        if (!cooperation) {
-            document.getElementById("coop-warning").style.display = "block";
-            valid = false;
-        }
-        if (!conceptualContribution) {
-            document.getElementById("concept-warning").style.display = "block";
-            valid = false;
-        }
-        if (!practicalContribution) {
-            document.getElementById("practical-warning").style.display = "block";
-            valid = false;
-        }
-        if (!workEthic) {
-            document.getElementById("ethic-warning").style.display = "block";
-            valid = false;
-        }
-
-        if (!valid) {
-            event.preventDefault();
-        }
-    }
-</script>
-
+  
 <%- include('partials/footer') %>
 
 
