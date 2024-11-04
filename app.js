@@ -229,6 +229,7 @@ app.get("/student-evaluation/:id", async (req, res) => {
   }
 });
 
+//Route for the VIEW-REVIEWS page
 app.get("/view-reviews", async (req, res) => {
   const RESULT = await db.query(
     "SELECT * FROM evaluation WHERE id_evaluatee = $1",
