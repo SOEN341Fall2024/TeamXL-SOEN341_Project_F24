@@ -10,6 +10,7 @@ import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
 import { group } from "console";
+import {getCooperation, getConceptual, getPractical, getWorkEthic, getPeers, getAverage} from "./helper.js"
 
 dotenv.config();
 
@@ -166,9 +167,11 @@ app.get("/peer-assessment", async (req, res) => {
 
   try {
     if (userType) {
+      const r_temp = await db.query("SELECT id_group FROM student WHERE id = $1", [req.session.userID]);
+      const groupID = r_temp.rows[0].id_group;
       const result = await db.query(
-        "SELECT * FROM student WHERE LOWER(name) LIKE $1",
-        [`%${query}%`]
+        "SELECT * FROM student WHERE LOWER(name) LIKE $1 AND id != $2 AND id_group = $3",
+        [`%${query}%`, req.session.userID, groupID]
       );
       res.render("peer-assessment.ejs", {
         query,
@@ -264,7 +267,41 @@ app.get("/edit-evaluation", async (req, res) => {
   }
 });
 
+app.get("/view-reviews-summary", async (req, res) => {
+  const result1 = await db.query("SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC");
+  const result2 = await db.query("SELECT group_name, id_group FROM groups ORDER BY id_group ASC");
+  const student_info = result1.rows;
+  const groups = result2.rows;
 
+  res.render("view-reviews-summary.ejs", {
+    getCooperation, 
+    getConceptual, 
+    getPractical, 
+    getWorkEthic, 
+    getPeers,
+    getAverage,
+    student_info,
+    groups
+  });
+});
+
+app.get("/view-reviews-detailed", async (req, res) => {
+  const result1 = await db.query("SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC");
+  const result2 = await db.query("SELECT group_name, id_group FROM groups ORDER BY id_group ASC");
+  const student_info = result1.rows;
+  const groups = result2.rows;
+  
+  res.render("view-reviews-detailed.ejs", {
+    getCooperation, 
+    getConceptual, 
+    getPractical, 
+    getWorkEthic, 
+    getPeers,
+    getAverage,
+    student_info,
+    groups
+  });
+});
 
 //Route to LOGOUT
 app.get("/logout", (req, res) => {
