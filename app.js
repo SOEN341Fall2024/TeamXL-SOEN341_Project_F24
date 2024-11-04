@@ -60,6 +60,8 @@ app.get("/student-dashboard", (req, res) => {
   res.render("student-dashboard.ejs");
 });
 
+
+
 // Route for the INSTRUCTOR DASHBOARD page
 app.get("/instructor-dashboard", async (req, res) => {
   const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
@@ -94,14 +96,45 @@ app.get("/create-teams", async (req, res) => {
 });
 
 // Route for the VIEW TEAMS page
+
 app.get("/view-teams", async (req, res) => {
-  try {
-    const Teams = await db.query("SELECT * FROM groups");
-    const StudentArr = await db.query("SELECT * FROM student");
-    res.render("view-teams-instructor", { Teams, StudentArr });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("An error occurred while fetching teams.");
+  console.log(req.session.userType);
+  if (req.session.userType == "INSTRUCTOR") {
+    try{
+      const DATA = await db.query(
+        "SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY student.id_group ASC"
+      );
+
+      res.render("view-teams-instructor.ejs", {
+        Teams: DATA,
+      });
+    } catch(err){
+      console.log(err);
+      res.redirect("/");
+    }
+  } else if (req.session.userType == "STUDENT") {
+    try {
+      const groupID_QUERY = await db.query(
+        "SELECT id_group FROM student WHERE id = $1",
+        [req.session.userID]
+      );
+
+      const groupID = groupID_QUERY.rows[0].id_group;
+
+      const DATA = await db.query(
+        "SELECT group_name, name, id FROM student, groups WHERE student.id_group = $1 AND student.id_group = groups.id_group",
+        [groupID]
+      );
+
+      res.render("view-team-student.ejs", {
+        groupName: DATA.rows[0].group_name,
+        members: DATA.rows,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    res.redirect("/");
   }
 });
 
@@ -169,16 +202,34 @@ async function getStudentById(studentId) {
 
 // Route for the STUDENT EVALUATION page, render the student-evaluation.ejs view
 app.get("/student-evaluation/:id", async (req, res) => {
-  const studentId = req.params.id;
+  const studentId = req.session.peerID = req.params.id;
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   try {
     const student = await getStudentById(studentId);
-    res.render("student-evaluation", { student, userType, instructorUsername });
+    res.render("student-evaluation.ejs", { student, userType, instructorUsername });
   } catch (error) {
     console.error("Error fetching student for evaluation:", error);
     res.status(500).send("Server Error");
   }
+});
+
+app.get("/view-reviews", async (req, res) => {
+  const RESULT = await db.query("SELECT * FROM evaluation WHERE id_evaluatee = $1", [req.session.userID]);
+
+  res.render("view-reviews.ejs", {
+    reviews: RESULT.rows,
+  });
+});
+
+app.get("/cancel-review", async (req, res) => {
+  await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 AND id_evaluatee = $2", 
+    [req.session.userID, req.session.peerID]
+  );
+
+  delete req.session.peerID;
+
+  res.redirect("/student-dashboard");
 });
 
 //Route to LOGOUT
@@ -374,6 +425,34 @@ app.post("/student-evaluation", async (req, res) => {
     res.status(404).send("Student not found");
   }
 });
+
+app.post("/submit-evaluation", async (req, res) => {
+  await db.query("INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)", 
+    [
+     req.session.userID, 
+     req.session.peerID, 
+     req.body.cooperation,
+     req.body.conceptual_contribution,
+     req.body.practical_contribution,
+     req.body.work_ethic,
+     req.body.comments
+    ]
+  )
+
+
+  //The /confirm-evaluation route
+  res.render("evaluation-confirmation.ejs" , { cooperation: req.body.cooperation,  
+    conceptual_contribution: req.body.conceptual_contribution,
+    practical_contribution: req.body.practical_contribution, 
+    work_ethic: req.body.work_ethic, 
+    additional_comments: req.body.comments})
+});
+
+// Route for the STUDENT DASHBOARD page, render the student-dashboard view
+app.post("/thank-you", (req, res) => {
+  res.render("thank-you.ejs");
+});
+
 
 //--------START EXPRESS SERVER--------//
 
