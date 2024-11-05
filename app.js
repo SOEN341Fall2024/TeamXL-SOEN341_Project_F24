@@ -10,6 +10,7 @@ import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
 import { group } from "console";
+import {getCooperation, getConceptual, getPractical, getWorkEthic, getPeers, getAverage} from "./helper.js"
 
 dotenv.config();
 
@@ -166,9 +167,11 @@ app.get("/peer-assessment", async (req, res) => {
 
   try {
     if (userType) {
+      const r_temp = await db.query("SELECT id_group FROM student WHERE id = $1", [req.session.userID]);
+      const groupID = r_temp.rows[0].id_group;
       const result = await db.query(
-        "SELECT * FROM student WHERE LOWER(name) LIKE $1",
-        [`%${query}%`]
+        "SELECT * FROM student WHERE LOWER(name) LIKE $1 AND id != $2 AND id_group = $3",
+        [`%${query}%`, req.session.userID, groupID]
       );
       res.render("peer-assessment.ejs", {
         query,
@@ -230,6 +233,74 @@ app.get("/cancel-review", async (req, res) => {
   delete req.session.peerID;
 
   res.redirect("/student-dashboard");
+});
+
+
+app.get("/edit-evaluation", async (req, res) => {
+  const studentId = req.params.id;
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+
+  try {
+
+    const answers = await db.query("SELECT cooperation, conceptual_contribution, practical_contribution, work_ethic, comments FROM EVALUATION WHERE" + 
+    " ID_EVALUATOR = $1 AND " +
+    " ID_EVALUATEE = $2; ", 
+      [req.session.userID, req.session.peerID]
+    );
+    
+    const student = await getStudentById(studentId);
+
+    res.render("edit-evaluation.ejs", { 
+      student, 
+      userType, 
+      instructorUsername,
+      cooperationValue :answers.rows[0].cooperation ,
+      conceptualContributionValue : answers.rows[0].conceptual_contribution,
+      practical_contributionValue: answers.rows[0].practical_contribution ,
+      work_ethicValue : answers.rows[0].work_ethic,
+      commentsValue : answers.rows[0].comments
+    });
+  } catch (error) {
+    console.error("Error fetching student for evaluation:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+app.get("/view-reviews-summary", async (req, res) => {
+  const result1 = await db.query("SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC");
+  const result2 = await db.query("SELECT group_name, id_group FROM groups ORDER BY id_group ASC");
+  const student_info = result1.rows;
+  const groups = result2.rows;
+
+  res.render("view-reviews-summary.ejs", {
+    getCooperation, 
+    getConceptual, 
+    getPractical, 
+    getWorkEthic, 
+    getPeers,
+    getAverage,
+    student_info,
+    groups
+  });
+});
+
+app.get("/view-reviews-detailed", async (req, res) => {
+  const result1 = await db.query("SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC");
+  const result2 = await db.query("SELECT group_name, id_group FROM groups ORDER BY id_group ASC");
+  const student_info = result1.rows;
+  const groups = result2.rows;
+  
+  res.render("view-reviews-detailed.ejs", {
+    getCooperation, 
+    getConceptual, 
+    getPractical, 
+    getWorkEthic, 
+    getPeers,
+    getAverage,
+    student_info,
+    groups
+  });
 });
 
 //Route to LOGOUT
@@ -426,6 +497,7 @@ app.post("/student-evaluation", async (req, res) => {
   }
 });
 
+//Route to handle the submission of the evaluation
 app.post("/submit-evaluation", async (req, res) => {
   await db.query("INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)", 
     [
@@ -439,6 +511,31 @@ app.post("/submit-evaluation", async (req, res) => {
     ]
   )
 
+
+  //The confirm-evaluation route
+  res.render("evaluation-confirmation.ejs" , { cooperation: req.body.cooperation,  
+    conceptual_contribution: req.body.conceptual_contribution,
+    practical_contribution: req.body.practical_contribution, 
+    work_ethic: req.body.work_ethic, 
+    additional_comments: req.body.comments})
+});
+
+// The edition of an evaluation route ----------------------------------
+app.post("/edit-submition", async (req, res) => {
+
+  await db.query(
+    "UPDATE evaluation SET cooperation = $3, conceptual_contribution = $4, practical_contribution = $5, work_ethic = $6, comments = $7 WHERE id_evaluator = $1 AND id_evaluatee = $2",
+    [
+      req.session.userID, 
+      req.session.peerID, 
+      req.body.cooperation,
+      req.body.conceptual_contribution,
+      req.body.practical_contribution,
+      req.body.work_ethic,
+      req.body.comments
+    ]
+  );
+  
 
   //The /confirm-evaluation route
   res.render("evaluation-confirmation.ejs" , { cooperation: req.body.cooperation,  
