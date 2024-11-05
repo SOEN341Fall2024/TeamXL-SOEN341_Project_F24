@@ -12,7 +12,7 @@
         }
 
         /* Main container styling */ 
-        .container {
+        .container2 {
             margin-top: 50px;
             max-width: 700px;
             padding: 30px;
@@ -78,47 +78,11 @@
             margin-top: 5px;
         }
     </style>
-    <script>
-        function validateForm(event) {
-            var cooperation = document.querySelector('input[name="cooperation"]:checked');
-            var conceptualContribution = document.querySelector('input[name="conceptual_contribution"]:checked');
-            var practicalContribution = document.querySelector('input[name="practical_contribution"]:checked');
-            var workEthic = document.querySelector('input[name="work_ethic"]:checked');
 
-            document.getElementById("coop-warning").style.display = "none";
-            document.getElementById("concept-warning").style.display = "none";
-            document.getElementById("practical-warning").style.display = "none";
-            document.getElementById("ethic-warning").style.display = "none";
 
-            var valid = true;
-
-            if (!cooperation) {
-                document.getElementById("coop-warning").style.display = "block";
-                valid = false;
-            }
-            if (!conceptualContribution) {
-                document.getElementById("concept-warning").style.display = "block";
-                valid = false;
-            }
-            if (!practicalContribution) {
-                document.getElementById("practical-warning").style.display = "block";
-                valid = false;
-            }
-            if (!workEthic) {
-                document.getElementById("ethic-warning").style.display = "block";
-                valid = false;
-            }
-
-            if (!valid) {
-                event.preventDefault();
-            }
-        }
-    </script>
-</head>
-<body>
-
+<div class=" d-flex justify-content-center" >
     <!-- Main Content -->
-    <div class="container">
+    <div class="container2 ">
         
         <!-- Evaluation Form -->
        <form action="/submit-evaluation" method="POST" onsubmit="validateForm(event)">
@@ -145,7 +109,7 @@
             <div class="criterion-box">
                 <h4>Conceptual Contribution</h4>
                 <div class="rating">
-                    <input type="radio" id="concept-5" name="conceptual_contribution" value="5">
+                    <input type="radio" id="concept-5" name="conceptual_contribution" value="5" >
                     <label for="concept-5"></label>
                     <input type="radio" id="concept-4" name="conceptual_contribution" value="4" >
                     <label for="concept-4"></label>
@@ -206,6 +170,7 @@
                 <button type="submit" class="btn btn-primary">Submit Evaluation</button>
             </div>
         </form>
+    </div>
     </div>
   
 <%- include('partials/footer') %>
