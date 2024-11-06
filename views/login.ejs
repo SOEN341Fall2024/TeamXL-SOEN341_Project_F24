@@ -51,10 +51,14 @@
     color: #333;
   }
 
-  /* Fade-out effect for smooth transition */
   .fade-out {
     opacity: 0;
     transition: opacity 0.5s ease-out;
+  }
+
+  .fade-in {
+    opacity: 1;
+    transition: opacity 0.5s ease-in;
   }
 </style>
 
@@ -75,7 +79,7 @@
       <button type="submit" class="btn btn-primary w-100 py-2">Log In</button>
     </form>
     <p class="mt-3">
-      Don’t have an account? <a href="/register" class="text-decoration-none smooth-transition">Register</a>
+      Don’t have an account? <a href="/register" class="text-decoration-none smooth-transition" id="register-link">Register</a>
     </p>
   </div>
 </div>
@@ -83,7 +87,32 @@
 <% if (!ajax) { %>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      document.body.style.opacity = "1"; // Fade-in effect for full page load
+      const registerLink = document.getElementById("register-link");
+      const contentContainer = document.getElementById("content-container");
+
+      // Function to handle smooth transition to another page
+      function loadPageContent(url) {
+        contentContainer.classList.add("fade-out"); // Start fade-out effect
+        setTimeout(() => {
+          fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }) // AJAX request
+            .then(response => response.text())
+            .then(html => {
+              contentContainer.innerHTML = html; // Replace content with new HTML
+              contentContainer.classList.remove("fade-out"); // Remove fade-out
+              contentContainer.classList.add("fade-in"); // Add fade-in for smooth entry
+              setTimeout(() => {
+                contentContainer.classList.remove("fade-in"); // Clean up fade-in class
+              }, 500); // Match this delay to the fade-in CSS duration
+            })
+            .catch(error => console.error('Error loading content:', error));
+        }, 500); // Match this delay to the fade-out CSS duration
+      }
+
+      // Attach event listener to "Register" link
+      registerLink.addEventListener("click", function(event) {
+        event.preventDefault();
+        loadPageContent('/register'); // Load register page content smoothly
+      });
     });
   </script>
   <%- include('partials/footer') %>
