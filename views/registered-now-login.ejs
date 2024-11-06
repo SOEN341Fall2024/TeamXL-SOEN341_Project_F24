@@ -1,4 +1,4 @@
-<% if (!ajax) { %>
+<% if (typeof ajax === 'undefined' || !ajax) { %>
   <%- include('partials/header', { title: 'Log In' }) %>
   <div class="overlay"></div>
 <% } %>
@@ -85,7 +85,7 @@
   </div>
 </div>
 
-<% if (!ajax) { %>
+<% if (typeof ajax === 'undefined' || !ajax) { %>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const registerLink = document.getElementById("register-link");

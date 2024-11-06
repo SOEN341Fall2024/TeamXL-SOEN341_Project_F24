@@ -360,7 +360,12 @@ app.post("/register", async (req, res) => {
     );
 
     if (checkResult.rows.length > 0) {
-      res.render("username-exists-login.ejs");
+      // Check if request is AJAX and render accordingly
+      if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+        res.render("username-exists-login.ejs", { ajax: true });
+      } else {
+        res.render("username-exists-login.ejs");
+      }
     } else {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
@@ -371,7 +376,12 @@ app.post("/register", async (req, res) => {
             [username, hash]
           );
 
-          res.render("registered-now-login.ejs");
+          // Check if request is AJAX and render accordingly
+          if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+            res.render("registered-now-login.ejs", { ajax: true });
+          } else {
+            res.render("registered-now-login.ejs");
+          }
         }
       });
     }
@@ -379,6 +389,7 @@ app.post("/register", async (req, res) => {
     console.log(err);
   }
 });
+
 
 // Route to handle user LOGIN
 app.post("/login", async (req, res) => {
