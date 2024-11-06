@@ -46,18 +46,18 @@
   /* Typing Animation for Heading */
   @keyframes typing {
     from { width: 0; }
-    to { width: 25ch; } /* Adjust to match the length of text */
+    to { width: 25ch; }
   }
   .typing-effect {
     font-size: 2.5rem;
     white-space: nowrap;
     overflow: hidden;
     border-right: 3px solid white;
-    width: 25ch; /* Adjust to match the length of text */
+    width: 25ch;
     animation: typing 5s steps(25, end) forwards;
   }
   .typing-effect.finished {
-    border-right: none; /* Stops blinking cursor after animation */
+    border-right: none;
   }
 
   /* Button Hover Effects */
@@ -112,7 +112,7 @@
   </p>
   <div class="mt-4">
     <button id="register-button" class="btn btn-primary btn-lg mx-2">Register</button>
-    <a href="/login" class="btn btn-outline-light btn-lg mx-2 smooth-transition">Log In</a>
+    <button id="login-button" class="btn btn-outline-light btn-lg mx-2">Log In</button>
   </div>
 </div>
 
@@ -128,30 +128,37 @@
     document.body.style.opacity = "1";
 
     const registerButton = document.getElementById("register-button");
+    const loginButton = document.getElementById("login-button");
     const contentContainer = document.getElementById("content-container");
 
     // Smooth transition for "Register" button
     registerButton.addEventListener("click", function(event) {
       event.preventDefault();
-
-      // Add fade-out effect to container
       contentContainer.classList.add("fade-out");
-
-      // Wait for fade-out transition, then load register content
       setTimeout(() => {
-        loadRegisterContent();
-      }, 500); // Delay matches fade-out transition
+        loadContent('/register');
+      }, 500);
     });
 
-    function loadRegisterContent() {
-      fetch('/register', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }) // AJAX request
+    // Smooth transition for "Log In" button
+    loginButton.addEventListener("click", function(event) {
+      event.preventDefault();
+      contentContainer.classList.add("fade-out");
+      setTimeout(() => {
+        loadContent('/login');
+      }, 500);
+    });
+
+    // Function to load content via AJAX
+    function loadContent(url) {
+      fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }) // AJAX request
         .then(response => response.text())
         .then(html => {
-          // Replace content with register form and remove fade-out for fade-in effect
+          // Replace content with loaded page and remove fade-out for fade-in effect
           contentContainer.innerHTML = html;
           contentContainer.classList.remove("fade-out");
         })
-        .catch(error => console.error('Error loading register content:', error));
+        .catch(error => console.error('Error loading content:', error));
     }
   });
 </script>

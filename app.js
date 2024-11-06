@@ -55,19 +55,23 @@ app.get("/", (req, res) => {
 
 // Route for the LOGIN PAGE, render the login.ejs view
 app.get("/login", (req, res) => {
-  res.render("login.ejs");
+  // Check if the request is an AJAX request
+  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
+  
+  // Render the login view, passing in the `ajax` variable
+  res.render("login", { ajax: isAjax });
 });
 
+
 // Route for the REGISTER PAGE, render the register.ejs view
-app.get('/register', (req, res) => {
-  if (req.xhr) {
-    // If the request is AJAX, render only the main form content
-    res.render('register', { layout: false, ajax: true });
-  } else {
-    // Otherwise, render the full page with the header and footer
-    res.render('register', { ajax: false });
-  }
+app.get("/register", (req, res) => {
+  // Check if the request is an AJAX request
+  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
+  
+  // Render the register view, passing in the `ajax` variable
+  res.render("register", { ajax: isAjax });
 });
+
 
 // Route for the STUDENT DASHBOARD page, render the student-dashboard view
 app.get("/student-dashboard", (req, res) => {
