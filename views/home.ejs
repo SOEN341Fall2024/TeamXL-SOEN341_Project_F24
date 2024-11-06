@@ -1,7 +1,7 @@
 <%- include('partials/header', { title: 'Home' }) %>
 
 <style>
-  /* Ensure html and body take full height */
+  /* Fullscreen background */
   html, body {
     height: 100%;
     margin: 0;
@@ -9,7 +9,6 @@
     overflow: hidden;
   }
 
-  /* Full-Screen Background on Body and Overlay */
   body {
     background-image: url('/uploads/home.jpg');
     background-size: cover;
@@ -17,6 +16,8 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     color: white;
+    opacity: 0; /* Start hidden for fade-in */
+    transition: opacity 0.3s ease-out; /* Fade-in effect on load */
   }
 
   /* Overlay for Darkening Background */
@@ -29,7 +30,7 @@
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 1;
   }
-  
+
   /* Center Content */
   .hero-content {
     position: relative;
@@ -41,25 +42,25 @@
     min-height: 100vh;
     text-align: center;
   }
-  
-  /* Typing Animation for Heading with Slower Speed */
+
+  /* Typing Animation for Heading */
   @keyframes typing {
     from { width: 0; }
-    to { width: 100%; }
+    to { width: 25ch; } /* Adjust to match the length of text */
   }
   .typing-effect {
     font-size: 2.5rem;
     white-space: nowrap;
     overflow: hidden;
     border-right: 3px solid white;
-    width: 0;
-    animation: typing 5s steps(40, end) forwards, blink 0.75s step-end infinite;
+    width: 25ch; /* Adjust to match the length of text */
+    animation: typing 5s steps(25, end) forwards;
   }
-  @keyframes blink {
-    50% { border-color: transparent; }
+  .typing-effect.finished {
+    border-right: none; /* Stops blinking cursor after animation */
   }
 
-  /* Button Hover Effects with Gradient */
+  /* Button Hover Effects */
   .btn-primary {
     background: linear-gradient(45deg, #007bff, #00d4ff);
     border: none;
@@ -87,10 +88,16 @@
   .floating-shape:nth-child(1) { background: #ffdd57; width: 60px; height: 60px; top: 20%; left: 10%; animation-delay: 1s; }
   .floating-shape:nth-child(2) { background: #ff6b6b; width: 80px; height: 80px; top: 50%; left: 80%; animation-delay: 2s; }
   .floating-shape:nth-child(3) { background: #4ecdc4; width: 40px; height: 40px; top: 70%; left: 30%; animation-delay: 3s; }
-  
+
   @keyframes float {
     0% { transform: translateY(0px); }
     100% { transform: translateY(15px); }
+  }
+
+  /* Fade-out effect for page transitions */
+  .fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
   }
 </style>
 
@@ -98,15 +105,14 @@
 <div class="overlay"></div>
 
 <!-- Hero Content with Typing Animation and Fade-ins -->
-<div class="hero-content fade-in">
-  <!-- Typing animation on heading -->
-  <h1 class="typing-effect">Welcome to Peer Assessment Hub</h1>
+<div id="content-container" class="hero-content fade-in">
+  <h1 class="typing-effect" id="main-heading">Welcome to Peer Assessment Hub</h1>
   <p class="lead text-light" style="max-width: 600px;">
     Empowering students and instructors to engage, learn, and grow through constructive feedback and collaborative evaluation.
   </p>
   <div class="mt-4">
-    <a href="/register" class="btn btn-primary btn-lg mx-2">Register</a>
-    <a href="/login" class="btn btn-outline-light btn-lg mx-2">Log In</a>
+    <button id="register-button" class="btn btn-primary btn-lg mx-2">Register</button>
+    <a href="/login" class="btn btn-outline-light btn-lg mx-2 smooth-transition">Log In</a>
   </div>
 </div>
 
@@ -114,5 +120,40 @@
 <div class="floating-shape"></div>
 <div class="floating-shape"></div>
 <div class="floating-shape"></div>
+
+<!-- JavaScript for Smooth Page Transition -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Fade-in effect on page load
+    document.body.style.opacity = "1";
+
+    const registerButton = document.getElementById("register-button");
+    const contentContainer = document.getElementById("content-container");
+
+    // Smooth transition for "Register" button
+    registerButton.addEventListener("click", function(event) {
+      event.preventDefault();
+
+      // Add fade-out effect to container
+      contentContainer.classList.add("fade-out");
+
+      // Wait for fade-out transition, then load register content
+      setTimeout(() => {
+        loadRegisterContent();
+      }, 500); // Delay matches fade-out transition
+    });
+
+    function loadRegisterContent() {
+      fetch('/register', { headers: { 'X-Requested-With': 'XMLHttpRequest' } }) // AJAX request
+        .then(response => response.text())
+        .then(html => {
+          // Replace content with register form and remove fade-out for fade-in effect
+          contentContainer.innerHTML = html;
+          contentContainer.classList.remove("fade-out");
+        })
+        .catch(error => console.error('Error loading register content:', error));
+    }
+  });
+</script>
 
 <%- include('partials/footer') %>

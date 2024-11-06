@@ -59,8 +59,14 @@ app.get("/login", (req, res) => {
 });
 
 // Route for the REGISTER PAGE, render the register.ejs view
-app.get("/register", (req, res) => {
-  res.render("register.ejs");
+app.get('/register', (req, res) => {
+  if (req.xhr) {
+    // If the request is AJAX, render only the main form content
+    res.render('register', { layout: false, ajax: true });
+  } else {
+    // Otherwise, render the full page with the header and footer
+    res.render('register', { ajax: false });
+  }
 });
 
 // Route for the STUDENT DASHBOARD page, render the student-dashboard view
