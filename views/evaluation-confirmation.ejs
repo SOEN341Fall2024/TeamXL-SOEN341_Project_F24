@@ -1,4 +1,4 @@
-<!-- variables for the comments for each dimension : coop_comments , concept_comments , practical_comments, ethic_comments  -->
+<!-- variables for the comments for each dimension :  , concept_comments , practical_comments, ethic_comments  -->
 
 
 <%- include('partials/header', { title: 'Home' }) %> 
@@ -137,13 +137,13 @@
         <div class="review-summary">
             <h5>Evaluation Summary</h5>
             <p><strong>Cooperation Rating:</strong> <%= cooperation %> / 5</p>
-            <p><strong>Comments on Cooperation:</strong> <%= coop_comments %></p>
+            <p><strong>Comments on Cooperation:</strong> <%= cooperation_comments %></p>
             <p><strong>Conceptual Contribution Rating:</strong> <%= conceptual_contribution %> / 5</p>
-            <p><strong>Comments on Conceptual Contribution:</strong> <%= concept_comments %></p>
+            <p><strong>Comments on Conceptual Contribution:</strong> <%= conceptual_comments %></p>
             <p><strong>Practical Contribution Rating:</strong> <%= practical_contribution %> / 5</p>
             <p><strong>Comments on Practical Contribution:</strong> <%= practical_comments %></p>
             <p><strong>Work Ethic Rating:</strong> <%= work_ethic %> / 5</p>
-            <p><strong>Comments on Work Ethic:</strong> <%= ethic_comments %></p> 
+            <p><strong>Comments on Work Ethic:</strong> <%= work_ethic_comments %></p> 
             <h5>Overall Comments</h5> 
             <p><%= additional_comments %></p> 
         </div> 
@@ -160,8 +160,7 @@
             <a href="/edit-evaluation" class="btn btn-outline-dark">Edit Evaluation</a>
             <!-- Cancel Button to discard evaluation -->
             <a href="/cancel-review" class="btn btn-outline-danger">Cancel Review</a>
-            </div>
-            
+            </div> 
         </div>
     </div>
     </div>
