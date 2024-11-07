@@ -72,3 +72,72 @@ export function getPeers(student_info, idx){
 export function getAverage(student_info, idx){
     return (getCooperation(student_info, idx) + getConceptual(student_info, idx) + getPractical(student_info, idx) + getWorkEthic(student_info, idx)) / 4.0 ;
 }
+
+export function getTeammateInfo(student_info, sorted_students, idx){
+    var numOfTeammates = getNumberOfTeammates(student_info, sorted_students, idx)
+    var group_index = getSortedStudentTeamIndex(student_info, sorted_students, idx);
+
+    var teammateInfo = new Array(numOfTeammates);
+
+    for(var i = 0; i < teammateNames.length; i++){
+        teammateInfo[i] = {name : sorted_students[group_index + i].name, id: sorted_students[group_index + i].id};
+    }
+
+    return teammateInfo;
+}
+
+function getSortedStudentTeamIndex(student_info, sorted_students, idx){
+    var index = 0;
+
+    for (var i = 0; i < sorted_students.length; i++){
+        if(sorted_students[i].id_group == student_info[idx].id_group){
+            index = i;
+            break;
+        }
+    }
+
+    return index;
+}
+
+function getStudentInfoTeamIndex(student_info, idx){
+    var index = 0;
+
+    for (var i = 0; i < student_info.length; i++){
+        if(student_info[i].id_group == student_info[idx].id_group){
+            index = i;
+            break;
+        }
+    }
+
+    return index;
+}
+
+export function getNumberOfTeammates(student_info, sorted_students, idx){
+    var groupIndex = getSortedStudentTeamIndex(student_info, sorted_students, idx);
+    var numOfTeammates = 0;
+
+    for(var i = groupIndex; i < sorted_students.length; i++){
+        if(sorted_students[i].id_group == student_info[idx].id_group){
+           numOfTeammates++; 
+        } else {
+            break;
+        }
+    }
+
+    return numOfTeammates;
+}
+
+export function getNumberOfReviews(student_info, idx){
+    var groupIndex = getStudentInfoTeamIndex(student_info, idx);
+    var numOfReviews = 0;
+
+    for(var i = groupIndex; i < student_info.length; i++){
+        if(student_info[i].id_evaluator == student_info[idx].id){
+            numOfReviews++;
+        } else if(student_info[i].id_group != student_info[idx].id_group){
+            break;
+        }
+    }
+
+    return numOfReviews;
+}
