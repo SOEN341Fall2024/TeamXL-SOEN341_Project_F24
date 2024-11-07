@@ -7,21 +7,19 @@
     <!-- Include Bootstrap Icons (optional) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        /* General page styling */
-        body {
-            background-color: #f8f9fa;
+        /* General page styling for full screen */
+        html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
         }
         .chat-container {
             display: flex;
-            height: 100vh;
-            max-width: 1200px;
-            margin: 0 auto;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: 100vh; /* Full height of the viewport */
+            width: 100vw; /* Full width of the viewport */
             background-color: white;
-            border-radius: 10px;
             overflow: hidden;
         }
         .user-list {
