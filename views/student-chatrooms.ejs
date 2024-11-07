@@ -17,8 +17,8 @@
         }
         .chat-container {
             display: flex;
-            height: 100vh; /* Full height of the viewport */
-            width: 100vw; /* Full width of the viewport */
+            height: 100vh;
+            width: 100vw;
             background-color: white;
             overflow: hidden;
         }
@@ -115,19 +115,19 @@
 <body>
     <div class="chat-container">
         <!-- Sidebar with User List -->
-        <div class="user-list">
+        <div class="user-list" id="userList">
             <h5>Users</h5>
-            <div class="user">
+            <div class="user" data-status="online">
                 <i class="bi bi-person-circle user-icon"></i>
                 <span>User1</span>
                 <span class="user-status online"></span>
             </div>
-            <div class="user">
+            <div class="user" data-status="offline">
                 <i class="bi bi-person-circle user-icon"></i>
                 <span>User2</span>
                 <span class="user-status offline"></span>
             </div>
-            <div class="user">
+            <div class="user" data-status="online">
                 <i class="bi bi-person-circle user-icon"></i>
                 <span>User3</span>
                 <span class="user-status online"></span>
@@ -162,5 +162,22 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to sort users by online status
+        window.onload = function() {
+            const userList = document.getElementById('userList');
+            const users = Array.from(userList.getElementsByClassName('user'));
+
+            // Sort users: online first, then offline
+            users.sort((a, b) => {
+                const statusA = a.getAttribute('data-status') === 'online' ? 1 : 0;
+                const statusB = b.getAttribute('data-status') === 'online' ? 1 : 0;
+                return statusB - statusA;
+            });
+
+            // Append sorted users back to the user list
+            users.forEach(user => userList.appendChild(user));
+        };
+    </script>
 </body>
 </html>
