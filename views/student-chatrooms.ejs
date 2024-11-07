@@ -11,62 +11,87 @@
             max-width: 800px;
             margin: 40px auto;
             height: 80vh;
-            border: 1px solid #ccc;
             display: flex;
             flex-direction: column;
             background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         .chat-header {
-            background-color: #007bff;
+            background: linear-gradient(90deg, #007bff, #00d2ff);
             color: white;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            border-bottom: 1px solid #ddd;
+            border-radius: 10px 10px 0 0;
         }
         .chat-messages {
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            background-color: #f8f9fa;
-            border-top: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
+            background-color: #f7f8fc;
+        }
+        .chat-bubble {
+            max-width: 60%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .chat-bubble.user {
+            background-color: #e1f5fe;
+            align-self: flex-end;
+            border-radius: 20px 20px 0 20px;
+        }
+        .chat-bubble.other {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 20px 20px 20px 0;
         }
         .chat-input {
-            padding: 15px;
+            padding: 10px;
             border-top: 1px solid #ddd;
+            background-color: #f0f0f0;
+            display: flex;
+            border-radius: 0 0 10px 10px;
+        }
+        .chat-input input {
+            border: none;
+            border-radius: 30px;
+            padding: 10px;
+            outline: none;
+            flex: 1;
+            margin-right: 10px;
+        }
+        .chat-input button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: background-color 0.3s;
+        }
+        .chat-input button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container py-4 my-5">
-        <div class="chat-container rounded-3 shadow-sm">
+        <div class="chat-container">
             <div class="chat-header">
-                <h1 class="h3 text-white">Chatroom</h1>
+                <h1 class="h4">Chatroom</h1>
             </div>
-            <div class="chat-messages">
-                <div class="d-flex mb-3">
-                    <div class="me-2">
-                        <i class="bi bi-person-circle text-primary" style="font-size: 1.5rem;"></i>
-                    </div>
-                    <div>
-                        <h5 class="mb-1">User1</h5>
-                        <p class="text-muted mb-0">Hello everyone!</p>
-                    </div>
+            <div class="chat-messages d-flex flex-column">
+                <div class="chat-bubble other mb-2">
+                    <strong>User1:</strong> Hello everyone!
                 </div>
-                <div class="d-flex justify-content-end mb-3">
-                    <div class="text-end">
-                        <h5 class="mb-1">You</h5>
-                        <p class="text-muted mb-0">Hi there!</p>
-                    </div>
-                    <div class="ms-2">
-                        <i class="bi bi-person-circle text-primary" style="font-size: 1.5rem;"></i>
-                    </div>
+                <div class="chat-bubble user mb-2">
+                    <strong>You:</strong> Hi there!
                 </div>
             </div>
-            <div class="chat-input d-flex">
-                <input type="text" class="form-control me-2" placeholder="Type a message...">
-                <button class="btn btn-outline-primary rounded-pill">Send</button>
+            <div class="chat-input">
+                <input type="text" class="form-control" placeholder="Type a message...">
+                <button class="btn">Send</button>
             </div>
         </div>
     </div>
