@@ -17,6 +17,11 @@ import {
   getWorkEthic,
   getPeers,
   getAverage,
+  getTeammateInfo,
+  getCommentMadeByStudent,
+  getGradesGivenByStudent,
+  getNumberOfReviews,
+  getNumberOfTeammates,
 } from "./helper.js";
 
 dotenv.config();
@@ -295,7 +300,7 @@ app.get("/edit-evaluation", async (req, res) => {
 
 app.get("/view-reviews-summary", async (req, res) => {
   const result1 = await db.query(
-    "SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
+    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
   const result2 = await db.query(
     "SELECT group_name, id_group FROM groups ORDER BY id_group ASC"
@@ -317,23 +322,48 @@ app.get("/view-reviews-summary", async (req, res) => {
 
 app.get("/view-reviews-detailed", async (req, res) => {
   const result1 = await db.query(
-    "SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
+    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
   const result2 = await db.query(
     "SELECT group_name, id_group FROM groups ORDER BY id_group ASC"
   );
+  const result3 = await db.query(
+    "SELECT id, id_group, name FROM student ORDER BY id_group, id ASC"
+  );
   const student_info = result1.rows;
   const groups = result2.rows;
+  const sorted_students = result3.rows;
 
   res.render("view-reviews-detailed.ejs", {
-    getCooperation,
-    getConceptual,
-    getPractical,
-    getWorkEthic,
-    getPeers,
-    getAverage,
+    getTeammateInfo,
+    getCommentMadeByStudent,
+    getGradesGivenByStudent,
     student_info,
     groups,
+    sorted_students,
+  });
+});
+
+app.get("/view-review-completion", async (req, res) => {
+  const result1 = await db.query(
+    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
+  );
+  const result2 = await db.query(
+    "SELECT group_name, id_group FROM groups ORDER BY id_group ASC"
+  );
+  const result3 = await db.query(
+    "SELECT id, id_group FROM student ORDER BY id_group, id ASC"
+  );
+  const student_info = result1.rows;
+  const groups = result2.rows;
+  const sorted_students = result3.rows;
+
+  res.render("view-review-completion.ejs", {
+    getNumberOfTeammates,
+    getNumberOfReviews,
+    student_info,
+    groups,
+    sorted_students,
   });
 });
 
@@ -544,6 +574,11 @@ app.post("/student-evaluation", async (req, res) => {
 
 //Route to handle the submission of the evaluation
 app.post("/submit-evaluation", async (req, res) => {
+  const comments = req.body.cooperation_comments == "" ? "Cooperation Contribution Comment: <br/>" + req.body.cooperation_comments + "<br/><br/>" : "";
+  comments += req.body.conceptual_comments == "" ? "Conceptual Contribution Comment: <br/>" + req.body.conceptual_comments + "<br/><br/>" : "";
+  comments += req.body.practical_comments == "" ? "Practical Contribution Comment: <br/>" + req.body.practical_comments + "<br/><br/>" : "";
+  comments += req.body.work_ethic_comments == "" ? "Work Ethic Comment: <br/>" + req.body.work_ethic_comments + "<br/><br/>" : "";
+
   await db.query(
     "INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)",
     [
@@ -553,7 +588,7 @@ app.post("/submit-evaluation", async (req, res) => {
       req.body.conceptual_contribution,
       req.body.practical_contribution,
       req.body.work_ethic,
-      req.body.comments,
+      comments,
     ]
   );
 
