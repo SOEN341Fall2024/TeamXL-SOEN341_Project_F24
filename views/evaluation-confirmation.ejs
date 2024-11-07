@@ -1,4 +1,7 @@
-<%- include('partials/header', { title: 'Home' }) %>
+<!-- variables for the comments for each dimension : coop_comments , concept_comments , practical_comments, ethic_comments  -->
+
+
+<%- include('partials/header', { title: 'Home' }) %> 
 <div>
 <header>
     <div class="px-3 py-2 text-bg-dark border-bottom">
@@ -134,11 +137,13 @@
         <div class="review-summary">
             <h5>Evaluation Summary</h5>
             <p><strong>Cooperation Rating:</strong> <%= cooperation %> / 5</p>
+            <p><strong>Comments on Cooperation:</strong> <%= coop_comments %></p>
             <p><strong>Conceptual Contribution Rating:</strong> <%= conceptual_contribution %> / 5</p>
+            <p><strong>Comments on Conceptual Contribution:</strong> <%= concept_comments %></p>
             <p><strong>Practical Contribution Rating:</strong> <%= practical_contribution %> / 5</p>
+            <p><strong>Comments on Practical Contribution:</strong> <%= practical_comments %></p>
             <p><strong>Work Ethic Rating:</strong> <%= work_ethic %> / 5</p>
-            <h5>Overall Comments</h5>
-            <p><%= additional_comments %></p>
+            <p><strong>Comments on Work Ethic:</strong> <%= ethic_comments %></p> 
         </div> 
 
         <!-- Button Group -->

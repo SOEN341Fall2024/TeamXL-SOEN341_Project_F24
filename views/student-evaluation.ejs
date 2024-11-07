@@ -1,84 +1,83 @@
 <%- include('partials/header-2', { title: 'Evaluate Student' , userType, instructorUsername}) %>
-    <style>
-        /* Black Gradient background for the title banner */
-        .title-banner {
-            background: linear-gradient(135deg, #222529, #222529);
-            color: white; 
-            padding: 30px;
-            margin-bottom: 40px;
-            text-align: center;
-            border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
+<style>
+    /* Black Gradient background for the title banner */
+    .title-banner {
+        background: linear-gradient(135deg, #222529, #222529);
+        color: white; 
+        padding: 30px;
+        margin-bottom: 40px;
+        text-align: center;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    } 
 
-        /* Main container styling */ 
-        .container2 {
-            margin-top: 50px;
-            max-width: 700px;
-            padding: 30px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
+    /* Main container styling */ 
+    .container2 {
+        margin-top: 50px;
+        max-width: 700px;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); 
+    }
 
-        /* Criterion box styling */
-        .criterion-box {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .criterion-box h4 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #222529;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
+    /* Criterion box styling */ 
+    .criterion-box {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    .criterion-box h4 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #222529;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
 
-        /* Rating system */
-        .rating {
-            display: flex;
-            justify-content: center;
-            max-width: 300px;
-            margin: 0 auto;
-            flex-direction: row-reverse;
-        }
-        .rating label { 
-            cursor: pointer;
-            font-size: 1.5rem;
-            transition: color 0.3s ease;
-        }
-        .rating input {
-            display: none;
-        }
-        .rating label::before {
-            content: "★";
-            color: lightgray;
-            transition: color 0.3s ease;
-        }
-        .rating label:hover::before,
-        .rating label:hover ~ label::before,
-        .rating input:checked ~ label::before {
-            color: gold;
-        }
+    /* Rating system */
+    .rating {
+        display: flex;
+        justify-content: center;
+        max-width: 300px;
+        margin: 0 auto;
+        flex-direction: row-reverse;
+    }
+    .rating label { 
+        cursor: pointer;
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+    }
+    .rating input {
+        display: none;
+    }
+    .rating label::before {
+        content: "★";
+        color: lightgray;
+        transition: color 0.3s ease;
+    }
+    .rating label:hover::before,
+    .rating label:hover ~ label::before,
+    .rating input:checked ~ label::before {
+        color: gold;
+    }
 
-        /* Additional Comments Styling */
-        .form-section {
-            margin-bottom: 50px; /* Adds extra space below the comments box */
-        }
+    /* Additional Comments Styling */
+    .form-section {
+        margin-bottom: 50px; /* Adds extra space below the comments box */
+    }
 
-        /* Warning message styling */
-        .warning {
-            color: red;
-            font-size: 0.9rem;
-            display: none;
-            margin-top: 5px;
-        }
-    </style>
-
+    /* Warning message styling */
+    .warning {
+        color: red;
+        font-size: 0.9rem;
+        display: none;
+        margin-top: 5px;
+    }
+</style>
 
 <div class=" d-flex justify-content-center" >
     <!-- Main Content -->
@@ -88,7 +87,7 @@
        <form action="/submit-evaluation" method="POST" onsubmit="validateForm(event)">
             
             <!-- Cooperation Criterion Box -->
-            <div class="criterion-box">
+            <div class="criterion-box"> 
                 <h4>Cooperation</h4>
                 <div class="rating">
                     <input type="radio" id="coop-5" name="cooperation" value="5">
@@ -103,6 +102,9 @@
                     <label for="coop-1"></label>
                 </div>
                 <p id="coop-warning" class="warning">Please select a rating for Cooperation.</p>
+                <!-- New comment box for Cooperation -->
+                <label for="coop-comments" class="form-label">Comments on Cooperation</label>
+                <textarea class="form-control" id="coop-comments" name="coop_comments" rows="3" placeholder="feedback on Cooperation..."></textarea>
             </div>
 
             <!-- Conceptual Contribution Criterion Box -->
@@ -121,6 +123,9 @@
                     <label for="concept-1"></label>
                 </div>
                 <p id="concept-warning" class="warning">Please select a rating for Conceptual Contribution.</p>
+                <!-- New comment box for Conceptual Contribution -->
+                <label for="concept-comments" class="form-label">Comments on Conceptual Contribution</label>
+                <textarea class="form-control" id="concept-comments" name="concept_comments" rows="3" placeholder="feedback on Conceptual Contribution..."></textarea>
             </div>
 
             <!-- Practical Contribution Criterion Box -->
@@ -139,6 +144,9 @@
                     <label for="practical-1"></label>
                 </div>
                 <p id="practical-warning" class="warning">Please select a rating for Practical Contribution.</p>
+                <!-- New comment box for Practical Contribution -->
+                <label for="practical-comments" class="form-label">Comments on Practical Contribution</label>
+                <textarea class="form-control" id="practical-comments" name="practical_comments" rows="3" placeholder="feedback on Practical Contribution..."></textarea>
             </div>
 
             <!-- Work Ethic Criterion Box -->
@@ -157,12 +165,9 @@
                     <label for="ethic-1"></label>
                 </div>
                 <p id="ethic-warning" class="warning">Please select a rating for Work Ethic.</p>
-            </div>
-
-            <!-- Additional Comments (Optional) -->
-            <div class="form-section text-center mb-5">
-                <label for="comments" class="form-label">Overall Comments </label>
-                <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Write any feedback here..."></textarea>
+                <!-- New comment box for Work Ethic -->
+                <label for="ethic-comments" class="form-label">Comments on Work Ethic</label>
+                <textarea class="form-control" id="ethic-comments" name="ethic_comments" rows="3" placeholder="feedback on Work Ethic..."></textarea>
             </div>
 
             <!-- Submit Button --> 
@@ -174,5 +179,6 @@
     </div>
   
 <%- include('partials/footer') %>
+
 
 
