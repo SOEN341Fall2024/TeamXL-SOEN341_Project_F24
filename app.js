@@ -55,13 +55,23 @@ app.get("/", (req, res) => {
 
 // Route for the LOGIN PAGE, render the login.ejs view
 app.get("/login", (req, res) => {
-  res.render("login.ejs");
+  // Check if the request is an AJAX request
+  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
+  
+  // Render the login view, passing in the `ajax` variable
+  res.render("login", { ajax: isAjax });
 });
+
 
 // Route for the REGISTER PAGE, render the register.ejs view
 app.get("/register", (req, res) => {
-  res.render("register.ejs");
+  // Check if the request is an AJAX request
+  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
+  
+  // Render the register view, passing in the `ajax` variable
+  res.render("register", { ajax: isAjax });
 });
+
 
 // Route for the STUDENT DASHBOARD page, render the student-dashboard view
 app.get("/student-dashboard", (req, res) => {
@@ -350,7 +360,12 @@ app.post("/register", async (req, res) => {
     );
 
     if (checkResult.rows.length > 0) {
-      res.render("username-exists-login.ejs");
+      // Check if request is AJAX and render accordingly
+      if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+        res.render("username-exists-login.ejs", { ajax: true });
+      } else {
+        res.render("username-exists-login.ejs");
+      }
     } else {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
@@ -361,7 +376,12 @@ app.post("/register", async (req, res) => {
             [username, hash]
           );
 
-          res.render("registered-now-login.ejs");
+          // Check if request is AJAX and render accordingly
+          if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+            res.render("registered-now-login.ejs", { ajax: true });
+          } else {
+            res.render("registered-now-login.ejs");
+          }
         }
       });
     }
@@ -369,6 +389,7 @@ app.post("/register", async (req, res) => {
     console.log(err);
   }
 });
+
 
 // Route to handle user LOGIN
 app.post("/login", async (req, res) => {
@@ -582,3 +603,5 @@ app.post("/thank-you", (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
 });
+
+app.use('/uploads', express.static('uploads'));
