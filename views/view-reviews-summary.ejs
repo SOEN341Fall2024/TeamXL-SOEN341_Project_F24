@@ -1,28 +1,69 @@
-<table>
-    <tr>
-        <th>Student ID</th>
-        <th>Name</th>
-        <th>Team</th>
-        <th>Cooperation</th>
-        <th>Conceptual contribution</th>
-        <th>Practical Contribution</th>
-        <th>Work Ethic</th>
-        <th>Average</th>
-        <th>Peers who responded</th>
-    </tr>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Reviews - Summary</title>
+  <!-- Include Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Include Bootstrap Icons (optional) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container py-4">
+  <!-- Header -->
+  <div class="mb-4">
+    <h2 class="text-primary"><i class="bi bi-list-ul me-2"></i>Review Summary</h2>
+    <p class="text-muted">A summary of reviews for each student, including performance across various metrics.</p>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Student ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Team</th>
+          <th scope="col">Cooperation</th>
+          <th scope="col">Conceptual Contribution</th>
+          <th scope="col">Practical Contribution</th>
+          <th scope="col">Work Ethic</th>
+          <th scope="col">Average</th>
+          <th scope="col">Peers Who Responded</th>
+        </tr>
+      </thead>
+      <tbody>
         <% for(var i = 0, j = 0; i < student_info.length; i++) { %>
-            <% if(i + 1 < student_info.length && i > 0  && student_info[i].id == student_info[i - 1].id) {i++;}%>
-            <% if(groups[j].id_group != student_info[i].id_group) {j++;}%>
-            <tr>
-                <td><%= student_info[i].id %></td>
-                <td><%= student_info[i].name %></td>
-                <td><%= groups[j].group_name %></td>
-                <td><%- getCooperation(student_info, i) %></td>
-                <td><%- getConceptual(student_info, i) %></td>
-                <td><%- getPractical(student_info, i) %></td>
-                <td><%- getWorkEthic(student_info, i) %></td>
-                <td><%- getAverage(student_info, i)%></td>
-                <td><%- getPeers(student_info, i) %></td>
-            </tr>
+          <% if(i + 1 < student_info.length && i > 0 && student_info[i].id == student_info[i - 1].id) { i++; } %>
+          <% if(groups[j].id_group != student_info[i].id_group) { j++; } %>
+          <tr>
+            <td><%= student_info[i].id %></td>
+            <td><%= student_info[i].name %></td>
+            <td><%= groups[j].group_name %></td>
+            <td class="text-center">
+              <span class="badge bg-success"><%- getCooperation(student_info, i) %></span>
+            </td>
+            <td class="text-center">
+              <span class="badge bg-info"><%- getConceptual(student_info, i) %></span>
+            </td>
+            <td class="text-center">
+              <span class="badge bg-warning"><%- getPractical(student_info, i) %></span>
+            </td>
+            <td class="text-center">
+              <span class="badge bg-primary"><%- getWorkEthic(student_info, i) %></span>
+            </td>
+            <td class="text-center fw-bold"><%- getAverage(student_info, i) %></td>
+            <td class="text-center"><%- getPeers(student_info, i) %></td>
+          </tr>
         <% } %>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Include Bootstrap JS (Optional, for tooltips, popovers, etc.) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

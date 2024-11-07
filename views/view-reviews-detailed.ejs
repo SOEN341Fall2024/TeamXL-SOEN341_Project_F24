@@ -12,17 +12,75 @@
 <body>
 
 <div class="container py-4">
+  <!-- Dashboard Component -->
+  <div class="mb-5">
+    <h2 class="text-primary mb-4"><i class="bi bi-bar-chart-fill me-2"></i>Assessment Dashboard</h2>
+    <div class="row g-4">
+      <!-- Cooperation Score Card -->
+      <div class="col-md-3">
+        <div class="card text-center shadow-sm border-0 h-100">
+          <div class="card-body">
+            <h5 class="card-title">Cooperation</h5>
+            <p class="display-6 text-success"><!-- Placeholder for dynamic data -->88%</p>
+            <div class="progress mt-2">
+              <div class="progress-bar bg-success" role="progressbar" style="width: 88%" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conceptual Score Card -->
+      <div class="col-md-3">
+        <div class="card text-center shadow-sm border-0 h-100">
+          <div class="card-body">
+            <h5 class="card-title">Conceptual</h5>
+            <p class="display-6 text-info"><!-- Placeholder for dynamic data -->75%</p>
+            <div class="progress mt-2">
+              <div class="progress-bar bg-info" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Practical Score Card -->
+      <div class="col-md-3">
+        <div class="card text-center shadow-sm border-0 h-100">
+          <div class="card-body">
+            <h5 class="card-title">Practical</h5>
+            <p class="display-6 text-warning"><!-- Placeholder for dynamic data -->82%</p>
+            <div class="progress mt-2">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Work Ethic Score Card -->
+      <div class="col-md-3">
+        <div class="card text-center shadow-sm border-0 h-100">
+          <div class="card-body">
+            <h5 class="card-title">Work Ethic</h5>
+            <p class="display-6 text-primary"><!-- Placeholder for dynamic data -->90%</p>
+            <div class="progress mt-2">
+              <div class="progress-bar bg-primary" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <% for(var i = 0, j = 0, k = -1; i < student_info.length; i++) { %>
     <% if(i + 1 < student_info.length && i > 0 && student_info[i].id == student_info[i - 1].id) { i++; } %>
     <% if(k != j) { k++; %>
-      <!-- Team Header with Bootstrap Styling -->
+      <!-- Team Header -->
       <div class="mb-4">
         <h3 class="text-primary border-bottom pb-2">
           <i class="bi bi-people-fill me-2"></i> Team Name: <%= groups[j].group_name %>
         </h3>
       </div>
 
-      <!-- Reviews Table with Bootstrap Styling -->
+      <!-- Reviews Table -->
       <div class="table-responsive mb-5">
         <table class="table table-bordered table-striped table-hover">
           <thead class="table-dark">
