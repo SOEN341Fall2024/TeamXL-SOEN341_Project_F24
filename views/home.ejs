@@ -1,29 +1,166 @@
 <%- include('partials/header', { title: 'Home' }) %>
 
-<header>
-  <div class="px-3 py-2 text-bg-dark border-bottom" style="height: 100px;">
-    <div class="mx-2   mt-3 h-100">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/instructor_dashboard" class="d-flex align-items-center justify-content-start my-lg-0 me-lg-auto text-white text-decoration-none">
-          <svg class="mx-3" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-puzzle" viewBox="0 0 16 16">
-            <path d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.5.5 0 0 0-.115.118l-.012.025L6.5 4.5v.003l.003.01q.005.015.036.053a.9.9 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.9.9 0 0 0 .271-.194.2.2 0 0 0 .039-.063v-.009l-.012-.025a.5.5 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.5.5 0 0 0 .115-.118l.012-.025.001-.006v-.003a.2.2 0 0 0-.039-.064.9.9 0 0 0-.27-.193C8.91 11.1 8.49 11 8 11s-.912.1-1.19.24a.9.9 0 0 0-.271.194.2.2 0 0 0-.039.063v.003l.001.006.012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238zM4.605 3a.5.5 0 0 0-.498.55l.001.007.29 3.4A.5.5 0 0 1 3.9 7.5h-.782c-.696 0-1.182-.497-1.469-.872a.5.5 0 0 0-.118-.115l-.025-.012L1.5 6.5h-.003a.2.2 0 0 0-.064.039.9.9 0 0 0-.193.27C1.1 7.09 1 7.51 1 8s.1.912.24 1.19c.07.14.14.225.194.271a.2.2 0 0 0 .063.039H1.5l.006-.001.025-.012a.5.5 0 0 0 .118-.115c.287-.375.773-.872 1.469-.872H3.9a.5.5 0 0 1 .498.542l-.29 3.408a.5.5 0 0 0 .497.55h1.878c-.048-.166-.195-.352-.463-.557-.274-.21-.52-.528-.52-.943 0-.568.447-.947.862-1.154C6.807 10.123 7.387 10 8 10s1.193.123 1.638.346c.415.207.862.586.862 1.154 0 .415-.246.733-.52.943-.268.205-.415.39-.463.557h1.878a.5.5 0 0 0 .498-.55l-.001-.007-.29-3.4A.5.5 0 0 1 12.1 8.5h.782c.696 0 1.182.497 1.469.872.05.065.091.099.118.115l.025.012.006.001h.003a.2.2 0 0 0 .064-.039.9.9 0 0 0 .193-.27c.14-.28.24-.7.24-1.191s-.1-.912-.24-1.19a.9.9 0 0 0-.194-.271.2.2 0 0 0-.063-.039H14.5l-.006.001-.025.012a.5.5 0 0 0-.118.115c-.287.375-.773.872-1.469.872H12.1a.5.5 0 0 1-.498-.543l.29-3.407a.5.5 0 0 0-.497-.55H9.517c.048.166.195.352.463.557.274.21.52.528.52.943 0 .568-.447.947-.862 1.154C9.193 5.877 8.613 6 8 6s-1.193-.123-1.638-.346C5.947 5.447 5.5 5.068 5.5 4.5c0-.415.246-.733.52-.943.268-.205.415-.39.463-.557z"/>
-          </svg>
-          <h1>InsightSphere</h1>
-        </a>
+<style>
+  /* Fullscreen background */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
 
-        <div class="text-end">
-            <div class="text-end">
-                <a href="/login" class="btn btn-outline-light me-2 btn-lg">Log In</a>
-                <a href="/register" class="btn btn-warning btn-lg">Register</a>
-              </div>
-        </div>
-        
-      </div>
-    </div>
+  body {
+    background-image: url('/uploads/home.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+    opacity: 0; /* Start hidden for fade-in */
+    transition: opacity 0.3s ease-out; /* Fade-in effect on load */
+  }
+
+  /* Overlay for Darkening Background */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+  }
+
+  /* Center Content */
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+  }
+
+  /* Typing Animation for Heading */
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 25ch; }
+  }
+  .typing-effect {
+    font-size: 2.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid white;
+    width: 25ch;
+    animation: typing 5s steps(25, end) forwards;
+  }
+  .typing-effect.finished {
+    border-right: none;
+  }
+
+  /* Button Hover Effects */
+  .btn-primary {
+    background: linear-gradient(45deg, #007bff, #00d4ff);
+    border: none;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  .btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #00aaff);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  .btn-outline-light:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+  }
+
+  /* Floating Elements for Ambient Effect */
+  .floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: float 6s ease-in-out infinite alternate;
+  }
+  .floating-shape:nth-child(1) { background: #ffdd57; width: 60px; height: 60px; top: 20%; left: 10%; animation-delay: 1s; }
+  .floating-shape:nth-child(2) { background: #ff6b6b; width: 80px; height: 80px; top: 50%; left: 80%; animation-delay: 2s; }
+  .floating-shape:nth-child(3) { background: #4ecdc4; width: 40px; height: 40px; top: 70%; left: 30%; animation-delay: 3s; }
+
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(15px); }
+  }
+
+  /* Fade-out effect for page transitions */
+  .fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+  }
+</style>
+
+<!-- Overlay Layer -->
+<div class="overlay"></div>
+
+<!-- Hero Content with Typing Animation and Fade-ins -->
+<div id="content-container" class="hero-content fade-in">
+  <h1 class="typing-effect" id="main-heading">Welcome to Peer Assessment Hub</h1>
+  <p class="lead text-light" style="max-width: 600px;">
+    Empowering students and instructors to engage, learn, and grow through constructive feedback and collaborative evaluation.
+  </p>
+  <div class="mt-4">
+    <button id="register-button" class="btn btn-primary btn-lg mx-2">Register</button>
+    <button id="login-button" class="btn btn-outline-light btn-lg mx-2">Log In</button>
   </div>
-  
-</header>
+</div>
 
+<!-- Floating Shapes for Ambient Effect -->
+<div class="floating-shape"></div>
+<div class="floating-shape"></div>
+<div class="floating-shape"></div>
 
+<!-- JavaScript for Smooth Page Transition -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Fade-in effect on page load
+    document.body.style.opacity = "1";
+
+    const registerButton = document.getElementById("register-button");
+    const loginButton = document.getElementById("login-button");
+    const contentContainer = document.getElementById("content-container");
+
+    // Smooth transition for "Register" button
+    registerButton.addEventListener("click", function(event) {
+      event.preventDefault();
+      contentContainer.classList.add("fade-out");
+      setTimeout(() => {
+        loadContent('/register');
+      }, 500);
+    });
+
+    // Smooth transition for "Log In" button
+    loginButton.addEventListener("click", function(event) {
+      event.preventDefault();
+      contentContainer.classList.add("fade-out");
+      setTimeout(() => {
+        loadContent('/login');
+      }, 500);
+    });
+
+    // Function to load content via AJAX
+    function loadContent(url) {
+      fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }) // AJAX request
+        .then(response => response.text())
+        .then(html => {
+          // Replace content with loaded page and remove fade-out for fade-in effect
+          contentContainer.innerHTML = html;
+          contentContainer.classList.remove("fade-out");
+        })
+        .catch(error => console.error('Error loading content:', error));
+    }
+  });
+</script>
 
 <%- include('partials/footer') %>

@@ -1,7 +1,7 @@
-# IterationX-SOEN341_Project_F24
+# TeamXL-SOEN341_Project_F24
 
 ## Team Name
-> **IterationX**
+> **TeamXL**
 
 ## Team Members
 + Aditi Abhaysingh Ingle - 40266449 : Scrum Master, Backend Developer, Frontend Developer, UX Designer
