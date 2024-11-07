@@ -79,11 +79,41 @@ export function getTeammateInfo(student_info, sorted_students, idx){
 
     var teammateInfo = new Array(numOfTeammates);
 
-    for(var i = 0; i < teammateNames.length; i++){
+    for(var i = 0; i < teammateInfo.length; i++){
         teammateInfo[i] = {name : sorted_students[group_index + i].name, id: sorted_students[group_index + i].id};
     }
 
     return teammateInfo;
+}
+
+export function getCommentMadeByStudent(evaluatorID, evaluateeID, student_info){
+    for(var i = 0; i < student_info.length; i++){
+        if(evaluatorID == student_info[i].id_evaluator && evaluateeID == student_info[i].id_evaluatee){
+            return student_info[i].comments;
+        }
+    }
+
+    return "";
+}
+
+export function getGradesGivenByStudent(evaluatorID, evaluateeID, student_info){
+    console.log(evaluatorID);
+    for(var i = 0; i < student_info.length; i++){
+        if(evaluatorID == student_info[i].id && evaluateeID == student_info[i].id_evaluatee){
+            console.log(student_info[i].id);
+            return {cooperation: student_info[i].cooperation,
+                    conceptual_contribution: student_info[i].conceptual_contribution,
+                    practical_contribution: student_info[i].practical_contribution,
+                    work_ethic: student_info[i].work_ethic,
+                };
+        }
+    }
+
+    return {cooperation: 0,
+            conceptual_contribution: 0,
+            practical_contribution: 0,
+            work_ethic: 0,
+    };
 }
 
 function getSortedStudentTeamIndex(student_info, sorted_students, idx){

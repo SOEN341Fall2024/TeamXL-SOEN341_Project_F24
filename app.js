@@ -17,6 +17,9 @@ import {
   getWorkEthic,
   getPeers,
   getAverage,
+  getTeammateInfo,
+  getCommentMadeByStudent,
+  getGradesGivenByStudent,
   getNumberOfReviews,
   getNumberOfTeammates,
 } from "./helper.js";
@@ -314,18 +317,20 @@ app.get("/view-reviews-detailed", async (req, res) => {
   const result2 = await db.query(
     "SELECT group_name, id_group FROM groups ORDER BY id_group ASC"
   );
+  const result3 = await db.query(
+    "SELECT id, id_group, name FROM student ORDER BY id_group, id ASC"
+  );
   const student_info = result1.rows;
   const groups = result2.rows;
+  const sorted_students = result3.rows;
 
   res.render("view-reviews-detailed.ejs", {
-    getCooperation,
-    getConceptual,
-    getPractical,
-    getWorkEthic,
-    getPeers,
-    getAverage,
+    getTeammateInfo,
+    getCommentMadeByStudent,
+    getGradesGivenByStudent,
     student_info,
     groups,
+    sorted_students,
   });
 });
 
@@ -341,7 +346,7 @@ app.get("/view-review-completion", async (req, res) => {
   );
   const student_info = result1.rows;
   const groups = result2.rows;
-  const sorted_students = result3. rows;
+  const sorted_students = result3.rows;
 
   res.render("view-review-completion.ejs", {
     getNumberOfTeammates,

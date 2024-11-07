@@ -1,27 +1,38 @@
-<% for(var i = 0, j = 0, k = -1; i < student_info.length; i++) { %>
-    <% if(i + 1 < student_info.length && i > 0  && student_info[i].id == student_info[i - 1].id) {i++;}%>
-    <%  if(k != j) { k++; %>
+<%var studentArr;%>
+<%var isNewTeam = true;%>
+<%for(var i = 0, j = 0; i < student_info.length; i++) { %>
+    <% if(isNewTeam) { isNewTeam = false; %>
         <b>Team Name: <%= groups[j].group_name; %></b>
-        <table>
+        <%studentArr = getTeammateInfo(student_info, sorted_students, i);%>
+    <% } %>
+    <% if(groups[j].id_group != student_info[i].id_group) { j++; i--; isNewTeam = true; continue;} %>
+    <% if(i > 0  && student_info[i].id == student_info[i - 1].id) {continue;}%>
+    <h4><b>Student Name: </b><%= student_info[i].name %></h4>
+    <table>
+        <tr>
+            <th>Member</th>
+            <th>Cooperation</th>
+            <th>Conceptual</th>
+            <th>Practical</th>
+            <th>Work Ethic</th>
+            <th>Average Across All</th>
+        </tr>
+    <%for(var k = 0; k < studentArr.length; k++){ %>
+        <%if(studentArr[k].id == student_info[i].id){continue;}%>
+        <%var info = getGradesGivenByStudent(student_info[i].id, studentArr[k].id, student_info);%>
             <tr>
-                <th>Member</th>
-                <th>Cooperation</th>
-                <th>Conceptual</th>
-                <th>Practical</th>
-                <th>Work Ethic</th>
-                <th>Average Across All</th>
+                <td><%= studentArr[k].name %></td>
+                <td><%= info.cooperation %></td>
+                <td><%= info.conceptual_contribution %></td>
+                <td><%= info.practical_contribution %></td>
+                <td><%= info.work_ethic %></td>
+                <td><%= (info.cooperation + info.conceptual_contribution + info.practical_contribution + info.work_ethic) / 4.0%></td>
             </tr>
     <% } %>
-    <% if(groups[j].id_group != student_info[i].id_group) { j++; i--; %>
-        </table>
-    <% } else { %>
-    <tr>
-        <td><%= student_info[i].id %></td>
-        <td><%- getCooperation(student_info, i) %></td>
-        <td><%- getConceptual(student_info, i) %></td>
-        <td><%- getPractical(student_info, i) %></td>
-        <td><%- getWorkEthic(student_info, i) %></td>
-        <td><%- getAverage(student_info, i)%></td>
-    </tr>
+    </table>
+    <%for(var k = 0; k < studentArr.length; k++) {%>
+        <%if(studentArr[k].id == student_info[i].id) {continue;} %>
+        <b><%= studentArr[k].name%> comment: </b></br>
+        <h4><%- getCommentMadeByStudent(student_info[i].id, studentArr[k], student_info) %></h4>
     <% } %>
 <% } %>
