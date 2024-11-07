@@ -89,6 +89,7 @@ export function getTeammateInfo(student_info, sorted_students, idx){
 export function getCommentMadeByStudent(evaluatorID, evaluateeID, student_info){
     for(var i = 0; i < student_info.length; i++){
         if(evaluatorID == student_info[i].id_evaluator && evaluateeID == student_info[i].id_evaluatee){
+            console.log(1);
             return student_info[i].comments;
         }
     }
@@ -97,10 +98,10 @@ export function getCommentMadeByStudent(evaluatorID, evaluateeID, student_info){
 }
 
 export function getGradesGivenByStudent(evaluatorID, evaluateeID, student_info){
-    console.log(evaluatorID);
+    //console.log(evaluatorID, evaluateeID);
     for(var i = 0; i < student_info.length; i++){
-        if(evaluatorID == student_info[i].id && evaluateeID == student_info[i].id_evaluatee){
-            console.log(student_info[i].id);
+        if(evaluatorID == student_info[i].id_evaluator && evaluateeID == student_info[i].id_evaluatee){
+            console.log(0);
             return {cooperation: student_info[i].cooperation,
                     conceptual_contribution: student_info[i].conceptual_contribution,
                     practical_contribution: student_info[i].practical_contribution,

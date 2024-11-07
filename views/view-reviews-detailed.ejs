@@ -33,6 +33,6 @@
     <%for(var k = 0; k < studentArr.length; k++) {%>
         <%if(studentArr[k].id == student_info[i].id) {continue;} %>
         <b><%= studentArr[k].name%> comment: </b></br>
-        <h4><%- getCommentMadeByStudent(student_info[i].id, studentArr[k], student_info) %></h4>
+        <h4><%- getCommentMadeByStudent(student_info[i].id, studentArr[k].id, student_info) %></h4>
     <% } %>
 <% } %>
