@@ -68,12 +68,14 @@
             background-color: #f8f9fa;
         }
         .chat-bubble {
-            max-width: 60%;
+            display: inline-block; /* Shrinks the bubble width to the content size */
+            max-width: 70%; /* Limits the width to 70% of the chat section */
             padding: 10px 15px;
             border-radius: 20px;
             margin-bottom: 15px;
             font-size: 16px;
             color: #333;
+            word-wrap: break-word; /* Breaks long words */
         }
         .chat-bubble.user {
             background-color: #e1f5fe;
@@ -83,7 +85,8 @@
         .chat-bubble.other {
             background-color: #ffffff;
             border: 1px solid #ddd;
-            border-radius: 20px 20px 20px 0;
+            align-self: flex-start; /* Aligns the "other" user's bubble to the left */
+            border-radius: 20px 20px 20px 0; /* Rounded corners */
         }
         .chat-input {
             display: flex;
@@ -110,7 +113,7 @@
         .chat-input button:hover {
             background-color: #0056b3;
         }
-    </style>
+    </style>    
 </head>
 <body>
     <div class="chat-container">
@@ -119,17 +122,17 @@
             <h5>Users</h5>
             <div class="user" data-status="online">
                 <i class="bi bi-person-circle user-icon"></i>
-                <span>User1</span>
+                <span>Kevin</span>
                 <span class="user-status online"></span>
             </div>
             <div class="user" data-status="offline">
                 <i class="bi bi-person-circle user-icon"></i>
-                <span>User2</span>
+                <span>Aditi</span>
                 <span class="user-status offline"></span>
             </div>
             <div class="user" data-status="online">
                 <i class="bi bi-person-circle user-icon"></i>
-                <span>User3</span>
+                <span>Jonathan</span>
                 <span class="user-status online"></span>
             </div>
             <!-- Add more users as needed -->
@@ -144,7 +147,7 @@
             <!-- Chat Messages -->
             <div class="chat-messages d-flex flex-column">
                 <div class="chat-bubble other">
-                    <strong>User1:</strong> Hello everyone!
+                    <strong>Aditi:</strong> Hello everyone!
                 </div>
                 <div class="chat-bubble user">
                     <strong>You:</strong> Hi there!
