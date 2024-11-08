@@ -640,3 +640,8 @@ app.listen(port, () => {
 });
 
 app.use('/uploads', express.static('uploads'));
+
+// Route for the STUDENT CHATROOMS page
+app.get("/student-chatrooms", (req, res) => {
+  res.render("student-chatrooms.ejs");
+});
