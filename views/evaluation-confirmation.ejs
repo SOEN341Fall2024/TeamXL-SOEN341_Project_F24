@@ -137,15 +137,15 @@
         <div class="review-summary">
             <h5>Evaluation Summary</h5>
             <p><strong>Cooperation Rating:</strong> <%= cooperation %> / 5</p>
-            <p><strong>Comments on Cooperation:</strong> <%= cooperation_comments %></p>
+            <p><strong>Comments on Cooperation:</strong><%- stringprint(commentsObj.cooperation) %></p>
             <p><strong>Conceptual Contribution Rating:</strong> <%= conceptual_contribution %> / 5</p>
-            <p><strong>Comments on Conceptual Contribution:</strong> <%= conceptual_comments %></p>
+            <p><strong>Comments on Conceptual Contribution:</strong><%- stringprint(commentsObj.conceptual) %></p>
             <p><strong>Practical Contribution Rating:</strong> <%= practical_contribution %> / 5</p>
-            <p><strong>Comments on Practical Contribution:</strong> <%= practical_comments %></p>
+            <p><strong>Comments on Practical Contribution:</strong><%- stringprint(commentsObj.practical) %></p>
             <p><strong>Work Ethic Rating:</strong> <%= work_ethic %> / 5</p>
-            <p><strong>Comments on Work Ethic:</strong> <%= work_ethic_comments %></p> 
+            <p><strong>Comments on Work Ethic:</strong><%- stringprint(commentsObj.work_ethic) %></p> 
             <h5>Overall Comments</h5> 
-            <p><%= additional_comments %></p> 
+            <p><%- stringprint(commentsObj.comments) %></p> 
         </div> 
 
         <!-- Button Group -->

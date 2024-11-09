@@ -123,7 +123,7 @@
                     <% reviews.forEach((review, index) => { %>
                         <tr>
                             <td><%= index + 1 %></td>
-                            <td><%= review.comments %></td>
+                            <td><%- stringprint(review.comments) %></td>
                             <td>
                                 Cooperation: <%= review.cooperation %><br>
                                 Conceptual Contribution: <%= review.conceptual_contribution %><br>
