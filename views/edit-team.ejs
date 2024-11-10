@@ -61,7 +61,7 @@
                 <% availableStudents.forEach(function(student) { %>
                   <li class="list-group-item d-flex align-items-center">
                     <input type="checkbox" id="student_<%= student.id %>" class="mr-2" name="students[]" value="<%= student.id %>">
-                    <label for="student_<%= student.id %>" class="mb-0"><%= student.name %></label>
+                    <label for="student_<%= student.id %>" class="mb-0 mx-2"><%= student.name %></label>
                   </li>
                 <% }) %>
               </ul>
