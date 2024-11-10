@@ -8,38 +8,17 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            background-color: #f4f6f9;
-        }
-        .title-banner {
-            background-color: #222529;
-            color: white;
-            padding: 20px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .card {
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff;
-        }
-        .table th, .table td {
-            vertical-align: middle;
-        }
-    </style>
 </head>
 <body>
 
     <!-- Title Banner -->
-    <header class="title-banner">
-        <h1>Review Completion Status</h1>
+    <header class="bg-dark text-white text-center py-3 mb-4">
+        <h1>Peer Assessment Completion Status</h1>
     </header>
 
     <div class="container mt-5">
-        <% var isNewGroup = true; for(var i = 0, j = 0; i < student_info.length; i++) { %>
-            <% if(isNewGroup) { isNewGroup = false; %>
+        <% var isNewGroup = true; for (var i = 0, j = 0; i < student_info.length; i++) { %>
+            <% if (isNewGroup) { isNewGroup = false; %>
                 <div class="card mb-4">
                     <div class="card-body">
                         <% 
@@ -54,13 +33,13 @@
                                 <tr>
                                     <th>Student ID</th>
                                     <th>Student Name</th>
-                                    <th>Number of Reviews Completed</th>
+                                    <th>Reviews Completed</th>
                                 </tr>
                             </thead>
                             <tbody>
             <% } %>
-            <% if(i > 0 && student_info[i].id == student_info[i - 1].id) { continue; } %>
-            <% if(groups[j] && groups[j].id_group != student_info[i].id_group) { j++; i--; isNewGroup = true; %>
+            <% if (i > 0 && student_info[i].id == student_info[i - 1].id) { continue; } %>
+            <% if (groups[j] && groups[j].id_group != student_info[i].id_group) { j++; i--; isNewGroup = true; %>
                             </tbody>
                         </table>
                     </div>
@@ -69,7 +48,29 @@
             <tr>
                 <td><%= student_info[i].id %></td>
                 <td><%= student_info[i].name %></td>
-                <td><%- getNumberOfReviews(student_info, i) %> / <%- getNumberOfTeammates(student_info, sorted_students, i) %></td>
+                <td>
+                    <% 
+                        var reviewsCompleted = getNumberOfReviews(student_info, i);
+                        var totalReviews = getNumberOfTeammates(student_info, sorted_students, i);
+                        var completionPercentage = totalReviews > 0 
+                            ? (reviewsCompleted / totalReviews) * 100
+                            : 0;
+
+                        // Determine progress bar color
+                        var progressBarClass = "bg-danger"; // Default to red
+                        if (completionPercentage >= 75) {
+                            progressBarClass = "bg-success"; // Green
+                        } else if (completionPercentage >= 50) {
+                            progressBarClass = "bg-warning"; // Orange
+                        }
+                    %>
+                    <!-- Progress bar with fraction inside -->
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar <%= progressBarClass %>" role="progressbar" style="width: <%= completionPercentage %>%;" aria-valuenow="<%= completionPercentage %>" aria-valuemin="0" aria-valuemax="100">
+                            <%= reviewsCompleted %> / <%= totalReviews %>
+                        </div>
+                    </div>
+                </td>
             </tr>
         <% } %>
                             </tbody>
