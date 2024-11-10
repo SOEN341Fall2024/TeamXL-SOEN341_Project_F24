@@ -42,9 +42,13 @@
             <% if(isNewGroup) { isNewGroup = false; %>
                 <div class="card mb-4">
                     <div class="card-body">
-                        <% if (groups[j]) { %>
-                            <h3 class="card-title">Team Name: <%= groups[j].group_name %></h3>
-                        <% } %>
+                        <% 
+                            // Ensure the group exists and handle empty group names
+                            var groupName = (groups[j] && groups[j].group_name && groups[j].group_name.trim() !== "") 
+                                ? groups[j].group_name 
+                                : 'Unplaced Students';
+                        %>
+                        <h3 class="card-title"><%= groupName %></h3>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
