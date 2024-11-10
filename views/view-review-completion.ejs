@@ -1,20 +1,82 @@
-<%var isNewGroup = true; for(var i = 0, j = 0; i < student_info.length; i++) { %>
-    <% if(isNewGroup) {isNewGroup = false; %>
-        <b>Team Name: <%= groups[j].group_name; %></b>
-        <table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Completion Status</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .title-banner {
+            background-color: #222529;
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .card {
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Title Banner -->
+    <header class="title-banner">
+        <h1>Review Completion Status</h1>
+    </header>
+
+    <div class="container mt-5">
+        <% var isNewGroup = true; for(var i = 0, j = 0; i < student_info.length; i++) { %>
+            <% if(isNewGroup) { isNewGroup = false; %>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <% if (groups[j]) { %>
+                            <h3 class="card-title">Team Name: <%= groups[j].group_name %></h3>
+                        <% } %>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Number of Reviews Completed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            <% } %>
+            <% if(i > 0 && student_info[i].id == student_info[i - 1].id) { continue; } %>
+            <% if(groups[j] && groups[j].id_group != student_info[i].id_group) { j++; i--; isNewGroup = true; %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <% continue; } %>
             <tr>
-                <th>Student ID</th>
-                <th>Student Name</th>
-                <th>Number of Reviews Completed</th>
+                <td><%= student_info[i].id %></td>
+                <td><%= student_info[i].name %></td>
+                <td><%- getNumberOfReviews(student_info, i) %> / <%- getNumberOfTeammates(student_info, sorted_students, i) %></td>
             </tr>
-    <% } %>
-    <% if(i > 0  && student_info[i].id == student_info[i - 1].id) {continue;}%>
-    <% if(groups[j].id_group != student_info[i].id_group) { j++; i--; isNewGroup = true; %>
-        </table>
-    <%continue;}%>
-    <tr>
-        <td><%= student_info[i].id %></td>
-        <td><%= student_info[i].name %></td>
-        <td><%- getNumberOfReviews(student_info, i) %> / <%- getNumberOfTeammates(student_info, sorted_students, i) %></td>
-    </tr>
-<% } %>
+        <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
