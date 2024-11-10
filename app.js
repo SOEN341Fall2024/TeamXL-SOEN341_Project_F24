@@ -675,3 +675,5 @@ app.get("/view-review-completion", (req, res) => {
 app.get("/access-assessment", (req, res) => {
   res.render("access-assessment.ejs"); 
 });
+
+export default app;

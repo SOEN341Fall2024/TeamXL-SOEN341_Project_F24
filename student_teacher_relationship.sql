@@ -27,7 +27,7 @@ CREATE TABLE STUDENT (
 
 -- Create table for the evaluation
 CREATE TABLE EVALUATION (
-    ID_EVALUATOR INTEGER,
+    ID_EVALUATOR INTEGER,o
     ID_EVALUATEE INTEGER,
     cooperation INT,
     conceptual_contribution INT,  
