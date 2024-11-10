@@ -26,6 +26,7 @@ import {
   getCommentsObj,
   stringprint,
 } from "./helper.js";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
@@ -381,14 +382,7 @@ app.get("/logout", (req, res) => {
 
 app.get("/send-message", (req, res) => {
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-const genAI = new GoogleGenerativeAI(Gemini_API_key);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-const result = await model.generateContent(req.body.text);
-console.log(result.response.text());
-
+  console.log(runAI(req.body.text));
 
 });
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
