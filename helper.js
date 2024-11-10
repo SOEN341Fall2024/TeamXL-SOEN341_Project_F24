@@ -207,13 +207,3 @@ function getSplitComment(type, comments){
 export function stringprint(str){
     return str;
 }
-
-export async function runAI(prompt) {
-    
-    const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    
-    const result = await model.generateContent(prompt);
-    return result.response.text();
-
-}

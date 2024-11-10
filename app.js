@@ -381,9 +381,15 @@ app.get("/logout", (req, res) => {
 });
 
 
-app.get("/send-message", (req, res) => {
+app.get("/send-message", async (req, res) => {
 
-  console.log(runAI(req.body.text));
+  console.log("fdssd");
+
+  const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  
+  const result = await model.generateContent(req.body.text);
+  return result.response.text();
 
 });
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
