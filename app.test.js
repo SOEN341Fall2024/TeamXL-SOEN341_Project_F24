@@ -28,5 +28,13 @@ describe('Express App Tests for student', () => {
     expect(response.headers.location).toBe('/login');
   });
 
+
+  // Test the LOGOUT route
+  it('should redirect to home on GET /logout', async () => {
+    const response = await request(app).get('/logout');
+    expect(response.statusCode).toBe(302); // Redirect status
+    expect(response.header.location).toBe('/'); // Ensure redirection is to home
+  });  
+  
 });
 
