@@ -10,6 +10,7 @@
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
+
         /* Main container styling */ 
         .container {
             margin-top: 50px;
@@ -19,6 +20,7 @@
             border-radius: 10px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
+
         /* Criterion box styling */
         .criterion-box {
             border: 1px solid #ddd;
@@ -35,6 +37,7 @@
             color: #222529;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
+
         /* Rating system */
         .rating {
             display: flex;
@@ -61,10 +64,12 @@
         .rating input:checked ~ label::before {
             color: gold;
         }
+
         /* Additional Comments Styling */
         .form-section {
             margin-bottom: 50px; /* Adds extra space below the comments box */
         }
+
         /* Warning message styling */
         .warning {
             color: red;
@@ -79,11 +84,14 @@
             var conceptualContribution = document.querySelector('input[name="conceptual_contribution"]:checked');
             var practicalContribution = document.querySelector('input[name="practical_contribution"]:checked');
             var workEthic = document.querySelector('input[name="work_ethic"]:checked');
+
             document.getElementById("coop-warning").style.display = "none";
             document.getElementById("concept-warning").style.display = "none";
             document.getElementById("practical-warning").style.display = "none";
             document.getElementById("ethic-warning").style.display = "none";
+
             var valid = true;
+
             if (!cooperation) {
                 document.getElementById("coop-warning").style.display = "block";
                 valid = false;
@@ -100,6 +108,7 @@
                 document.getElementById("ethic-warning").style.display = "block";
                 valid = false;
             }
+
             if (!valid) {
                 event.preventDefault();
             }
@@ -110,7 +119,7 @@
 
     <!-- Main Content -->
     <div class="container">
-
+        
         <!-- Evaluation Form -->
        <form action="/edit-submition" method="POST" onsubmit="validateForm(event)">
         <p>Edit your evaluation</p>
@@ -149,7 +158,7 @@
                 </div>
                 <p id="concept-warning" class="warning">Please select a rating for Conceptual Contribution.</p>
             </div>
-
+            
 
             <!-- Practical Contribution Criterion Box -->
             <div class="criterion-box">
@@ -201,5 +210,7 @@
     </div>
 
  <
-
+   
 <%- include('partials/footer') %>
+
+
