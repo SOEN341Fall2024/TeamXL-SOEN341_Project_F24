@@ -178,8 +178,8 @@
             </div>
             <!-- Input Area -->
             <div class="chat-input">
-                <input type="text" placeholder="Type a message...">
-                <button> <a href="/send-message"> Send </a></button>
+                <input type="text" id="message" placeholder="Type a message...">
+                <button id="sendButton">Send</button>
             </div>
         </div>
     </div>
@@ -204,6 +204,28 @@
             // Append sorted users back to the user list
             users.forEach(user => userList.appendChild(user));
         };
+
+        document.getElementById('sendButton').addEventListener('click', async () => {
+    const message = document.getElementById('message').value;
+    
+    if (message) {
+      console.log("Sending message:", message);  // Check the message before sending
+
+      const response = await fetch('/send-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),  // Send message as JSON
+      });
+
+      const result = await response.json(); // Assuming server returns JSON
+      console.log(result);  // Handle the response
+    } else {
+      console.log("No message to send.");
+    }
+  });
+
     </script>
 </body>
 </html>

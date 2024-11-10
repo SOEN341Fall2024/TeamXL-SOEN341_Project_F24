@@ -9,6 +9,7 @@ import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
+import { GoogleGenerativeAI } from "@google/generative-ai"; 
 import { group } from "console";
 import {
   getCooperation,
@@ -25,9 +26,7 @@ import {
   getComments,
   getCommentsObj,
   stringprint,
-  runAI,
 } from "./helper.js";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 
@@ -36,6 +35,9 @@ dotenv.config();
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+
+
+app.use(express.json()); 
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -381,15 +383,13 @@ app.get("/logout", (req, res) => {
 });
 
 
-app.get("/send-message", async (req, res) => {
-
-  console.log("fdssd");
+app.post("/send-message", async (req, res) => {
 
   const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  
-  const result = await model.generateContent(req.body.text);
-  return result.response.text();
+
+  const result = await model.generateContent(req.body.message);
+   console.log(result.response.text());
 
 });
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
