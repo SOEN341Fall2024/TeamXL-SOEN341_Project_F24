@@ -8,11 +8,50 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            font-weight: bold;
+            font-size: 1.8rem; /* Increased font size for the team name */
+            color: #333;
+        }
+        .progress {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .badge-custom {
+            font-size: 1.2rem; /* Adjusted font size for better visibility */
+            background-color: #f0f0f0;
+            color: #555;
+            border-radius: 20px;
+            padding: 5px 15px;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .table thead th {
+            background-color: #f8f9fa;
+            border-top: none;
+            font-weight: 600;
+        }
+        .header {
+            background-color: #000; /* Set header color to black */
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
     <!-- Title Banner -->
-    <header class="bg-dark text-white text-center py-3 mb-4">
+    <header class="header text-center py-4 mb-4">
         <h1>Peer Assessment Completion Status</h1>
     </header>
 
@@ -27,8 +66,10 @@
                                 ? groups[j].group_name 
                                 : 'Unplaced Students';
                         %>
-                        <h3 class="card-title"><%= groupName %></h3>
-                        <table class="table table-striped">
+                        <h3 class="card-title mb-3">
+                            <span class="badge badge-custom"><%= groupName %></span>
+                        </h3>
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>Student ID</th>
@@ -73,7 +114,7 @@
                             : `${reviewsCompleted} / ${totalReviews}`;
                     %>
                     <!-- Progress bar with "Complete" or fraction inside -->
-                    <div class="progress" style="height: 20px;">
+                    <div class="progress" style="height: 25px;">
                         <div class="progress-bar <%= progressBarClass %>" role="progressbar" style="width: <%= completionPercentage %>%;" aria-valuenow="<%= completionPercentage %>" aria-valuemin="0" aria-valuemax="100">
                             <%= displayText %>
                         </div>
