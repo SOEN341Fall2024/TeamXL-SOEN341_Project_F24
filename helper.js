@@ -210,7 +210,7 @@ export function stringprint(str){
 
 export async function runAI(prompt) {
     
-    const genAI = new GoogleGenerativeAI(Gemini_API_key);
+    const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     const result = await model.generateContent(prompt);
