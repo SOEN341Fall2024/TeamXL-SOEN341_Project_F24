@@ -645,3 +645,5 @@ app.use('/uploads', express.static('uploads'));
 app.get("/student-chatrooms", (req, res) => {
   res.render("student-chatrooms.ejs");
 });
+
+export default app;
