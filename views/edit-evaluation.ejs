@@ -1,62 +1,216 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Team</title>
-  <!-- Include Bootstrap CSS -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<%- include('partials/header-2', { title: 'Evaluate Student' , userType, instructorUsername, cooperationValue, conceptualContributionValue, practical_contributionValue, work_ethicValue, commentsValue  }) %>
+    <style>
+        /* Black Gradient background for the title banner */
+        .title-banner {
+            background: linear-gradient(135deg, #222529, #222529);
+            color: white; 
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main container styling */ 
+        .container {
+            margin-top: 50px;
+            max-width: 700px;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Criterion box styling */
+        .criterion-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .criterion-box h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #222529;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Rating system */
+        .rating {
+            display: flex;
+            justify-content: center;
+            max-width: 300px;
+            margin: 0 auto;
+            flex-direction: row-reverse;
+        }
+        .rating label { 
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        .rating input {
+            display: none;
+        }
+        .rating label::before {
+            content: "★";
+            color: lightgray;
+            transition: color 0.3s ease;
+        }
+        .rating label:hover::before,
+        .rating label:hover ~ label::before,
+        .rating input:checked ~ label::before {
+            color: gold;
+        }
+
+        /* Additional Comments Styling */
+        .form-section {
+            margin-bottom: 50px; /* Adds extra space below the comments box */
+        }
+
+        /* Warning message styling */
+        .warning {
+            color: red;
+            font-size: 0.9rem;
+            display: none;
+            margin-top: 5px;
+        }
+    </style>
+    <script>
+        function validateForm(event) {
+            var cooperation = document.querySelector('input[name="cooperation"]:checked');
+            var conceptualContribution = document.querySelector('input[name="conceptual_contribution"]:checked');
+            var practicalContribution = document.querySelector('input[name="practical_contribution"]:checked');
+            var workEthic = document.querySelector('input[name="work_ethic"]:checked');
+
+            document.getElementById("coop-warning").style.display = "none";
+            document.getElementById("concept-warning").style.display = "none";
+            document.getElementById("practical-warning").style.display = "none";
+            document.getElementById("ethic-warning").style.display = "none";
+
+            var valid = true;
+
+            if (!cooperation) {
+                document.getElementById("coop-warning").style.display = "block";
+                valid = false;
+            }
+            if (!conceptualContribution) {
+                document.getElementById("concept-warning").style.display = "block";
+                valid = false;
+            }
+            if (!practicalContribution) {
+                document.getElementById("practical-warning").style.display = "block";
+                valid = false;
+            }
+            if (!workEthic) {
+                document.getElementById("ethic-warning").style.display = "block";
+                valid = false;
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        }
+    </script>
 </head>
 <body>
-  <!-- Container to center the form vertically and horizontally -->
-  <div class="container m-5 d-flex justify-content-center align-items-center">
-    <div class="vh-100 d-flex justify-content-center align-items-center w-75">
-      <div class="row justify-content-center w-100">
-        <div class="col-md-8">
-          <h1 class="text-center mb-4">Edit Team</h1>
-          <form>
-            <!-- Form Group for Team Name -->
-            <div class="form-group mb-3">
-              <label for="teamName" class="form-label">Team Name</label>
-              <input type="text" id="teamName" name="teamName" class="form-control" placeholder="Enter team name">
+
+    <!-- Main Content -->
+    <div class="container">
+        
+        <!-- Evaluation Form -->
+       <form action="/edit-submition" method="POST" onsubmit="validateForm(event)">
+        <p>Edit your evaluation</p>
+            <!-- Cooperation Criterion Box -->
+            <div class="criterion-box">
+                <h4>Cooperation</h4>
+                <div class="rating">
+                    <input type="radio" id="coop-5" name="cooperation" value="5" <%= cooperationValue == 5 ? 'checked' : '' %>>
+                    <label for="coop-5"></label>
+                    <input type="radio" id="coop-4" name="cooperation" value="4" <%= cooperationValue == 4 ? 'checked' : '' %>>
+                    <label for="coop-4"></label>
+                    <input type="radio" id="coop-3" name="cooperation" value="3" <%= cooperationValue == 3 ? 'checked' : '' %>>
+                    <label for="coop-3"></label>
+                    <input type="radio" id="coop-2" name="cooperation" value="2" <%= cooperationValue == 2 ? 'checked' : '' %>>
+                    <label for="coop-2"></label>
+                    <input type="radio" id="coop-1" name="cooperation" value="1" <%= cooperationValue == 1 ? 'checked' : '' %>>
+                    <label for="coop-1"></label>
+                </div>
+                <p id="coop-warning" class="warning">Please select a rating for Cooperation.</p>
             </div>
 
-            <!-- Example Form Group for Adding/Editing Members -->
-            <div class="form-group mb-3">
-              <label for="memberName" class="form-label">Member Name</label>
-              <input type="text" id="memberName" name="memberName" class="form-control" placeholder="Enter member name">
+            <!-- Conceptual Contribution Criterion Box -->
+            <div class="criterion-box">
+                <h4>Conceptual Contribution</h4>
+                <div class="rating">
+                    <input type="radio" id="concept-5" name="conceptual_contribution" value="5" <%= conceptualContributionValue == 5 ? 'checked' : '' %>>
+                    <label for="concept-5"></label>
+                    <input type="radio" id="concept-4" name="conceptual_contribution" value="4" <%= conceptualContributionValue == 4 ? 'checked' : '' %>>
+                    <label for="concept-4"></label>
+                    <input type="radio" id="concept-3" name="conceptual_contribution" value="3" <%= conceptualContributionValue == 3 ? 'checked' : '' %>>
+                    <label for="concept-3"></label>
+                    <input type="radio" id="concept-2" name="conceptual_contribution" value="2" <%= conceptualContributionValue == 2 ? 'checked' : '' %>>
+                    <label for="concept-2"></label>
+                    <input type="radio" id="concept-1" name="conceptual_contribution" value="1" <%= conceptualContributionValue == 1 ? 'checked' : '' %>>
+                    <label for="concept-1"></label>
+                </div>
+                <p id="concept-warning" class="warning">Please select a rating for Conceptual Contribution.</p>
+            </div>
+            
+
+            <!-- Practical Contribution Criterion Box -->
+            <div class="criterion-box">
+                <h4>Practical Contribution</h4>
+                <div class="rating">
+                    <input type="radio" id="practical-5" name="practical_contribution" value="5" <%= practical_contributionValue == 5 ? 'checked' : '' %>>
+                    <label for="practical-5"></label>
+                    <input type="radio" id="practical-4" name="practical_contribution" value="4" <%= practical_contributionValue == 4 ? 'checked' : '' %>>
+                    <label for="practical-4"></label>
+                    <input type="radio" id="practical-3" name="practical_contribution" value="3" <%= practical_contributionValue == 3 ? 'checked' : '' %>>
+                    <label for="practical-3"></label>
+                    <input type="radio" id="practical-2" name="practical_contribution" value="2" <%= practical_contributionValue == 2 ? 'checked' : '' %>>
+                    <label for="practical-2"></label>
+                    <input type="radio" id="practical-1" name="practical_contribution" value="1" <%= practical_contributionValue == 1 ? 'checked' : '' %>>
+                    <label for="practical-1"></label>
+                </div>
+                <p id="practical-warning" class="warning">Please select a rating for Practical Contribution.</p>
             </div>
 
-            <!-- More Form Fields as Needed -->
-            <div class="form-group mb-3">
-              <label for="memberID" class="form-label">Member ID</label>
-              <input type="text" id="memberID" name="memberID" class="form-control" placeholder="Enter member ID">
+            <!-- Work Ethic Criterion Box -->
+            <div class="criterion-box">
+                <h4>Work Ethic</h4>
+                <div class="rating">
+                    <input type="radio" id="ethic-5" name="work_ethic" value="5" <%= work_ethicValue == 5 ? 'checked' : '' %>>
+                    <label for="ethic-5"></label>
+                    <input type="radio" id="ethic-4" name="work_ethic" value="4" <%= work_ethicValue == 4 ? 'checked' : '' %>>
+                    <label for="ethic-4"></label>
+                    <input type="radio" id="ethic-3" name="work_ethic" value="3" <%= work_ethicValue == 3 ? 'checked' : '' %>>
+                    <label for="ethic-3"></label>
+                    <input type="radio" id="ethic-2" name="work_ethic" value="2" <%= work_ethicValue == 2 ? 'checked' : '' %>>
+                    <label for="ethic-2"></label>
+                    <input type="radio" id="ethic-1" name="work_ethic" value="1" <%= work_ethicValue == 1 ? 'checked' : '' %>>
+                    <label for="ethic-1"></label>
+                </div>
+                <p id="ethic-warning" class="warning">Please select a rating for Work Ethic.</p>
             </div>
 
-            <!-- Optional: Dropdown to Select Role -->
-            <div class="form-group mb-3">
-              <label for="role" class="form-label">Role</label>
-              <select id="role" name="role" class="form-control">
-                <option value="" disabled selected>Select role</option>
-                <option value="leader">Leader</option>
-                <option value="member">Member</option>
-              </select>
+            <!-- Additional Comments (Optional) -->
+            <div class="form-section text-center mb-5">
+                <label for="comments" class="form-label">Overall Comments </label>
+                <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Write any feedback here..."><%= commentsValue === null ? '' : commentsValue %></textarea>
             </div>
 
-            <!-- Submit Button -->
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">Save Changes</button>
+            <!-- Submit Button --> 
+            <div class="text-center mb-5">
+                <button type="submit" class="btn btn-primary">Submit Edited Evaluation</button>
             </div>
-          </form>
-        </div>
-      </div>
+        </form>
     </div>
-  </div>
 
-  <!-- Include Bootstrap JS and dependencies (optional, for interactive components) -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+ <
+   
+<%- include('partials/footer') %>
+
+

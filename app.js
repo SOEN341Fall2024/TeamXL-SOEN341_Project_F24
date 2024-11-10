@@ -22,6 +22,9 @@ import {
   getGradesGivenByStudent,
   getNumberOfReviews,
   getNumberOfTeammates,
+  getComments,
+  getCommentsObj,
+  stringprint,
 } from "./helper.js";
 
 dotenv.config();
@@ -253,6 +256,7 @@ app.get("/view-reviews", async (req, res) => {
 
   res.render("view-reviews.ejs", {
     reviews: RESULT.rows,
+    stringprint,
   });
 });
 
@@ -574,11 +578,18 @@ app.post("/student-evaluation", async (req, res) => {
 
 //Route to handle the submission of the evaluation
 app.post("/submit-evaluation", async (req, res) => {
-  const comments = req.body.cooperation_comments == "" ? "Cooperation Contribution Comment: <br/>" + req.body.cooperation_comments + "<br/><br/>" : "";
-  comments += req.body.conceptual_comments == "" ? "Conceptual Contribution Comment: <br/>" + req.body.conceptual_comments + "<br/><br/>" : "";
-  comments += req.body.practical_comments == "" ? "Practical Contribution Comment: <br/>" + req.body.practical_comments + "<br/><br/>" : "";
-  comments += req.body.work_ethic_comments == "" ? "Work Ethic Comment: <br/>" + req.body.work_ethic_comments + "<br/><br/>" : "";
-
+  var commentsObj = {
+    cooperation : "",
+    conceptual: "",
+    practical: "",
+    work_ethic: "",
+    comments: "",
+  };
+  commentsObj.cooperation = req.body.cooperation_comments != "" ? "Cooperation Contribution Comment: <br/>" + req.body.cooperation_comments + "<br/><br/>" : "";
+  commentsObj.conceptual = req.body.conceptual_comments != "" ? "Conceptual Contribution Comment: <br/>" + req.body.conceptual_comments + "<br/><br/>" : "";
+  commentsObj.practical = req.body.practical_comments != "" ? "Practical Contribution Comment: <br/>" + req.body.practical_comments + "<br/><br/>" : "";
+  commentsObj.work_ethic = req.body.work_ethic_comments != "" ? "Work Ethic Comment: <br/>" + req.body.work_ethic_comments + "<br/><br/>" : "";
+  commentsObj.comments = req.body.comments != "" ? "Additional Comment: <br/>" + req.body.comments + "<br/><br/>" : "";
   await db.query(
     "INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)",
     [
@@ -588,7 +599,7 @@ app.post("/submit-evaluation", async (req, res) => {
       req.body.conceptual_contribution,
       req.body.practical_contribution,
       req.body.work_ethic,
-      comments,
+      getComments(commentsObj),
     ]
   );
 
@@ -598,12 +609,20 @@ app.post("/submit-evaluation", async (req, res) => {
     conceptual_contribution: req.body.conceptual_contribution,
     practical_contribution: req.body.practical_contribution,
     work_ethic: req.body.work_ethic,
-    additional_comments: req.body.comments,
+    commentsObj,
+    stringprint,
   });
 });
 
 // The edition of an evaluation route ----------------------------------
 app.post("/edit-submition", async (req, res) => {
+  var commentsObj;
+  commentsObj.cooperation = req.body.cooperation_comments != "" ? "Cooperation Contribution Comment: <br/>" + req.body.cooperation_comments + "<br/><br/>" : "";
+  commentsObj.conceptual = req.body.conceptual_comments != "" ? "Conceptual Contribution Comment: <br/>" + req.body.conceptual_comments + "<br/><br/>" : "";
+  commentsObj.practical = req.body.practical_comments != "" ? "Practical Contribution Comment: <br/>" + req.body.practical_comments + "<br/><br/>" : "";
+  commentsObj.work_ethic = req.body.work_ethic_comments != "" ? "Work Ethic Comment: <br/>" + req.body.work_ethic_comments + "<br/><br/>" : "";
+  commentsObj.comments = req.body.comments != "" ? "Additional Comment: <br/>" + req.body.comments + "<br/><br/>" : "";
+
   await db.query(
     "UPDATE evaluation SET cooperation = $3, conceptual_contribution = $4, practical_contribution = $5, work_ethic = $6, comments = $7 WHERE id_evaluator = $1 AND id_evaluatee = $2",
     [
@@ -613,7 +632,7 @@ app.post("/edit-submition", async (req, res) => {
       req.body.conceptual_contribution,
       req.body.practical_contribution,
       req.body.work_ethic,
-      req.body.comments,
+      getComments(commentsObj),
     ]
   );
 
@@ -623,7 +642,8 @@ app.post("/edit-submition", async (req, res) => {
     conceptual_contribution: req.body.conceptual_contribution,
     practical_contribution: req.body.practical_contribution,
     work_ethic: req.body.work_ethic,
-    additional_comments: req.body.comments,
+    commentsObj,
+    stringprint,
   });
 });
 
@@ -644,6 +664,16 @@ app.use('/uploads', express.static('uploads'));
 // Route for the STUDENT CHATROOMS page
 app.get("/student-chatrooms", (req, res) => {
   res.render("student-chatrooms.ejs");
+});
+
+// Route for the View Review Completion page
+app.get("/view-review-completion", (req, res) => {
+  res.render("view-review-completion.ejs");
+});
+
+// Route for access assessment page
+app.get("/access-assessment", (req, res) => {
+  res.render("access-assessment.ejs"); 
 });
 
 export default app;
