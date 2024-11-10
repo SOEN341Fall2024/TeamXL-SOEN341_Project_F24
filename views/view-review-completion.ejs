@@ -63,11 +63,16 @@
                         } else if (completionPercentage >= 50) {
                             progressBarClass = "bg-warning"; // Orange
                         }
+
+                        // Display "Complete" or fraction
+                        var displayText = completionPercentage === 100 
+                            ? "Complete" 
+                            : `${reviewsCompleted} / ${totalReviews}`;
                     %>
-                    <!-- Progress bar with fraction inside -->
+                    <!-- Progress bar with "Complete" or fraction inside -->
                     <div class="progress" style="height: 20px;">
                         <div class="progress-bar <%= progressBarClass %>" role="progressbar" style="width: <%= completionPercentage %>%;" aria-valuenow="<%= completionPercentage %>" aria-valuemin="0" aria-valuemax="100">
-                            <%= reviewsCompleted %> / <%= totalReviews %>
+                            <%= displayText %>
                         </div>
                     </div>
                 </td>
