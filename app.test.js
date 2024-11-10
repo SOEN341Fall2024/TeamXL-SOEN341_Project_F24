@@ -65,7 +65,34 @@ describe('GET /login', () => {
   
   });
 
+  describe('GET /register', () => {
+  it('should render the register page with ajax = true for AJAX request', async () => {
+    // Send an AJAX request (with the x-requested-with header)
+    const response = await request(app)
+      .get('/register')
+      .set('X-Requested-With', 'XMLHttpRequest');
+  
+    // Check that the response status is 200 (OK)
+    expect(response.status).toBe(200);
+  
+    // Check if the rendered HTML contains the expected value for the ajax status
+    expect(response.text).toContain('ajax: true');
+  });
+  
+  
+  it('should render the register page with ajax = false for non-AJAX request', async () => {
+    // Send a regular (non-AJAX) request
+    const response = await request(app).get('/register');
+  
+    // Check that the response status is 200 (OK)
+    expect(response.status).toBe(200);
+  
+    // Check if the rendered HTML contains the expected value for the ajax status
+    expect(response.text).toContain('ajax: false');
+  });
 
+
+});
 /*
 // App test for instructor
 describe('GET /instructor-dashboard', () => {
