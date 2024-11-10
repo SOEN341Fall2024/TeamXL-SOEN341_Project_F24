@@ -655,9 +655,11 @@ app.post("/thank-you", (req, res) => {
 //--------START EXPRESS SERVER--------//
 
 // Start the Express server. Server listening on port 3000
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
 });
+
+server.close();
 
 app.use('/uploads', express.static('uploads'));
 
