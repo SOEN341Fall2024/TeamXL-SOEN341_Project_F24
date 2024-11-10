@@ -665,3 +665,8 @@ app.use('/uploads', express.static('uploads'));
 app.get("/student-chatrooms", (req, res) => {
   res.render("student-chatrooms.ejs");
 });
+
+// Route for the View Review Completion page
+app.get("/view-review-completion", (req, res) => {
+  res.render("view-review-completion.ejs");
+});
