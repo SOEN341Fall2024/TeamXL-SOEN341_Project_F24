@@ -1,38 +1,154 @@
-<%var studentArr;%>
-<%var isNewTeam = true;%>
-<%for(var i = 0, j = 0; i < student_info.length; i++) { %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detailed Reviews Page</title>
+  <!-- Include Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Include Bootstrap Icons (optional) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .section-title {
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-weight: 600;
+    }
+    .badge {
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <!-- Page Title Section -->
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-dark">
+        <i class="bi bi-journal-text me-2"></i> Detailed Reviews Page
+      </h1>
+    <p class="text-muted fs-5">Explore a comprehensive breakdown of team reviews, scores, and feedback for each student.</p>
+  </div>
+
+  <!-- Dashboard Component -->
+  <div class="mb-5">
+    <h2 class="text-secondary section-title"><i class="bi bi-bar-chart-fill me-2"></i>Assessment Dashboard</h2>
+    <div class="row g-4">
+      <!-- Score Cards -->
+      <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center">
+            <h5 class="card-title">Cooperation</h5>
+            <p class="display-6 text-success">88%</p> <!-- Replace with dynamic values (backend) -->
+            <div class="progress mt-2">
+              <div class="progress-bar bg-success" role="progressbar" style="width: 88%" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center">
+            <h5 class="card-title">Conceptual</h5>
+            <p class="display-6 text-info">75%</p> <!-- Replace with dynamic values (backend) -->
+            <div class="progress mt-2">
+              <div class="progress-bar bg-info" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center">
+            <h5 class="card-title">Practical</h5>
+            <p class="display-6 text-warning">82%</p> <!-- Replace with dynamic values (backend) -->
+            <div class="progress mt-2">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body text-center">
+            <h5 class="card-title">Work Ethic</h5>
+            <p class="display-6 text-primary">90%</p> <!-- Replace with dynamic values (backend) -->
+            <div class="progress mt-2">
+              <div class="progress-bar bg-primary" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Section -->
+  <% var studentArr; %>
+  <% var isNewTeam = true; %>
+  <% for(var i = 0, j = 0; i < student_info.length; i++) { %>
     <% if(isNewTeam) { isNewTeam = false; %>
-        <b>Team Name: <%= groups[j].group_name; %></b>
-        <%studentArr = getTeammateInfo(student_info, sorted_students, i);%>
+      <!-- Team Header -->
+      <div class="mb-4">
+        <h3 class="text-secondary section-title">
+          <i class="bi bi-people-fill me-2"></i> Team Name: <%= groups[j].group_name %>
+        </h3>
+        <% studentArr = getTeammateInfo(student_info, sorted_students, i); %>
+      </div>
     <% } %>
-    <% if(groups[j].id_group != student_info[i].id_group) { j++; i--; isNewTeam = true; continue;} %>
-    <% if(i > 0  && student_info[i].id == student_info[i - 1].id) {continue;}%>
-    <h4><b>Student Name: </b><%= student_info[i].name %></h4>
-    <table>
-        <tr>
-            <th>Member</th>
-            <th>Cooperation</th>
-            <th>Conceptual</th>
-            <th>Practical</th>
-            <th>Work Ethic</th>
-            <th>Average Across All</th>
-        </tr>
-    <%for(var k = 0; k < studentArr.length; k++){ %>
-        <%if(studentArr[k].id == student_info[i].id){continue;}%>
-        <%var info = getGradesGivenByStudent(student_info[i].id, studentArr[k].id, student_info);%>
+    <% if(groups[j].id_group != student_info[i].id_group) { j++; i--; isNewTeam = true; continue; } %>
+    <% if(i > 0 && student_info[i].id == student_info[i - 1].id) { continue; } %>
+
+    <!-- Student Details -->
+    <div class="mb-4 p-3 bg-white shadow-sm rounded">
+      <h4 class="fw-bold">Student Name: <span class="text-primary"><%= student_info[i].name %></span></h4>
+      <div class="table-responsive mt-3">
+        <table class="table table-bordered table-striped table-hover">
+          <thead class="table-dark">
             <tr>
+              <th>Member</th>
+              <th>Cooperation</th>
+              <th>Conceptual</th>
+              <th>Practical</th>
+              <th>Work Ethic</th>
+              <th>Average Across All</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var k = 0; k < studentArr.length; k++) { %>
+              <% if(studentArr[k].id == student_info[i].id) { continue; } %>
+              <% var info = getGradesGivenByStudent(student_info[i].id, studentArr[k].id, student_info); %>
+              <tr>
                 <td><%= studentArr[k].name %></td>
                 <td><%= info.cooperation %></td>
                 <td><%= info.conceptual_contribution %></td>
                 <td><%= info.practical_contribution %></td>
                 <td><%= info.work_ethic %></td>
-                <td><%= (info.cooperation + info.conceptual_contribution + info.practical_contribution + info.work_ethic) / 4.0%></td>
-            </tr>
-    <% } %>
-    </table>
-    <%for(var k = 0; k < studentArr.length; k++) {%>
-        <%if(studentArr[k].id == student_info[i].id) {continue;} %>
-        <b><%= studentArr[k].name%> comment: </b></br>
-        <h4><%- getCommentMadeByStudent(student_info[i].id, studentArr[k].id, student_info) %></h4>
-    <% } %>
-<% } %>
+                <td><%= (info.cooperation + info.conceptual_contribution + info.practical_contribution + info.work_ethic) / 4.0 %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Student Comments -->
+      <div class="mt-3">
+        <% for(var k = 0; k < studentArr.length; k++) { %>
+          <% if(studentArr[k].id == student_info[i].id) { continue; } %>
+          <p class="fw-bold mb-1"><%= studentArr[k].name %> comment:</p>
+          <p class="text-muted border rounded p-2"><%- getCommentMadeByStudent(student_info[i].id, studentArr[k].id, student_info) %></p>
+        <% } %>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<!-- Include Bootstrap JS (Optional, for tooltips, popovers, etc.) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
