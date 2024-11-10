@@ -1,5 +1,150 @@
-<%- include('partials/header', { title: 'edit-team' }) %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Team</title>
+  <!-- Add Bootstrap CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  
+  <style>
+    
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .large-font {
+      font-size: 1.5rem; 
+    }
+
+    .heading-font {
+      font-size: 3rem; 
+    }
+
+    .card {
+      width: 200%; 
+      max-width: 900px;
+      padding: 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: #f8f9fa;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 0 auto;
+    }
+
+    .taller-box {
+      min-height: 700px;
+      padding: 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-group {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: white;
+    }
+
+    .form-label {
+      font-size: 1.5rem; 
+    }
+
+    .checkbox-group label {
+      font-size: 1.05rem; 
+    }
+
+    .btn-submit {
+      padding: 1rem 2rem; 
+      font-size: 1.1rem; 
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .btn-custom {
+      padding: 1rem 1rem;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .btn-submit, .btn-custom {
+      padding: 1rem 1rem;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .btn-remove-all {
+      background-color: #dc3545;
+      font-size: 1rem;
+      color: white; 
+      border: none;
+      border-radius: 5px;
+      padding: 1rem 1rem;
+    }
+
+    #confirmationMessage {
+      display: none;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .error-message {
+      display: none;
+      color: red;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; 
+      width: 100vw; 
+      padding: 0 2rem; 
+      box-sizing: border-box; 
+    }
+
+    .centered-container {
+      max-width: 1500px;
+      width: 100%;
+      padding: 20px;
+    }
+
+
+    .btn-remove {
+      background-color: #dc3545;
+      color: white;
+      border: none; 
+      border-radius: 5px; 
+      padding: 0.2rem 1rem;
+    }
+  </style>
+</head>
+
 <body>
+
   <%
     // Mock Data for Testing
     const teams = [
@@ -22,177 +167,248 @@
       { id: 11, name: 'Olivia' }
     ];
 
+    // Store removed students to highlight in the available list
     let removedStudents = [];
     let newStudents = [];
   %>
 
-  <!-- Container to center the form -->
-  <div class="container mt-5 mb-5 d-flex justify-content-center align-items-center">
-    <!-- Card to hold the form -->
-    <div class="card bg-light rounded p-5" style="width: 100%; max-width: 900px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
-      <h2 class="text-center mb-4">Edit Teams</h2>
+  <!-- Center the card using Bootstrap classes -->
+  <div class="container mt-5">
+    <div class="centered-container">
+      <!-- Custom card with updated background color and padding -->
+      <div class="card taller-box">
+        <h2 class="text-center heading-font">Edit Teams</h2>
 
-      <!-- Form to edit the team -->
-      <form id="editTeamForm" onsubmit="return showConfirmation()">
-        <!-- Team selection dropdown -->
-        <div class="form-group mx-5 my-4">
-          <label for="teamSelect">Select Team</label>
-          <select id="teamSelect" name="team" class="form-control" style="max-width: 700px;" onchange="switchTeam()">
-            <% teams.forEach(function(team) { %>
-              <option value="<%= team.id %>"><%= team.name %></option>
-            <% }) %>
-          </select>
-        </div>
+        <!-- Form to edit the team -->
+        <form id="editTeamForm" onsubmit="return showConfirmation()">
+          <!-- Dropdown to select team -->
+          <div class="form-group">
+            <label for="teamSelect" class="form-label">Select Team</label>
+            <select id="teamSelect" name="team" class="form-control" onchange="switchTeam()">
+              <% teams.forEach(function(team) { %>
+                <option value="<%= team.id %>"><%= team.name %></option>
+              <% }) %>
+            </select>
+          </div>
 
-        <!-- Input to change the team name -->
-        <div class="form-group mx-5 my-4">
-          <label for="teamName">Change Team Name</label>
-          <input type="text" id="teamName" name="teamName" class="form-control" style="max-width: 700px;">
-        </div>
+          <!-- Input to change the team name -->
+          <div class="form-group">
+            <label for="teamName" class="form-label">Change Team Name</label>
+            <input type="text" id="teamName" name="teamName" class="form-control">
+          </div>
 
-        <!-- Row to separate student lists and members -->
-        <div class="row">
-          <!-- Available Students List -->
-          <div class="mx-5 col-md-5">
-            <h5 class="mb-3">List of Students</h5>
-            <input type="text" id="studentSearch" class="form-control mb-3" placeholder="Search for students" style="max-width: 300px;">
-            <div class="border rounded p-2" style="max-height: 300px; overflow-y: auto;">
-              <ul id="studentList" class="list-group mb-0">
+          <div class="row">
+            <!-- Available Students List -->
+            <div class="col-md-6">
+              <h5>List of Students</h5>
+              <!-- Search input for filtering students -->
+              <input type="text" id="studentSearch" class="form-control mb-2" placeholder="Search for students">
+              <ul id="studentList" class="list-group student-list checkbox-group">
                 <% availableStudents.forEach(function(student) { %>
-                  <li class="list-group-item d-flex align-items-center">
-                    <input type="checkbox" id="student_<%= student.id %>" class="mr-2" name="students[]" value="<%= student.id %>">
-                    <label for="student_<%= student.id %>" class="mb-0 mx-2"><%= student.name %></label>
+                  <li class="list-group-item" id="studentItem_<%= student.id %>">
+                    <input type="checkbox" id="student_<%= student.id %>" class="student-checkbox" name="students[]" value="<%= student.id %>">
+                    <label for="student_<%= student.id %>"><%= student.name %></label>
                   </li>
                 <% }) %>
               </ul>
             </div>
-          </div>
 
-          <!-- Current Team Members and New Students -->
-          <div class="col-md-4">
-            <h5 class="mb-3">Current Team Members</h5>
-            <div class="border rounded p-2 mb-3" style="max-height: 300px; overflow-y: auto;">
-              <ul id="currentMembersList" class="list-group mb-0"></ul>
-            </div>
+            <!-- Current Team Members -->
+            <div class="col-md-6">
+              <h5>Current Team Members</h5>
+              <ul id="currentMembersList" class="list-group student-list checkbox-group"></ul>
+              <!-- Button to remove all current members -->
+              <button type="button" class="btn btn-remove-all btn-sm mt-3" onclick="removeAllMembers()">Remove All</button>
 
-            <!-- Centered Buttons with Reduced Width -->
-            <div class="d-flex justify-content-center mb-3">
-              <button type="button" class="btn btn-outline-danger btn-sm" style="width: 150px;" onclick="removeAllMembers()">Remove All</button>
-            </div>
-
-            <h5 class="mb-3">New Students</h5>
-            <div class="border rounded p-2 mb-3" style="max-height: 300px; overflow-y: auto;">
-              <ul id="newStudentsList" class="list-group mb-0"></ul>
-            </div>
-
-            <!-- Centered Buttons with Reduced Width -->
-            <div class="d-flex justify-content-center">
-              <button type="button" class="btn btn-outline-success btn-sm" style="width: 150px;" onclick="saveNewStudents()">Save New Students</button>
+              <!-- New Students List & Save Button -->
+              <h5 class="mt-3">New Students</h5>
+              <ul id="newStudentsList" class="list-group student-list checkbox-group"></ul>
+              <!-- Button to save new students -->
+              <button type="button" class="btn btn-custom btn-sm mt-2" onclick="saveNewStudents()">Save New Students</button>
             </div>
           </div>
-        </div>
 
-        <!-- Save Changes Button -->
-        <div class="text-center mt-4">
-          <button type="submit" class="btn btn-primary">Save Changes</button>
-        </div>
+          <!-- Save Changes Button -->
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-submit">Save Changes</button>
+          </div>
 
-        <!-- Confirmation message -->
-        <div id="confirmationMessage" class="alert alert-success mt-3" style="display: none;">
-          Team changes have been successfully saved!
-        </div>
-      </form>
+          <!-- Confirmation message -->
+          <div id="confirmationMessage" style="display: none;">
+            Team changes have been successfully saved!
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
-  <!-- JavaScript -->
+  <!-- Confirmation message for successfully saving the team -->
+  <script>
+    function showConfirmation() {
+      // Prevent the form from submitting (for demonstration)
+      event.preventDefault(); 
+
+      // Display the confirmation message
+      document.getElementById('confirmationMessage').style.display = 'block';
+
+      // Optionally, reset the form or perform additional actions here
+      document.getElementById('editTeamForm').reset();
+
+      // Scroll to the top of the page to show the message (optional)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      return false; // Prevent default form submission for now
+    }
+  </script>
+
   <script>
     let teams = <%- JSON.stringify(teams) %>;
     let availableStudents = <%- JSON.stringify(availableStudents) %>;
     let removedStudents = [];
     let newStudents = [];
 
-    function showConfirmation() {
-      event.preventDefault();
-      document.getElementById('confirmationMessage').style.display = 'block';
-      document.getElementById('editTeamForm').reset();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return false;
-    }
-
+    // Switch teams dynamically when a team is selected
     function switchTeam() {
       let teamId = document.getElementById('teamSelect').value;
       let selectedTeam = teams.find(team => team.id == teamId);
+
+      // Update the team name
       document.getElementById('teamName').value = selectedTeam.name;
+
+      // Clear and repopulate the current members list
       let memberList = document.getElementById('currentMembersList');
       memberList.innerHTML = '';
+
       selectedTeam.members.forEach(member => {
         let li = document.createElement('li');
         li.classList.add('list-group-item');
-        li.innerHTML = `${member.name} <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeMember(${member.id})">Remove</button>`;
+        li.innerHTML = `${member.name} <button type="button" class="btn btn-remove btn-sm" onclick="removeMember(${member.id})">Remove</button>`;
+        li.dataset.id = member.id;
         memberList.appendChild(li);
+      });
+
+      // Reset available students checkboxes and add event listeners for adding new students
+      availableStudents.forEach(student => {
+        let studentCheckbox = document.getElementById('student_' + student.id);
+        studentCheckbox.checked = false;
+
+        studentCheckbox.addEventListener('change', function() {
+          if (this.checked) {
+            addNewStudent(student.id, student.name);
+          } else {
+            removeNewStudent(student.id);
+          }
+        });
+
+        let studentItem = document.getElementById('studentItem_' + student.id);
+        studentItem.classList.remove('student-removed');
+        studentItem.querySelector('label').textContent = student.name; // Reset label text
       });
     }
 
+    // Add a new student to the "New Students" list
     function addNewStudent(studentId, studentName) {
       if (!newStudents.includes(studentId)) {
         newStudents.push(studentId);
+
+        // Add the student to the new students list
         let newStudentList = document.getElementById('newStudentsList');
         let li = document.createElement('li');
         li.classList.add('list-group-item');
-        li.innerHTML = `${studentName} <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeNewStudent(${studentId})">Remove</button>`;
+        li.innerHTML = `${studentName} <button type="button" class="btn btn-remove btn-sm" onclick="removeNewStudent(${studentId})">Remove</button>`;
+        li.dataset.id = studentId;
         newStudentList.appendChild(li);
       }
     }
 
+    // Remove a student from the "New Students" list
     function removeNewStudent(studentId) {
+      // Remove the student from the newStudents array
       newStudents = newStudents.filter(id => id !== studentId);
-      let studentElement = document.querySelector(`#newStudentsList li`);
-      if (studentElement) studentElement.remove();
+
+      // Remove the student from the DOM
+      let studentElement = document.querySelector('#newStudentsList li[data-id="' + studentId + '"]');
+      if (studentElement) {
+        studentElement.remove();
+      }
+
+      // Uncheck the checkbox in the available students list
       let studentCheckbox = document.getElementById('student_' + studentId);
-      if (studentCheckbox) studentCheckbox.checked = false;
+      if (studentCheckbox) {
+        studentCheckbox.checked = false;
+      }
     }
 
+    // Save the new students to the team
     function saveNewStudents() {
       if (newStudents.length === 0) {
         alert('No new students to save.');
         return;
       }
+
+      // Add new students to the current team list
       newStudents.forEach(studentId => {
         let studentName = document.querySelector(`#studentItem_${studentId} label`).textContent;
         addTeamMember(studentId, studentName);
       });
+
+      // Clear the new students list and reset the array
       newStudents = [];
       document.getElementById('newStudentsList').innerHTML = '';
     }
 
+    // Helper function to add a student to the current team list
     function addTeamMember(studentId, studentName) {
       let currentMembersList = document.getElementById('currentMembersList');
       let li = document.createElement('li');
       li.classList.add('list-group-item');
-      li.innerHTML = `${studentName} <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeMember(${studentId})">Remove</button>`;
+      li.innerHTML = `${studentName} <button type="button" class="btn btn-remove btn-sm" onclick="removeMember(${studentId})">Remove</button>`;
+      li.dataset.id = studentId;
       currentMembersList.appendChild(li);
     }
 
+    // Remove a single member from the current team
     function removeMember(memberId) {
-      let memberElement = document.querySelector(`#currentMembersList li`);
-      if (memberElement) memberElement.remove();
-      removedStudents.push(memberId);
+      let memberElement = document.querySelector('#currentMembersList li[data-id="' + memberId + '"]');
+      if (memberElement) {
+        memberElement.remove();  // Remove member from the current team list
+        removedStudents.push(memberId);  // Store removed student
+      }
+
+      let studentCheckbox = document.getElementById('student_' + memberId);
+      if (studentCheckbox) {
+        studentCheckbox.checked = false;
+
+        // Highlight the student in the available list
+        let studentItem = document.getElementById('studentItem_' + memberId);
+        studentItem.classList.add('student-removed');
+      }
     }
 
+    // Remove all members from the current team
     function removeAllMembers() {
-      document.getElementById('currentMembersList').innerHTML = '';
-      removedStudents = [];
+      let membersToRemove = Array.from(document.querySelectorAll('#currentMembersList li'));
+      membersToRemove.forEach(function(memberElement) {
+        let memberId = memberElement.getAttribute('data-id');
+        removeMember(memberId);
+      });
     }
 
+    // Search filter for students list
+    document.getElementById('studentSearch').addEventListener('keyup', function() {
+      let filter = this.value.toLowerCase();
+      document.querySelectorAll('#studentList li').forEach(function(studentElement) {
+        let studentName = studentElement.textContent.toLowerCase();
+        if (studentName.indexOf(filter) > -1) {
+          studentElement.style.display = '';
+        } else {
+          studentElement.style.display = 'none';
+        }
+      });
+    });
+
+    // Initialize page with the first team
     document.addEventListener('DOMContentLoaded', switchTeam);
   </script>
-
-  <!-- Bootstrap JS and dependencies -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-<%- include('partials/footer') %>
