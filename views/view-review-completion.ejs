@@ -15,7 +15,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
         .card-title {
-            font-weight: bold;
+            font-weight: bold; 
             font-size: 1.8rem;
             color: #333;
         }
@@ -121,8 +121,8 @@
                         var barWidth = completionPercentage > 0 ? completionPercentage : 100; // Set to 100% width for grey bar
                     %>
                     <!-- Progress bar with "No Progress", "Complete", or fraction inside -->
-                    <div class="progress" style="height: 25px;">
-                        <div class="progress-bar <%= progressBarClass %>" role="progressbar" style="width: <%= barWidth %>%;" aria-valuenow="<%= completionPercentage %>" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress" style="height: 25px;"> 
+                        <div class="progress-bar <%= progressBarClass %>" role="progressbar" style="width: <%= barWidth || 100 %>%;" aria-valuenow="<%= completionPercentage %>" aria-valuemin="0" aria-valuemax="100">
                             <%= displayText %>
                         </div>
                     </div>
@@ -141,3 +141,5 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+

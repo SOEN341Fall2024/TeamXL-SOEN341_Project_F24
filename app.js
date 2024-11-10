@@ -670,3 +670,8 @@ app.get("/student-chatrooms", (req, res) => {
 app.get("/view-review-completion", (req, res) => {
   res.render("view-review-completion.ejs");
 });
+
+// Route for access assessment page
+app.get("/access-assessment", (req, res) => {
+  res.render("access-assessment.ejs"); 
+});
