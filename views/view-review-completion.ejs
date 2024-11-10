@@ -16,7 +16,7 @@
         }
         .card-title {
             font-weight: bold;
-            font-size: 1.8rem; /* Increased font size for the team name */
+            font-size: 1.8rem;
             color: #333;
         }
         .progress {
@@ -26,9 +26,13 @@
         .progress-bar {
             font-size: 0.85rem;
             font-weight: 500;
+            color: black;
+        }
+        .progress-bar-grey {
+            background-color: #d3d7da; /* Use the grey color from the image */
         }
         .badge-custom {
-            font-size: 1.2rem; /* Adjusted font size for better visibility */
+            font-size: 1.2rem;
             background-color: #f0f0f0;
             color: #555;
             border-radius: 20px;
@@ -42,17 +46,15 @@
             border-top: none;
             font-weight: 600;
         }
-        .header {
-            background-color: #000; /* Set header color to black */
-            color: white;
-        }
     </style>
 </head>
 <body>
 
     <!-- Title Banner -->
-    <header class="header text-center py-4 mb-4">
-        <h1>Peer Assessment Completion Status</h1>
+    <header class="header text-center py-4 mb-4 text-black">
+        <h1 class="display-5 fw-bold">
+            Peer Assessment Completion Status
+        </h1>
     </header>
 
     <div class="container mt-5">
@@ -92,7 +94,7 @@
                 <td>
                     <% 
                         var reviewsCompleted = getNumberOfReviews(student_info, i);
-                        var totalReviews = getNumberOfTeammates(student_info, sorted_students, i) - 1; // Subtract 1 from total reviews
+                        var totalReviews = getNumberOfTeammates(student_info, sorted_students, i) - 1;
                         var completionPercentage = totalReviews > 0 
                             ? (reviewsCompleted / totalReviews) * 100
                             : 0;
@@ -100,22 +102,27 @@
                         // Ensure the values are non-negative
                         totalReviews = Math.max(0, totalReviews);
 
-                        // Determine progress bar color
+                        // Determine progress bar color and text
                         var progressBarClass = "bg-danger"; // Default to red
-                        if (completionPercentage >= 75) {
-                            progressBarClass = "bg-success"; // Green
-                        } else if (completionPercentage >= 50) {
-                            progressBarClass = "bg-warning"; // Orange
+                        var displayText = "No Progress"; // Default text for 0%
+
+                        if (completionPercentage > 0) {
+                            displayText = completionPercentage === 100 ? "Complete" : `${reviewsCompleted} / ${totalReviews}`;
+                            if (completionPercentage >= 75) {
+                                progressBarClass = "bg-success"; // Green
+                            } else if (completionPercentage >= 50) {
+                                progressBarClass = "bg-warning"; // Orange
+                            }
+                        } else {
+                            progressBarClass = "progress-bar-grey"; // Grey for "No Progress"
                         }
 
-                        // Display "Complete" or fraction
-                        var displayText = completionPercentage === 100 
-                            ? "Complete" 
-                            : `${reviewsCompleted} / ${totalReviews}`;
+                        // Ensure the bar is visible even for 0% completion
+                        var barWidth = completionPercentage > 0 ? completionPercentage : 100; // Set to 100% width for grey bar
                     %>
-                    <!-- Progress bar with "Complete" or fraction inside -->
+                    <!-- Progress bar with "No Progress", "Complete", or fraction inside -->
                     <div class="progress" style="height: 25px;">
-                        <div class="progress-bar <%= progressBarClass %>" role="progressbar" style="width: <%= completionPercentage %>%;" aria-valuenow="<%= completionPercentage %>" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar <%= progressBarClass %>" role="progressbar" style="width: <%= barWidth %>%;" aria-valuenow="<%= completionPercentage %>" aria-valuemin="0" aria-valuemax="100">
                             <%= displayText %>
                         </div>
                     </div>
