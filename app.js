@@ -25,6 +25,7 @@ import {
   getComments,
   getCommentsObj,
   stringprint,
+  runAI,
 } from "./helper.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
