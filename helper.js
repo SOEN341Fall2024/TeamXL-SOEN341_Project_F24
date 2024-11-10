@@ -172,3 +172,38 @@ export function getNumberOfReviews(student_info, idx){
 
     return numOfReviews;
 }
+
+export function getComments(commentsObj){
+    var comments = commentsObj.cooperation;
+    comments += commentsObj.conceptual;
+    comments += commentsObj.practical;
+    comments += commentsObj.work_ethic;
+    comments += commentsObj.comments;
+
+    return comments;
+}
+
+export function getCommentsObj(comments){
+    var commentsObj;
+    commentsObj.cooperation = getSplitComment("Coop", comments);
+    commentsObj.conceptual = getSplitComment("Conc", comments)
+    commentsObj.practical = getSplitComment("Prac", comments);
+    commentsObj.work_ethic = getSplitComment("Work", comments);
+    commentsObj.comments = getSplitComment("Addi", comments);
+}
+
+function getSplitComment(type, comments){
+    var splitComment = comments.split("<br/><br/>");
+
+    for(var i = 0; i < splitComment.length; i++){
+        if(splitComment[i].substring(0, 5) == type){
+            return splitComment[0] + "<br/><br/>";
+        }
+    }
+
+    return "";
+}
+
+export function stringprint(str){
+    return str;
+}
