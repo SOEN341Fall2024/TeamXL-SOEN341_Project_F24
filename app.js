@@ -684,3 +684,5 @@ app.get("/student-chatrooms", (req, res) => {
 app.get("/view-review-completion", (req, res) => {
   res.render("view-review-completion.ejs");
 });
+
+export default app; // Add this line to export the app instance
