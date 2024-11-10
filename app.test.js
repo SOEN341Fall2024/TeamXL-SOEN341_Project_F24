@@ -42,6 +42,12 @@ describe('Express App Tests for student', () => {
 // App test for instructor
 describe('GET /instructor-dashboard', () => {
 
+    it('should return 400 if instructorUsername is not provided', async () => {
+        const response = await request(app).get('/instructor-dashboard');
+        expect(response.status).toBe(400);
+        expect(response.text).toBe('Instructor username is required.');
+      });
+  
 
 });
 
