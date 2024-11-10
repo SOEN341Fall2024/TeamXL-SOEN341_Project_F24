@@ -51,10 +51,13 @@
                 <td>
                     <% 
                         var reviewsCompleted = getNumberOfReviews(student_info, i);
-                        var totalReviews = getNumberOfTeammates(student_info, sorted_students, i);
+                        var totalReviews = getNumberOfTeammates(student_info, sorted_students, i) - 1; // Subtract 1 from total reviews
                         var completionPercentage = totalReviews > 0 
                             ? (reviewsCompleted / totalReviews) * 100
                             : 0;
+
+                        // Ensure the values are non-negative
+                        totalReviews = Math.max(0, totalReviews);
 
                         // Determine progress bar color
                         var progressBarClass = "bg-danger"; // Default to red
