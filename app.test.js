@@ -38,3 +38,10 @@ describe('Express App Tests for student', () => {
   
 });
 
+
+// App test for instructor
+describe('GET /instructor-dashboard', () => {
+
+
+});
+
