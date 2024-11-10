@@ -83,6 +83,7 @@ describe('Test for Login', () => {
   
   });
 
+
   //Test for register
   describe('Test for register', () => {
   it('should render the register page with ajax = true for AJAX request', async () => {
@@ -111,4 +112,3 @@ describe('Test for Login', () => {
   });
 
 });
-
