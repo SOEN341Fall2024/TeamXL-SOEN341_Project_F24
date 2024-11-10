@@ -21,5 +21,12 @@ describe('Express App Tests for student', () => {
     expect(response.text).toContain('Student Dashboard'); // Adjust based on your actual content
   });
 
+  // Test the PROFILE page (requires session)
+  it('GET /profile should redirect if user is not logged in', async () => {
+    const response = await request(app).get('/profile');
+    expect(response.status).toBe(302); // Should redirect to login
+    expect(response.headers.location).toBe('/login');
+  });
+
 });
 
