@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Assessments</title>
+  <!-- Include Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Include Bootstrap Icons (optional) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .section-title {
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .btn-custom {
+      padding: 10px 20px;
+      font-size: 1.1rem;
+      width: 180px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-custom i {
+      margin-right: 8px; /* Space between icon and text */
+    }
+    .info-box {
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5 d-flex flex-column align-items-center">
+  <!-- Page Title Section -->
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-dark">
+      <i class="bi bi-journal-text me-2"></i> Access Assessments
+    </h1>
+    <p class="text-muted fs-5">Instructors can access various views of student assessments here to monitor and analyze team and individual performance.</p>
+  </div> 
+
+  <!-- Button Section -->
+  <div class="info-box"> 
+    <p class="text-muted mb-0">View a summarized report of student reviews, showing average scores across different criteria for each team member.</p>
+    <a href="/view-reviews-summary" class="btn btn-primary btn-custom">
+      <i class="bi bi-bar-chart-fill"></i> Reviews Summary
+    </a>
+  </div>
+
+  <div class="info-box">
+    <p class="text-muted mb-0">Explore detailed feedback and scores provided for each student by their peers, with breakdowns by evaluation criteria.</p>
+    <a href="/view-reviews-detailed" class="btn btn-secondary btn-custom">
+      <i class="bi bi-file-earmark-text"></i> Detailed Reviews
+    </a>
+  </div>
+
+  <div class="info-box">
+    <p class="text-muted mb-0">Check the completion status of all peer assessments to ensure every student has been reviewed by their teammates.</p>
+    <a href="/view-review-completion" class="btn btn-success btn-custom">
+      <i class="bi bi-check-circle"></i> Review Completion
+    </a>
+  </div>
+</div>
+
+<!-- Include Bootstrap JS (Optional, for tooltips, popovers, etc.) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+ 

@@ -9,7 +9,6 @@ import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
-import { GoogleGenerativeAI } from "@google/generative-ai"; 
 import { group } from "console";
 import {
   getCooperation,
@@ -35,9 +34,6 @@ dotenv.config();
 const app = express();
 const port = 3000;
 const saltRounds = 10;
-
-
-app.use(express.json()); 
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -383,15 +379,23 @@ app.get("/logout", (req, res) => {
 });
 
 
-app.post("/send-message", async (req, res) => {
+app.use('/uploads', express.static('uploads'));
 
-  const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  const result = await model.generateContent(req.body.message);
-   console.log(result.response.text());
-
+// Route for the STUDENT CHATROOMS page
+app.get("/student-chatrooms", (req, res) => {
+  res.render("student-chatrooms.ejs");
 });
+
+// Route for the View Review Completion page
+app.get("/view-review-completion", (req, res) => {
+  res.render("view-review-completion.ejs");
+});
+
+// Route for access assessment page
+app.get("/access-assessment", (req, res) => {
+  res.render("access-assessment.ejs"); 
+});
+
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
 
 // Route to handle user REGISTRATION
@@ -666,23 +670,6 @@ app.post("/thank-you", (req, res) => {
   res.render("thank-you.ejs");
 });
 
-//--------START EXPRESS SERVER--------//
 
-// Start the Express server. Server listening on port 3000
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`); // Log that the server is running
-});
+export default app;
 
-app.use('/uploads', express.static('uploads'));
-
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
-
-// Route for the View Review Completion page
-app.get("/view-review-completion", (req, res) => {
-  res.render("view-review-completion.ejs");
-});
-
-export default app; // Add this line to export the app instance
