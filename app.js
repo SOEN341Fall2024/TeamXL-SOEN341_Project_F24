@@ -123,6 +123,8 @@ app.get("/create-teams", async (req, res) => {
 
 app.get("/view-teams", async (req, res) => {
   console.log(req.session.userType);
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
   if (req.session.userType == "INSTRUCTOR") {
     try {
       const DATA = await db.query(
@@ -369,6 +371,16 @@ app.get("/view-review-completion", async (req, res) => {
     groups,
     sorted_students,
   });
+});
+
+app.get("/assess-notification", async (req, res) => {
+  try {
+    const incompleteAssessments = await getIncompleteAssessments();
+    res.render("assess-notification", { incompleteAssessments });
+  } catch (error) {
+    console.error("Error fetching incomplete assessments:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 //Route to LOGOUT
