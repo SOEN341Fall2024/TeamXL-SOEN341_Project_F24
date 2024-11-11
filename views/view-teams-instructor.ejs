@@ -81,14 +81,14 @@
   </header>
 </div>
 
-  <div class="container">
+  <div class="container m-5">
 
 <% for(var i = 0; i < Teams.rows.length; i++) { %>
   <% if(i == 0 || Teams.rows[i].group_name != Teams.rows[i - 1].group_name) { %>
       <table>
           <caption> <%= Teams.rows[i].group_name %> </caption>
           <tr>
-              <th>Student Name</th><th>Student ID</th>
+              <div class="m-2"><th>Student Name  </th></div><div class="m-2 " style="white-space: pre;"><th>Student ID</th></div>
           </tr>
   <% } %>
       <tr>
