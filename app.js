@@ -271,6 +271,29 @@ app.get("/cancel-review", async (req, res) => {
   res.redirect("/student-dashboard");
 });
 
+async function getIncompleteAssessments() {
+  const query = `
+    SELECT s1.ID AS evaluator_id, s1.NAME AS evaluator_name, s2.ID AS evaluatee_id, s2.NAME AS evaluatee_name
+    FROM STUDENT s1
+    JOIN STUDENT s2 ON s1.ID_GROUP = s2.ID_GROUP AND s1.ID <> s2.ID
+    LEFT JOIN EVALUATION e ON e.ID_EVALUATOR = s1.ID AND e.ID_EVALUATEE = s2.ID
+    WHERE e.ID_EVALUATOR IS NULL;
+  `;
+
+  const result = await pool.query(query);
+  return result.rows; // List of students who haven't completed assessments
+}
+
+app.get("/assess-notification", async (req, res) => {
+  try {
+    const incompleteAssessments = await getIncompleteAssessments();
+    res.render("assess-notification", { incompleteAssessments });
+  } catch (error) {
+    console.error("Error fetching incomplete assessments:", error);
+    res.status(500).send("Server error");
+  }
+});
+
 app.get("/edit-evaluation", async (req, res) => {
   const studentId = req.params.id;
   const instructorUsername = req.query.instructorUsername;
