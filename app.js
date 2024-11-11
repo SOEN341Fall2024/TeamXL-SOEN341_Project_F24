@@ -123,8 +123,6 @@ app.get("/create-teams", async (req, res) => {
 
 app.get("/view-teams", async (req, res) => {
   console.log(req.session.userType);
-  const instructorUsername = req.query.instructorUsername;
-  const userType = req.session.userType;
   if (req.session.userType == "INSTRUCTOR") {
     try {
       const DATA = await db.query(
@@ -373,16 +371,6 @@ app.get("/view-review-completion", async (req, res) => {
   });
 });
 
-app.get("/assess-notification", async (req, res) => {
-  try {
-    const incompleteAssessments = await getIncompleteAssessments();
-    res.render("assess-notification", { incompleteAssessments });
-  } catch (error) {
-    console.error("Error fetching incomplete assessments:", error);
-    res.status(500).send("Server error");
-  }
-});
-
 //Route to LOGOUT
 app.get("/logout", (req, res) => {
   delete req.session.userID;
@@ -390,20 +378,24 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+app.use("/uploads", express.static("uploads"));
+
+// Route for the STUDENT CHATROOMS page
+app.get("/student-chatrooms", (req, res) => {
+  res.render("student-chatrooms.ejs");
+});
+
+// Route for the View Review Completion page
+app.get("/view-review-completion", (req, res) => {
+  res.render("view-review-completion.ejs");
+});
+
+// Route for access assessment page
+app.get("/access-assessment", (req, res) => {
+  res.render("access-assessment.ejs");
+});
+
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
-
-async function getIncompleteAssessments() {
-  const query = `
-    SELECT s1.ID AS evaluator_id, s1.NAME AS evaluator_name, s2.ID AS evaluatee_id, s2.NAME AS evaluatee_name
-    FROM STUDENT s1
-    JOIN STUDENT s2 ON s1.ID_GROUP = s2.ID_GROUP AND s1.ID <> s2.ID
-    LEFT JOIN EVALUATION e ON e.ID_EVALUATOR = s1.ID AND e.ID_EVALUATEE = s2.ID
-    WHERE e.ID_EVALUATOR IS NULL;
-  `;
-
-  const result = await pool.query(query);
-  return result.rows; // List of students who haven't completed assessments
-}
 
 // Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
@@ -722,28 +714,4 @@ app.post("/thank-you", (req, res) => {
   res.render("thank-you.ejs");
 });
 
-app.use("/uploads", express.static("uploads"));
-
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
-
-// Route for the View Review Completion page
-app.get("/view-review-completion", (req, res) => {
-  res.render("view-review-completion.ejs");
-});
-
-// Route for access assessment page
-app.get("/access-assessment", (req, res) => {
-  res.render("access-assessment.ejs");
-});
-
 export default app;
-
-//--------START EXPRESS SERVER--------//
-
-// Start the Express server. Server listening on port 3000
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`); // Log that the server is running
-});
