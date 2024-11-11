@@ -398,6 +398,16 @@ app.get("/access-assessment", (req, res) => {
 
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
 
+app.post("/send-message", async (req, res) => {
+
+  const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const result = await model.generateContent(req.body.message);
+   console.log(result.response.text());
+
+});
+
 // Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
