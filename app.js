@@ -722,13 +722,6 @@ app.post("/thank-you", (req, res) => {
   res.render("thank-you.ejs");
 });
 
-//--------START EXPRESS SERVER--------//
-
-// Start the Express server. Server listening on port 3000
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`); // Log that the server is running
-});
-
 app.use("/uploads", express.static("uploads"));
 
 // Route for the STUDENT CHATROOMS page
@@ -747,3 +740,10 @@ app.get("/access-assessment", (req, res) => {
 });
 
 export default app;
+
+//--------START EXPRESS SERVER--------//
+
+// Start the Express server. Server listening on port 3000
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`); // Log that the server is running
+});
