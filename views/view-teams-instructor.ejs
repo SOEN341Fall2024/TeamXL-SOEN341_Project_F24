@@ -1,15 +1,79 @@
-<% for(var i = 0; i < Teams.rows.length; i++) { %>
-  <% if(i == 0 || Teams.rows[i].group_name != Teams.rows[i - 1].group_name) { %>
-      <table>
-          <caption> <%= Teams.rows[i].group_name %> </caption>
-          <tr>
-              <th>Student Name</th><th>Student ID</th>
-          </tr>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teams Overview</title>
+  <!-- Include Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Include Bootstrap Icons (optional) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .table-container {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .table thead th {
+      background-color: #2b5681;
+      font-weight: 600;
+      border-top: none;
+    }
+    .table th, .table td {
+      vertical-align: middle;
+    }
+    .caption-style {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <!-- Page Title -->
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-dark">
+      <i class="bi bi-people-fill me-2"></i> Teams Overview
+    </h1>
+    <p class="text-muted fs-5">Detailed information on team members across all groups, including student names and IDs.</p>
+  </div>
+
+  <!-- Team Cards -->
+  <% for(var i = 0; i < Teams.rows.length; i++) { %>
+    <% if(i == 0 || Teams.rows[i].group_name != Teams.rows[i - 1].group_name) { %>
+      <div class="table-container">
+        <h2 class="caption-style mb-3">
+          <i class="bi bi-folder-fill me-2"></i><%= Teams.rows[i].group_name %>
+        </h2>
+        <table class="table table-bordered table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Student Name</th>
+              <th scope="col">Student ID</th>
+            </tr>
+          </thead>
+          <tbody>
+    <% } %>
+            <tr>
+              <td><%= Teams.rows[i].name %></td>
+              <td><%= Teams.rows[i].id %></td>
+            </tr>
+    <% if(i + 1 == Teams.rows.length || Teams.rows[i].group_name != Teams.rows[i + 1].group_name) { %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
   <% } %>
-      <tr>
-          <td><%= Teams.rows[i].name %></td><td><%= Teams.rows[i].id %></td>
-      </tr>
-  <% if(i + 1 == Teams.rows.length || Teams.rows[i].group_name != Teams.rows[i + 1].group_name) { %>
-  </table>
-  <% } %>
-<% } %>
+</div>
+
+<!-- Include Bootstrap JS (Optional, for tooltips, popovers, etc.) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
