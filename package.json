@@ -4,12 +4,6 @@
   "description": "## Team Name > **IterationX**",
   "main": "index.js",
   "type": "module",
-<<<<<<< HEAD
-  "scripts": {
-    "test": "jest"
-  },
-=======
->>>>>>> 6fb582efafb9bda45f895cc58951e8f7b12bfafe
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -34,7 +28,6 @@
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
   },
-<<<<<<< HEAD
   "jest": {
     "transform": {
       "^.+\\.js$": "babel-jest"
@@ -45,10 +38,9 @@
       "jsx",
       "node"
     ]
-=======
+  },
   "scripts": {
     "start": "node server.js",
     "test": "jest"
->>>>>>> 6fb582efafb9bda45f895cc58951e8f7b12bfafe
   }
 }
