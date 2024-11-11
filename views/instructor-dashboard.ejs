@@ -35,7 +35,7 @@
                       <!-- The Three Buttons for Team Management -->
                     <li><a class="nav-link" href="/create-teams?instructorUsername=<%= instructorUsername %>">Create Team</a></li>
                     <li><a class="dropdown-item" href="/view-teams">View Teams</a></li>
-                    <li><a class="dropdown-item" href="/peer-assessment">Peer Assessment</a></li>
+                    <li><a class="dropdown-item" href="/view-review-completion">Peer Assessment</a></li>
                   </ul>
                 </div>
             </li>
@@ -84,57 +84,103 @@
   <div class="container py-4 my-5 ">
  
 
-    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Instructor Dashboard</h1>
-        <p class="col-md-8 fs-4">Welcome to your dashboard! You can manage your courses, students, and teams.</p>
+    <div class="p-5 mb-4 bg-body-secondary rounded-3 shadow-sm">
+      <div class="container-fluid py-5 text-center">
+        <h1 class="display-5 fw-bold text-primary">Welcome to Your Instructor Dashboard!</h1>
+        <p class="lead fs-5 text-muted">Your central hub to manage courses, students, and teams efficiently.</p>
+        <p class="col-md-8 mx-auto fs-4 text-muted">Easily create and edit student teams, view progress, and facilitate peer assessments for enhanced learning outcomes.</p>
+      </div>
+    </div>
+    
+    <!-- Team Management Section with Cards -->
+    <div class="my-5">
+      <div class="d-flex align-items-center mb-3">
+        <h2 class="text-primary">Team Management</h2>
+        <div class="ms-3">
+          <span class="badge bg-info">Teams</span>
+        </div>
+      </div>
+      <p class="text-muted">Manage student teams for your courses:</p>
+      <div class="row g-4">
+      
+    <!-- Create Teams -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-lg border-0 bg-light">
+            <div class="card-body text-center">
+              <div class="mb-3">
+                <i class="bi bi-card-checklist text-primary" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">Create Team</h5>
+              <p class="card-text text-muted">Create a new team for your students.</p>
+              <a href="/create-teams" class="btn btn-outline-success btn-lg rounded-pill">
+                <i class="bi bi-plus-circle me-2"></i>Create Team
+            </a>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Edit Teams Card -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-lg border-0 bg-light">
+            <div class="card-body text-center">
+              <div class="mb-3">
+                <i class="bi bi-star-fill text-primary" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">View Teams</h5>
+              <p class="card-text text-muted">View the teams you have created.</p>
+              <a href="/view-teams" class="btn btn-outline-primary btn-lg rounded-pill">
+                <i class="bi bi-eye me-2"></i>View Teams
+            </a>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-md-4">
+          <div class="card h-100 shadow-lg border-0 bg-light">
+            <div class="card-body text-center">
+              <div class="mb-3">
+                <i class="bi bi-card-checklist text-primary" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">Edit Teams</h5>
+              <p class="card-text text-muted">Make changes to existing teams.</p>
+              <a href="/edit-team" class="btn btn-outline-warning btn-lg rounded-pill">
+                <i class="bi bi-pencil-square me-2"></i>Edit Teams
+            </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Team Management Section with Cards -->
-    <div class="my-5">
-      <h2>Team Management</h2>
-      <p>Manage student teams for your courses:</p>
-      <div class="row">
-          <div class="col-md-4 mb-3">
-              <div class="card text-center h-100">
-                  <div class="card-body">
-                      <h5 class="card-title">Create Team</h5>
-                      <p class="card-text">Create a new team for your students.</p>
-                      <a href="/create-teams" class="btn btn-success btn-lg rounded-pill">
-                          <i class="bi bi-plus-circle me-2"></i>Create Team
-                      </a>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-4 mb-3">
-              <div class="card text-center h-100">
-                  <div class="card-body">
-                      <h5 class="card-title">View Teams</h5>
-                      <p class="card-text">View the teams you have created.</p>
-                      <a href="/view-teams" class="btn btn-primary btn-lg rounded-pill">
-                          <i class="bi bi-eye me-2"></i>View Teams
-                      </a>
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-4 mb-3">
-              <div class="card text-center h-100">
-                  <div class="card-body">
-                      <h5 class="card-title">Edit Teams</h5>
-                      <p class="card-text">Make changes to existing teams.</p>
-                      <a href="/edit-team" class="btn btn-warning btn-lg rounded-pill">
-                          <i class="bi bi-pencil-square me-2"></i>Edit Teams
-                      </a>
-                  </div>
-              </div>
-          </div>
+
+     <!-- Peer Assessment Section -->
+     <div class="my-5"> 
+      <div class="d-flex align-items-center mb-3">
+        <h2 class="text-primary">Access Assessments</h2>
+        <div class="ms-3">
+          <span class="badge bg-success">Feedback</span>
+        </div>
       </div>
-  </div>
-
+      <p class="text-muted">View and manage student assessments to facilitate fair and valuable feedback among teams.</p>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card h-100 shadow-lg border-0 bg-light">
+            <div class="card-body text-center">
+              <div class="mb-3">
+                <i class="bi bi-chat-dots-fill text-primary" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">Access Assessment</h5>
+              <p class="card-text text-muted">Evaluate and provide feedback on student performance within their teams.</p>
+              <a href="/access-assessment" class="btn btn-outline-success btn-lg rounded-pill">
+                <i class="bi bi-plus-circle me-2"></i>Access Assessment
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   
-
-  
-
+  </div>   
 
   <%- include('partials/footer') %>

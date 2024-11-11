@@ -23,10 +23,14 @@ jobs:
         with:
           node-version: '14'  # Use the Node.js version that matches your project
 
+      # Install jest and supertest as dev dependencies
+      - name: Install jest and supertest
+        run: npm install jest supertest --save-dev
+
       # Install dependencies
       - name: Install dependencies
         run: npm install
 
       # # Run tests
-      # - name: Run tests
-      #   run: npm test
+      - name: Run tests
+        run: npm test

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer Assessment Completion Status</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons for icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #333;
+        }
+        .progress {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: black;
+        }
+        .progress-bar-grey {
+            background-color: #d3d7da;
+        }
+        .badge-custom {
+            font-size: 1.2rem;
+            background-color: #f0f0f0;
+            color: #555;
+            border-radius: 20px;
+            padding: 5px 15px;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .table thead th {
+            background-color: #f8f9fa;
+            border-top: none;
+            font-weight: 600;
+        }
+        .section-title {
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Title Section -->
+    <div class="container py-5 text-center">
+        <h1 class="display-5 fw-bold text-dark">
+            <i class="bi bi-journal-text me-2"></i> Peer Assessment Completion Status
+        </h1>
+        <p class="text-muted fs-5">View the completion status of peer assessments for each student to ensure that all reviews are accounted for.</p>
+    </div>
+
+    <div class="container mt-5">
+        <% var isNewGroup = true; for (var i = 0, j = 0; i < student_info.length; i++) { %>
+            <% if (isNewGroup) { isNewGroup = false; %>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <% 
+                            var groupName = (groups[j] && groups[j].group_name && groups[j].group_name.trim() !== "") 
+                                ? groups[j].group_name 
+                                : 'Unplaced Students';
+                        %>
+                        <h3 class="card-title mb-3">
+                            <span class="badge badge-custom"><%= groupName %></span>
+                        </h3>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Reviews Completed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            <% } %>
+            <% if (i > 0 && student_info[i].id == student_info[i - 1].id) { continue; } %>
+            <% if (groups[j] && groups[j].id_group != student_info[i].id_group) { j++; i--; isNewGroup = true; %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <% continue; } %>
+            <tr>
+                <td><%= student_info[i].id %></td>
+                <td><%= student_info[i].name %></td>
+                <td>
+                    <% 
+                        var reviewsCompleted = getNumberOfReviews(student_info, i);
+                        var totalReviews = getNumberOfTeammates(student_info, sorted_students, i) - 1;
+                        var completionPercentage = totalReviews > 0 
+                            ? (reviewsCompleted / totalReviews) * 100
+                            : 0;
+
+                        totalReviews = Math.max(0, totalReviews);
+                        var progressBarClass = "bg-danger"; 
+                        var displayText = "No Progress"; 
+
+                        if (completionPercentage > 0) {
+                            displayText = completionPercentage === 100 ? "Complete" : `${reviewsCompleted} / ${totalReviews}`;
+                            if (completionPercentage >= 75) {
+                                progressBarClass = "bg-success";
+                            } else if (completionPercentage >= 50) {
+                                progressBarClass = "bg-warning";
+                            }
+                        } else {
+                            progressBarClass = "progress-bar-grey";
+                        }
+
+                        var barWidth = completionPercentage > 0 ? completionPercentage : 100;
+                    %>
+                    <!-- Progress bar with "No Progress", "Complete", or fraction inside -->
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar <%= progressBarClass %>" role="progressbar" style="width: <%= barWidth || 100 %>%;" aria-valuenow="<%= completionPercentage %>" aria-valuemin="0" aria-valuemax="100">
+                            <%= displayText %>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        <% } %>
+                            </tbody>
+                        </table>
+                    </div>  
+                </div>  
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
+

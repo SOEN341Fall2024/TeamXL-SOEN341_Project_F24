@@ -77,58 +77,105 @@
     
   </header>
 
-  <div class="container py-4">
+  <div class="container py-4 my-5">
 
-    <!--Main Welcome Section-->
-    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Engage in intuitive conversations</h1>
-        <p class="col-md-8 fs-4">Join dynamic discussions with fellow learners and erudites. Our chatrooms provide a space to explore a variety of topics, exchange knowledge, and connect with others who share your interests.Ask questions, share insights, and take part in thought-provoking conversations. Let’s learn and grow together!</p>
-        <button class="btn btn-primary btn-lg" type="button">Chatrooms</button>
+    <!-- Main Welcome Section  -->
+    <div class="p-5 mb-4 bg-body-secondary rounded-3 shadow-sm">
+      <div class="container-fluid py-5 text-center">
+        <h1 class="display-5 fw-bold text-primary">Welcome to Your Student Dashboard!</h1>
+        <p class="lead fs-5 text-muted">Your central hub to assess and communicate with your peers efficiently.</p>
+        <p class="col-md-8 mx-auto fs-4 text-muted">Explore all features available to you for seamless collaboration, communication, and peer engagement.</p>
       </div>
     </div>
-
-    <!--Cards Section-->
-    <div class="row g-4">
-      <!-- Peer Assessment -->
-      <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-              <div class="card-body">
-                  <h5 class="card-title">Get to know your peers</h5>
-                  <p class="card-text">
-                      Explore detailed reviews and insights about your peers. This platform allows you to assess skills, contributions, and overall compatibility for team dynamics. Share your experiences, read others' feedback, and make informed decisions about collaboration opportunities. Join the conversation and enhance your team-building process!
-                  </p>
-                  <a href="/peer-assessment" class="btn btn-dark">Peer Assessment</a>
-              </div>
-          </div>
-      </div>
-
-        <!-- View Your Team -->
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-              <div class="card-body">
-                  <h5 class="card-title">View the team you are in</h5>
-                  <p class="card-text">
-                      Quickly check which team you belong to and see your team members. Stay informed and connected with your team for all collaborative projects and activities.
-                  </p>
-                  <a href="/view-teams" class="btn btn-primary">View Team</a>
-              </div>
-          </div>
-      </div>
-
-       <!-- Start a Conversation -->
-       <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Be a part of something bigger</h5>
-                <p class="card-text">
-                    Connect with fellow peers to share experiences and engage in casual conversations. This is a great space to get to know potential team members better, helping you assess compatibility for future collaborations. Join us and start building meaningful connections today!
-                </p>
-                <a href="#" class="btn btn-outline-secondary">Start a conversation</a>
-            </div>
+  
+    <!-- Section: Your Team -->
+    <div class="my-5">
+      <div class="d-flex align-items-center mb-3">
+        <h2 class="text-primary">Your Team</h2>
+        <div class="ms-3">
+          <span class="badge bg-secondary">Collaboration</span>
         </div>
+      </div>
+      <p class="text-muted">Stay informed and connected with your team members for all collaborative projects and tasks.</p>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card h-100 shadow-lg border-0">
+            <div class="card-body text-center">
+              <div class="mb-3">
+                <i class="bi bi-people-fill text-primary" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">View Your Team</h5>
+              <p class="card-text text-muted">See who’s on your team and stay connected for collaborative projects.</p>
+              <a href="/view-teams" class="btn btn-outline-primary btn-lg rounded-pill mt-3">View Team</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  
+    <!-- Section: Peer Assessments and Reviews -->
+    <div class="my-5">
+      <div class="d-flex align-items-center mb-3">
+        <h2 class="text-primary">Peer Assessments and Reviews</h2>
+        <div class="ms-3">
+          <span class="badge bg-info">Feedback</span>
+        </div>
+      </div>
+      <p class="text-muted">Gain insights, give and receive feedback, and build meaningful collaborations through peer assessments and reviews.</p>
+      <div class="row g-4">
+        <!-- Peer Assessment Card -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-lg border-0 bg-light">
+            <div class="card-body text-center">
+              <div class="mb-3">
+                <i class="bi bi-card-checklist text-primary" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">Peer Assessment</h5>
+              <p class="card-text text-muted">Get and provide detailed feedback to improve teamwork and collaboration.</p>
+              <a href="/peer-assessment" class="btn btn-outline-dark btn-lg rounded-pill mt-3">Peer Assessment</a>
+            </div>
+          </div>
+        </div>
+  
+        <!-- View Reviews Card -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-lg border-0 bg-light">
+            <div class="card-body text-center">
+              <div class="mb-3">
+                <i class="bi bi-star-fill text-primary" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">View Reviews</h5>
+              <p class="card-text text-muted">Access feedback and reviews from your peers and instructors to foster growth.</p>
+              <a href="/view-reviews" class="btn btn-outline-info btn-lg rounded-pill mt-3">View Reviews</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Section: Chatrooms -->
+    <div class="my-5">
+      <div class="d-flex align-items-center mb-3">
+        <h2 class="text-primary">Chatrooms</h2>
+        <div class="ms-3">
+          <span class="badge bg-success">Community</span>
+        </div>
+      </div>
+      <p class="text-muted">Engage in discussions, ask questions, and connect with your peers in a vibrant community space.</p>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card h-100 shadow-lg border-0 bg-light">
+            <div class="card-body text-center">
+              <div class="mb-3">
+                <i class="bi bi-chat-dots-fill text-primary" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">Connect with Peers</h5>
+              <p class="card-text text-muted">Share experiences, engage in discussions, and build stronger connections.</p>
+              <a href="/student-chatrooms" class="btn btn-outline-secondary btn-lg rounded-pill mt-3">Start a Conversation</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
   </div>
-
-
-  <%- include('partials/footer') %>

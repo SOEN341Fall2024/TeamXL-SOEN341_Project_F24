@@ -17,6 +17,14 @@ import {
   getWorkEthic,
   getPeers,
   getAverage,
+  getTeammateInfo,
+  getCommentMadeByStudent,
+  getGradesGivenByStudent,
+  getNumberOfReviews,
+  getNumberOfTeammates,
+  getComments,
+  getCommentsObj,
+  stringprint,
 } from "./helper.js";
 
 dotenv.config();
@@ -55,13 +63,23 @@ app.get("/", (req, res) => {
 
 // Route for the LOGIN PAGE, render the login.ejs view
 app.get("/login", (req, res) => {
-  res.render("login.ejs");
+  // Check if the request is an AJAX request
+  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
+  
+  // Render the login view, passing in the `ajax` variable
+  res.render("login", { ajax: isAjax });
 });
+
 
 // Route for the REGISTER PAGE, render the register.ejs view
 app.get("/register", (req, res) => {
-  res.render("register.ejs");
+  // Check if the request is an AJAX request
+  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
+  
+  // Render the register view, passing in the `ajax` variable
+  res.render("register", { ajax: isAjax });
 });
+
 
 // Route for the STUDENT DASHBOARD page, render the student-dashboard view
 app.get("/student-dashboard", (req, res) => {
@@ -238,6 +256,7 @@ app.get("/view-reviews", async (req, res) => {
 
   res.render("view-reviews.ejs", {
     reviews: RESULT.rows,
+    stringprint,
   });
 });
 
@@ -285,7 +304,7 @@ app.get("/edit-evaluation", async (req, res) => {
 
 app.get("/view-reviews-summary", async (req, res) => {
   const result1 = await db.query(
-    "SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
+    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
   const result2 = await db.query(
     "SELECT group_name, id_group FROM groups ORDER BY id_group ASC"
@@ -307,23 +326,48 @@ app.get("/view-reviews-summary", async (req, res) => {
 
 app.get("/view-reviews-detailed", async (req, res) => {
   const result1 = await db.query(
-    "SELECT * FROM evaluation INNER JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
+    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
   const result2 = await db.query(
     "SELECT group_name, id_group FROM groups ORDER BY id_group ASC"
   );
+  const result3 = await db.query(
+    "SELECT id, id_group, name FROM student ORDER BY id_group, id ASC"
+  );
   const student_info = result1.rows;
   const groups = result2.rows;
+  const sorted_students = result3.rows;
 
   res.render("view-reviews-detailed.ejs", {
-    getCooperation,
-    getConceptual,
-    getPractical,
-    getWorkEthic,
-    getPeers,
-    getAverage,
+    getTeammateInfo,
+    getCommentMadeByStudent,
+    getGradesGivenByStudent,
     student_info,
     groups,
+    sorted_students,
+  });
+});
+
+app.get("/view-review-completion", async (req, res) => {
+  const result1 = await db.query(
+    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
+  );
+  const result2 = await db.query(
+    "SELECT group_name, id_group FROM groups ORDER BY id_group ASC"
+  );
+  const result3 = await db.query(
+    "SELECT id, id_group FROM student ORDER BY id_group, id ASC"
+  );
+  const student_info = result1.rows;
+  const groups = result2.rows;
+  const sorted_students = result3.rows;
+
+  res.render("view-review-completion.ejs", {
+    getNumberOfTeammates,
+    getNumberOfReviews,
+    student_info,
+    groups,
+    sorted_students,
   });
 });
 
@@ -350,7 +394,12 @@ app.post("/register", async (req, res) => {
     );
 
     if (checkResult.rows.length > 0) {
-      res.render("username-exists-login.ejs");
+      // Check if request is AJAX and render accordingly
+      if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+        res.render("username-exists-login.ejs", { ajax: true });
+      } else {
+        res.render("username-exists-login.ejs");
+      }
     } else {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
@@ -361,7 +410,12 @@ app.post("/register", async (req, res) => {
             [username, hash]
           );
 
-          res.render("registered-now-login.ejs");
+          // Check if request is AJAX and render accordingly
+          if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+            res.render("registered-now-login.ejs", { ajax: true });
+          } else {
+            res.render("registered-now-login.ejs");
+          }
         }
       });
     }
@@ -369,6 +423,7 @@ app.post("/register", async (req, res) => {
     console.log(err);
   }
 });
+
 
 // Route to handle user LOGIN
 app.post("/login", async (req, res) => {
@@ -523,6 +578,18 @@ app.post("/student-evaluation", async (req, res) => {
 
 //Route to handle the submission of the evaluation
 app.post("/submit-evaluation", async (req, res) => {
+  var commentsObj = {
+    cooperation : "",
+    conceptual: "",
+    practical: "",
+    work_ethic: "",
+    comments: "",
+  };
+  commentsObj.cooperation = req.body.cooperation_comments != "" ? "Cooperation Contribution Comment: <br/>" + req.body.cooperation_comments + "<br/><br/>" : "";
+  commentsObj.conceptual = req.body.conceptual_comments != "" ? "Conceptual Contribution Comment: <br/>" + req.body.conceptual_comments + "<br/><br/>" : "";
+  commentsObj.practical = req.body.practical_comments != "" ? "Practical Contribution Comment: <br/>" + req.body.practical_comments + "<br/><br/>" : "";
+  commentsObj.work_ethic = req.body.work_ethic_comments != "" ? "Work Ethic Comment: <br/>" + req.body.work_ethic_comments + "<br/><br/>" : "";
+  commentsObj.comments = req.body.comments != "" ? "Additional Comment: <br/>" + req.body.comments + "<br/><br/>" : "";
   await db.query(
     "INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)",
     [
@@ -532,7 +599,7 @@ app.post("/submit-evaluation", async (req, res) => {
       req.body.conceptual_contribution,
       req.body.practical_contribution,
       req.body.work_ethic,
-      req.body.comments,
+      getComments(commentsObj),
     ]
   );
 
@@ -542,12 +609,20 @@ app.post("/submit-evaluation", async (req, res) => {
     conceptual_contribution: req.body.conceptual_contribution,
     practical_contribution: req.body.practical_contribution,
     work_ethic: req.body.work_ethic,
-    additional_comments: req.body.comments,
+    commentsObj,
+    stringprint,
   });
 });
 
 // The edition of an evaluation route ----------------------------------
 app.post("/edit-submition", async (req, res) => {
+  var commentsObj;
+  commentsObj.cooperation = req.body.cooperation_comments != "" ? "Cooperation Contribution Comment: <br/>" + req.body.cooperation_comments + "<br/><br/>" : "";
+  commentsObj.conceptual = req.body.conceptual_comments != "" ? "Conceptual Contribution Comment: <br/>" + req.body.conceptual_comments + "<br/><br/>" : "";
+  commentsObj.practical = req.body.practical_comments != "" ? "Practical Contribution Comment: <br/>" + req.body.practical_comments + "<br/><br/>" : "";
+  commentsObj.work_ethic = req.body.work_ethic_comments != "" ? "Work Ethic Comment: <br/>" + req.body.work_ethic_comments + "<br/><br/>" : "";
+  commentsObj.comments = req.body.comments != "" ? "Additional Comment: <br/>" + req.body.comments + "<br/><br/>" : "";
+
   await db.query(
     "UPDATE evaluation SET cooperation = $3, conceptual_contribution = $4, practical_contribution = $5, work_ethic = $6, comments = $7 WHERE id_evaluator = $1 AND id_evaluatee = $2",
     [
@@ -557,7 +632,7 @@ app.post("/edit-submition", async (req, res) => {
       req.body.conceptual_contribution,
       req.body.practical_contribution,
       req.body.work_ethic,
-      req.body.comments,
+      getComments(commentsObj),
     ]
   );
 
@@ -567,7 +642,8 @@ app.post("/edit-submition", async (req, res) => {
     conceptual_contribution: req.body.conceptual_contribution,
     practical_contribution: req.body.practical_contribution,
     work_ethic: req.body.work_ethic,
-    additional_comments: req.body.comments,
+    commentsObj,
+    stringprint,
   });
 });
 
@@ -582,3 +658,22 @@ app.post("/thank-you", (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`); // Log that the server is running
 });
+
+app.use('/uploads', express.static('uploads'));
+
+// Route for the STUDENT CHATROOMS page
+app.get("/student-chatrooms", (req, res) => {
+  res.render("student-chatrooms.ejs");
+});
+
+// Route for the View Review Completion page
+app.get("/view-review-completion", (req, res) => {
+  res.render("view-review-completion.ejs");
+});
+
+// Route for access assessment page
+app.get("/access-assessment", (req, res) => {
+  res.render("access-assessment.ejs"); 
+});
+
+export default app;
