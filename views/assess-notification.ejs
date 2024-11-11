@@ -1,0 +1,9 @@
+<h1>Incomplete Peer Assessments</h1>
+  <ul>
+    <% incompleteAssessments.forEach(assessment => { %>
+      <li>
+        <strong><%= assessment.evaluator_name %></strong> has not assessed 
+        <strong><%= assessment.evaluatee_name %></strong>.
+      </li>
+    <% }); %>
+  </ul>
