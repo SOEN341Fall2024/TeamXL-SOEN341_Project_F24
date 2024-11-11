@@ -80,82 +80,10 @@
   
 </header>
 </div>
-<!-- Include any additional CSS files here -->
-<!-- <style>
-  .large-font {
-    font-size: 1.5rem;
-  }
-
-  .heading-font {
-    font-size: 3rem;
-  }
-
-  .taller-box {
-    min-height: 600px;
-    padding: 3rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .card {
-    flex-grow: 1;
-    width: 70%;
-    padding: 5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  .checkbox-group {
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: white;
-  }
-
-  .form-label {
-    font-size: 1.5rem;
-  }
-
-  .checkbox-group label {
-    font-size: 1.05rem;
-  }
-
-  .btn-submit {
-    font-size: 20px;
-  }
-
-  /* Styles for the confirmation message */
-  #confirmationMessage {
-    display: none;
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    padding: 10px;
-    margin-top: 20px;
-    text-align: center;
-  }
-
-  /* Styles for the error messages */
-  .error-message {
-    display: none;
-    color: red;
-    margin-top: 10px;
-    text-align: left;
-  }
-</style> -->
-
 <!-- Container to center the form vertically and horizontally -->
-<div class="container m-5 d-flex justify-content-center align-items-center">
-  <div class="vh-50 d-flex justify-content-center align-items-center" style="width:70%">
-    <div class="row justify-content-center w-100">
+<div class="container-center m-5 d-flex justify-content-center align-items-center">
+  <div class="vh-50 d-flex justify-content-center align-items-center" style="width: 45%">
+    <div class="row justify-content-center w-70">
       <!-- Card to create a grey box with rounded edges and taller height -->
       <div class="card bg-light rounded taller-box">
         <div class="p-5">
@@ -204,7 +132,7 @@
                 <!--<form action="/create-teams" method="POST">-->
                   <!--<label for="teamname">Team Name:</label>
                   <input type="text" name="teamname" id="teamname" />-->
-                  <table>
+                  <table class="w-100">
                       <tr>
                           <th>Student Name</th>
                           <th>Student ID</th>
@@ -269,7 +197,7 @@
           <!-- Submit button -->
           <button
             type="submit"
-            class="btn btn-primary btn-submit my-2 mx-5 "
+            class="btn btn-primary btn-submit my-2 mx-5"
           >
             Submit
           </button>
