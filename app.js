@@ -378,6 +378,24 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+
+app.use('/uploads', express.static('uploads'));
+
+// Route for the STUDENT CHATROOMS page
+app.get("/student-chatrooms", (req, res) => {
+  res.render("student-chatrooms.ejs");
+});
+
+// Route for the View Review Completion page
+app.get("/view-review-completion", (req, res) => {
+  res.render("view-review-completion.ejs");
+});
+
+// Route for access assessment page
+app.get("/access-assessment", (req, res) => {
+  res.render("access-assessment.ejs"); 
+});
+
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
 
 // Route to handle user REGISTRATION
@@ -652,28 +670,7 @@ app.post("/thank-you", (req, res) => {
   res.render("thank-you.ejs");
 });
 
-//--------START EXPRESS SERVER--------//
-
-// Start the Express server. Server listening on port 3000
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`); // Log that the server is running
-});
-
-app.use('/uploads', express.static('uploads'));
-
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
-
-// Route for the View Review Completion page
-app.get("/view-review-completion", (req, res) => {
-  res.render("view-review-completion.ejs");
-});
-
-// Route for access assessment page
-app.get("/access-assessment", (req, res) => {
-  res.render("access-assessment.ejs"); 
-});
 
 export default app;
+
+
