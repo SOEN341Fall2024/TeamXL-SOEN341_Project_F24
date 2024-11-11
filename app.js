@@ -64,22 +64,22 @@ app.get("/", (req, res) => {
 // Route for the LOGIN PAGE, render the login.ejs view
 app.get("/login", (req, res) => {
   // Check if the request is an AJAX request
-  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
-  
+  const isAjax =
+    req.xhr || req.headers["x-requested-with"] === "XMLHttpRequest";
+
   // Render the login view, passing in the `ajax` variable
   res.render("login", { ajax: isAjax });
 });
 
-
 // Route for the REGISTER PAGE, render the register.ejs view
 app.get("/register", (req, res) => {
   // Check if the request is an AJAX request
-  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
-  
+  const isAjax =
+    req.xhr || req.headers["x-requested-with"] === "XMLHttpRequest";
+
   // Render the register view, passing in the `ajax` variable
   res.render("register", { ajax: isAjax });
 });
-
 
 // Route for the STUDENT DASHBOARD page, render the student-dashboard view
 app.get("/student-dashboard", (req, res) => {
@@ -378,6 +378,23 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+app.use("/uploads", express.static("uploads"));
+
+// Route for the STUDENT CHATROOMS page
+app.get("/student-chatrooms", (req, res) => {
+  res.render("student-chatrooms.ejs");
+});
+
+// Route for the View Review Completion page
+app.get("/view-review-completion", (req, res) => {
+  res.render("view-review-completion.ejs");
+});
+
+// Route for access assessment page
+app.get("/access-assessment", (req, res) => {
+  res.render("access-assessment.ejs");
+});
+
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
 
 // Route to handle user REGISTRATION
@@ -423,7 +440,6 @@ app.post("/register", async (req, res) => {
     console.log(err);
   }
 });
-
 
 // Route to handle user LOGIN
 app.post("/login", async (req, res) => {
@@ -579,17 +595,40 @@ app.post("/student-evaluation", async (req, res) => {
 //Route to handle the submission of the evaluation
 app.post("/submit-evaluation", async (req, res) => {
   var commentsObj = {
-    cooperation : "",
+    cooperation: "",
     conceptual: "",
     practical: "",
     work_ethic: "",
     comments: "",
   };
-  commentsObj.cooperation = req.body.cooperation_comments != "" ? "Cooperation Contribution Comment: <br/>" + req.body.cooperation_comments + "<br/><br/>" : "";
-  commentsObj.conceptual = req.body.conceptual_comments != "" ? "Conceptual Contribution Comment: <br/>" + req.body.conceptual_comments + "<br/><br/>" : "";
-  commentsObj.practical = req.body.practical_comments != "" ? "Practical Contribution Comment: <br/>" + req.body.practical_comments + "<br/><br/>" : "";
-  commentsObj.work_ethic = req.body.work_ethic_comments != "" ? "Work Ethic Comment: <br/>" + req.body.work_ethic_comments + "<br/><br/>" : "";
-  commentsObj.comments = req.body.comments != "" ? "Additional Comment: <br/>" + req.body.comments + "<br/><br/>" : "";
+  commentsObj.cooperation =
+    req.body.cooperation_comments != ""
+      ? "Cooperation Contribution Comment: <br/>" +
+        req.body.cooperation_comments +
+        "<br/><br/>"
+      : "";
+  commentsObj.conceptual =
+    req.body.conceptual_comments != ""
+      ? "Conceptual Contribution Comment: <br/>" +
+        req.body.conceptual_comments +
+        "<br/><br/>"
+      : "";
+  commentsObj.practical =
+    req.body.practical_comments != ""
+      ? "Practical Contribution Comment: <br/>" +
+        req.body.practical_comments +
+        "<br/><br/>"
+      : "";
+  commentsObj.work_ethic =
+    req.body.work_ethic_comments != ""
+      ? "Work Ethic Comment: <br/>" +
+        req.body.work_ethic_comments +
+        "<br/><br/>"
+      : "";
+  commentsObj.comments =
+    req.body.comments != ""
+      ? "Additional Comment: <br/>" + req.body.comments + "<br/><br/>"
+      : "";
   await db.query(
     "INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)",
     [
@@ -617,11 +656,34 @@ app.post("/submit-evaluation", async (req, res) => {
 // The edition of an evaluation route ----------------------------------
 app.post("/edit-submition", async (req, res) => {
   var commentsObj;
-  commentsObj.cooperation = req.body.cooperation_comments != "" ? "Cooperation Contribution Comment: <br/>" + req.body.cooperation_comments + "<br/><br/>" : "";
-  commentsObj.conceptual = req.body.conceptual_comments != "" ? "Conceptual Contribution Comment: <br/>" + req.body.conceptual_comments + "<br/><br/>" : "";
-  commentsObj.practical = req.body.practical_comments != "" ? "Practical Contribution Comment: <br/>" + req.body.practical_comments + "<br/><br/>" : "";
-  commentsObj.work_ethic = req.body.work_ethic_comments != "" ? "Work Ethic Comment: <br/>" + req.body.work_ethic_comments + "<br/><br/>" : "";
-  commentsObj.comments = req.body.comments != "" ? "Additional Comment: <br/>" + req.body.comments + "<br/><br/>" : "";
+  commentsObj.cooperation =
+    req.body.cooperation_comments != ""
+      ? "Cooperation Contribution Comment: <br/>" +
+        req.body.cooperation_comments +
+        "<br/><br/>"
+      : "";
+  commentsObj.conceptual =
+    req.body.conceptual_comments != ""
+      ? "Conceptual Contribution Comment: <br/>" +
+        req.body.conceptual_comments +
+        "<br/><br/>"
+      : "";
+  commentsObj.practical =
+    req.body.practical_comments != ""
+      ? "Practical Contribution Comment: <br/>" +
+        req.body.practical_comments +
+        "<br/><br/>"
+      : "";
+  commentsObj.work_ethic =
+    req.body.work_ethic_comments != ""
+      ? "Work Ethic Comment: <br/>" +
+        req.body.work_ethic_comments +
+        "<br/><br/>"
+      : "";
+  commentsObj.comments =
+    req.body.comments != ""
+      ? "Additional Comment: <br/>" + req.body.comments + "<br/><br/>"
+      : "";
 
   await db.query(
     "UPDATE evaluation SET cooperation = $3, conceptual_contribution = $4, practical_contribution = $5, work_ethic = $6, comments = $7 WHERE id_evaluator = $1 AND id_evaluatee = $2",
@@ -652,21 +714,4 @@ app.post("/thank-you", (req, res) => {
   res.render("thank-you.ejs");
 });
 
-//--------START EXPRESS SERVER--------//
-
-// Start the Express server. Server listening on port 3000
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`); // Log that the server is running
-});
-
-app.use('/uploads', express.static('uploads'));
-
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
-
-// Route for the View Review Completion page
-app.get("/view-review-completion", (req, res) => {
-  res.render("view-review-completion.ejs");
-});
+export default app;
