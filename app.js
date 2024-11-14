@@ -81,25 +81,25 @@ app.get("/register", (req, res) => {
   res.render("register", { ajax: isAjax });
 });
 
-// Route for the STUDENT DASHBOARD page, render the student-dashboard view
-app.get("/student-dashboard", async (req, res) => {
-  try {
-    // Example SQL query to fetch pending evaluations for the logged-in student
-    const studentId = req.session.userId; // Assuming the student ID is stored in the session
-    const query = `
-      SELECT E.ID_EVALUATEE, S.NAME AS evaluatee_name 
-      FROM EVALUATION E
-      JOIN STUDENT S ON E.ID_EVALUATEE = S.ID
-      WHERE E.ID_EVALUATOR = $1 AND E.cooperation IS NULL;
-    `;
-    const result = await pool.query(query, [studentId]);
-    const pendingEvaluations = result.rows;
+// ROute to handle the Student Dashboard view
+app.get("/student-dashboard", (req, res) => {
+  const query = `
+      SELECT EVALUATION.ID_EVALUATEE, STUDENT.NAME AS evaluatee_name
+      FROM EVALUATION
+      JOIN STUDENT ON EVALUATION.ID_EVALUATEE = STUDENT.ID
+      WHERE EVALUATION.cooperation IS NULL;  
+  `;
 
-    res.render("student-dashboard", { pendingEvaluations });
-  } catch (error) {
-    console.error("Error fetching pending evaluations:", error);
-    res.render("student-dashboard", { pendingEvaluations: [] });
-  }
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching pending evaluations:", err);
+      return res.status(500).send("Database query error");
+    }
+
+    const pendingEvaluations = results.rows || [];
+    console.log("Pending Evaluations:", pendingEvaluations);
+    res.render("student-dashboard", { pendingEvaluations: pendingEvaluations });
+  });
 });
 
 // Route for the INSTRUCTOR DASHBOARD page
