@@ -81,9 +81,26 @@ app.get("/register", (req, res) => {
   res.render("register", { ajax: isAjax });
 });
 
-// Route for the STUDENT DASHBOARD page, render the student-dashboard view
+// Route to handle the Student Dashboard view
 app.get("/student-dashboard", (req, res) => {
-  res.render("student-dashboard.ejs");
+  res.render("student-dashboard");
+  /*const query = `
+      SELECT EVALUATION.ID_EVALUATEE, STUDENT.NAME AS evaluatee_name
+      FROM EVALUATION
+      JOIN STUDENT ON EVALUATION.ID_EVALUATEE = STUDENT.ID
+      WHERE EVALUATION.cooperation IS NULL;  
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching pending evaluations:", err);
+      return res.status(500).send("Database query error");
+    }
+
+    const pendingEvaluations = results.rows || [];
+    console.log("Pending Evaluations:", pendingEvaluations);
+    res.render("student-dashboard", { pendingEvaluations: pendingEvaluations });
+  });*/
 });
 
 // Route for the INSTRUCTOR DASHBOARD page
@@ -182,6 +199,19 @@ app.get("/profile", (req, res) => {
   }
 });
 
+async function getIncompleteAssessments() {
+  const query = `
+    SELECT s1.ID AS evaluator_id, s1.NAME AS evaluator_name, s2.ID AS evaluatee_id, s2.NAME AS evaluatee_name
+    FROM STUDENT s1
+    JOIN STUDENT s2 ON s1.ID_GROUP = s2.ID_GROUP AND s1.ID <> s2.ID
+    LEFT JOIN EVALUATION e ON e.ID_EVALUATOR = s1.ID AND e.ID_EVALUATEE = s2.ID
+    WHERE e.ID_EVALUATOR IS NULL;
+  `;
+
+  const result = await pool.query(query);
+  return result.rows; // List of students who haven't completed assessments
+}
+
 // Route for the PEER ASSESSMENT page
 app.get("/peer-assessment", async (req, res) => {
   const query = req.query.query ? req.query.query.toLowerCase() : "";
@@ -269,6 +299,16 @@ app.get("/cancel-review", async (req, res) => {
   delete req.session.peerID;
 
   res.redirect("/student-dashboard");
+});
+
+app.get("/assess-notification", async (req, res) => {
+  try {
+    const incompleteAssessments = await getIncompleteAssessments();
+    res.render("assess-notification", { incompleteAssessments });
+  } catch (error) {
+    console.error("Error fetching incomplete assessments:", error);
+    res.status(500).send("Server error");
+  }
 });
 
 app.get("/edit-evaluation", async (req, res) => {
@@ -470,7 +510,10 @@ app.post("/login", async (req, res) => {
               userType: user.origin,
             });
           } else {
-            res.render("student-dashboard.ejs", { userType: user.origin }); // Render student dashboard
+            res.render("student-dashboard.ejs", {
+              userType: user.origin,
+              studentId: user.id,
+            }); // Render student dashboard
           }
         } else {
           res.render("incorrect-pw-un.ejs");
