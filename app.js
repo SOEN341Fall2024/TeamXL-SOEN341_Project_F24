@@ -82,8 +82,24 @@ app.get("/register", (req, res) => {
 });
 
 // Route for the STUDENT DASHBOARD page, render the student-dashboard view
-app.get("/student-dashboard", (req, res) => {
-  res.render("student-dashboard.ejs");
+app.get("/student-dashboard", async (req, res) => {
+  try {
+    // Example SQL query to fetch pending evaluations for the logged-in student
+    const studentId = req.session.userId; // Assuming the student ID is stored in the session
+    const query = `
+      SELECT E.ID_EVALUATEE, S.NAME AS evaluatee_name 
+      FROM EVALUATION E
+      JOIN STUDENT S ON E.ID_EVALUATEE = S.ID
+      WHERE E.ID_EVALUATOR = $1 AND E.cooperation IS NULL;
+    `;
+    const result = await pool.query(query, [studentId]);
+    const pendingEvaluations = result.rows;
+
+    res.render("student-dashboard", { pendingEvaluations });
+  } catch (error) {
+    console.error("Error fetching pending evaluations:", error);
+    res.render("student-dashboard", { pendingEvaluations: [] });
+  }
 });
 
 // Route for the INSTRUCTOR DASHBOARD page
@@ -493,7 +509,10 @@ app.post("/login", async (req, res) => {
               userType: user.origin,
             });
           } else {
-            res.render("student-dashboard.ejs", { userType: user.origin }); // Render student dashboard
+            res.render("student-dashboard.ejs", {
+              userType: user.origin,
+              studentId: user.id,
+            }); // Render student dashboard
           }
         } else {
           res.render("incorrect-pw-un.ejs");
