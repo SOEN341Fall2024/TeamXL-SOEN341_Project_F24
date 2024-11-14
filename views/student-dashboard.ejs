@@ -1,185 +1,350 @@
 <%- include('partials/header', { title: 'Student-dashboard' }) %>
 <div>
-<header>
+  <header>
     <div class="px-3 py-2 text-bg-dark border-bottom">
       <div class="mx-2">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          <a href="/student_dashboard" class="d-flex align-items-center justify-content-start my-lg-0 me-lg-auto text-white text-decoration-none">
-            <svg class="mx-3" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-puzzle" viewBox="0 0 16 16">
-              <path d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.5.5 0 0 0-.115.118l-.012.025L6.5 4.5v.003l.003.01q.005.015.036.053a.9.9 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.9.9 0 0 0 .271-.194.2.2 0 0 0 .039-.063v-.009l-.012-.025a.5.5 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.5.5 0 0 0 .115-.118l.012-.025.001-.006v-.003a.2.2 0 0 0-.039-.064.9.9 0 0 0-.27-.193C8.91 11.1 8.49 11 8 11s-.912.1-1.19.24a.9.9 0 0 0-.271.194.2.2 0 0 0-.039.063v.003l.001.006.012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238zM4.605 3a.5.5 0 0 0-.498.55l.001.007.29 3.4A.5.5 0 0 1 3.9 7.5h-.782c-.696 0-1.182-.497-1.469-.872a.5.5 0 0 0-.118-.115l-.025-.012L1.5 6.5h-.003a.2.2 0 0 0-.064.039.9.9 0 0 0-.193.27C1.1 7.09 1 7.51 1 8s.1.912.24 1.19c.07.14.14.225.194.271a.2.2 0 0 0 .063.039H1.5l.006-.001.025-.012a.5.5 0 0 0 .118-.115c.287-.375.773-.872 1.469-.872H3.9a.5.5 0 0 1 .498.542l-.29 3.408a.5.5 0 0 0 .497.55h1.878c-.048-.166-.195-.352-.463-.557-.274-.21-.52-.528-.52-.943 0-.568.447-.947.862-1.154C6.807 10.123 7.387 10 8 10s1.193.123 1.638.346c.415.207.862.586.862 1.154 0 .415-.246.733-.52.943-.268.205-.415.39-.463.557h1.878a.5.5 0 0 0 .498-.55l-.001-.007-.29-3.4A.5.5 0 0 1 12.1 8.5h.782c.696 0 1.182.497 1.469.872.05.065.091.099.118.115l.025.012.006.001h.003a.2.2 0 0 0 .064-.039.9.9 0 0 0 .193-.27c.14-.28.24-.7.24-1.191s-.1-.912-.24-1.19a.9.9 0 0 0-.194-.271.2.2 0 0 0-.063-.039H14.5l-.006.001-.025.012a.5.5 0 0 0-.118.115c-.287.375-.773.872-1.469.872H12.1a.5.5 0 0 1-.498-.543l.29-3.407a.5.5 0 0 0-.497-.55H9.517c.048.166.195.352.463.557.274.21.52.528.52.943 0 .568-.447.947-.862 1.154C9.193 5.877 8.613 6 8 6s-1.193-.123-1.638-.346C5.947 5.447 5.5 5.068 5.5 4.5c0-.415.246-.733.52-.943.268-.205.415-.39.463-.557z"/>
+        <div
+          class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+        >
+          <a
+            href="/student_dashboard"
+            class="d-flex align-items-center justify-content-start my-lg-0 me-lg-auto text-white text-decoration-none"
+          >
+            <svg
+              class="mx-3"
+              xmlns="http://www.w3.org/2000/svg"
+              width="50"
+              height="50"
+              fill="currentColor"
+              class="bi bi-puzzle"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.5.5 0 0 0-.115.118l-.012.025L6.5 4.5v.003l.003.01q.005.015.036.053a.9.9 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.9.9 0 0 0 .271-.194.2.2 0 0 0 .039-.063v-.009l-.012-.025a.5.5 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.5.5 0 0 0 .115-.118l.012-.025.001-.006v-.003a.2.2 0 0 0-.039-.064.9.9 0 0 0-.27-.193C8.91 11.1 8.49 11 8 11s-.912.1-1.19.24a.9.9 0 0 0-.271.194.2.2 0 0 0-.039.063v.003l.001.006.012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238zM4.605 3a.5.5 0 0 0-.498.55l.001.007.29 3.4A.5.5 0 0 1 3.9 7.5h-.782c-.696 0-1.182-.497-1.469-.872a.5.5 0 0 0-.118-.115l-.025-.012L1.5 6.5h-.003a.2.2 0 0 0-.064.039.9.9 0 0 0-.193.27C1.1 7.09 1 7.51 1 8s.1.912.24 1.19c.07.14.14.225.194.271a.2.2 0 0 0 .063.039H1.5l.006-.001.025-.012a.5.5 0 0 0 .118-.115c.287-.375.773-.872 1.469-.872H3.9a.5.5 0 0 1 .498.542l-.29 3.408a.5.5 0 0 0 .497.55h1.878c-.048-.166-.195-.352-.463-.557-.274-.21-.52-.528-.52-.943 0-.568.447-.947.862-1.154C6.807 10.123 7.387 10 8 10s1.193.123 1.638.346c.415.207.862.586.862 1.154 0 .415-.246.733-.52.943-.268.205-.415.39-.463.557h1.878a.5.5 0 0 0 .498-.55l-.001-.007-.29-3.4A.5.5 0 0 1 12.1 8.5h.782c.696 0 1.182.497 1.469.872.05.065.091.099.118.115l.025.012.006.001h.003a.2.2 0 0 0 .064-.039.9.9 0 0 0 .193-.27c.14-.28.24-.7.24-1.191s-.1-.912-.24-1.19a.9.9 0 0 0-.194-.271.2.2 0 0 0-.063-.039H14.5l-.006.001-.025.012a.5.5 0 0 0-.118.115c-.287.375-.773.872-1.469.872H12.1a.5.5 0 0 1-.498-.543l.29-3.407a.5.5 0 0 0-.497-.55H9.517c.048.166.195.352.463.557.274.21.52.528.52.943 0 .568-.447.947-.862 1.154C9.193 5.877 8.613 6 8 6s-1.193-.123-1.638-.346C5.947 5.447 5.5 5.068 5.5 4.5c0-.415.246-.733.52-.943.268-.205.415-.39.463-.557z"
+              />
             </svg>
             <h1>InsightSphere</h1>
           </a>
 
-          <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+          <ul
+            class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small"
+          >
             <li>
               <a href="/student-dashboard" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-speedometer2" viewBox="0 0 16 16">
-                    <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z"/>
-                    <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3"/>
-                  </svg>
+                <svg
+                  class="bi d-block mx-auto mb-1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  fill="currentColor"
+                  class="bi bi-speedometer2"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3"
+                  />
+                </svg>
                 Dashboard
               </a>
             </li>
             <li>
-                <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
-                    <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
-                  </svg>
-                  <div class="btn-group">
-                    <button class="btn btn-dark btn-md dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      Peers
-                    </button>
-                    <ul class="dropdown-menu" >
-                      <li><a class="dropdown-item" href="/view-teams">View Teams</a></li>
-                      <li><a class="dropdown-item" href="#">Chatrooms</a></li>
-                      <li><a class="dropdown-item" href="/peer-assessment">Peer Assessment</a></li>
-                      <li><a class="dropdown-item" href="/view-reviews">View Reviews</a></li>
-                    </ul>
-                  </div>
-                  
-
+              <svg
+                class="bi d-block mx-auto mb-1"
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                fill="currentColor"
+                class="bi bi-people"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"
+                />
+              </svg>
+              <div class="btn-group">
+                <button
+                  class="btn btn-dark btn-md dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Peers
+                </button>
+                <ul class="dropdown-menu">
                   <li>
-                    <a href="/assess-notification" class="nav-link text-white" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
-                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                        <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                      </svg>
-                      Notifications
-                    </a>
-                  
-                    <!-- Dropdown Menu -->
-                    <ul class="dropdown-menu p-2" aria-labelledby="notificationsDropdown">
-                      <!-- Dropdown Items -->
-                      <li><a class="dropdown-item" href="/private-messages">Private messages</a></li>
-                      <li><a class="dropdown-item" href="/contacts">Contacts</a></li>
-                    </ul>
+                    <a class="dropdown-item" href="/view-teams">View Teams</a>
+                  </li>
+                  <li><a class="dropdown-item" href="#">Chatrooms</a></li>
+                  <li>
+                    <a class="dropdown-item" href="/peer-assessment"
+                      >Peer Assessment</a
+                    >
                   </li>
                   <li>
-  <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-  </svg>
-    <div class="btn-group">
-      <button class="btn btn-dark btn-md dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Account
-      </button>
-      
-      <ul class="dropdown-menu" style="">
-        <li><a class="dropdown-item" href="/profile">Profile</a></li>
-        <li><a class="dropdown-item" href="/logout">Logout</a></li>
-      </ul>
-    </div>
-</li>
+                    <a class="dropdown-item" href="/view-reviews"
+                      >View Reviews</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <li>
+              <svg
+                class="bi d-block mx-auto mb-1"
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                fill="currentColor"
+                class="bi bi-chat-left-dots"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"
+                />
+                <path
+                  d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
+                />
+              </svg>
+              <div class="btn-group">
+                <button
+                  class="btn btn-dark btn-md dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Notifications
+                </button>
+                <ul class="dropdown-menu">
+                  <div class="m-2"><li><h4>This Notification</h3></li></div>
+                  <li><a class="dropdown-item" href="#">Chatrooms</a></li>
+                  <li>
+                    <a class="dropdown-item" href="/peer-assessment"
+                      >Peer Assessment</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/view-reviews"
+                      >View Reviews</a
+                    >
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Dropdown Menu -->
+              <ul
+                class="dropdown-menu p-2"
+                aria-labelledby="notificationsDropdown"
+              >
+                <!-- Dropdown Items -->
+                <li>
+                  <a class="dropdown-item" href="/private-messages">Private messages</a>
+                </li>
+                <li><a class="dropdown-item" href="/contacts">Contacts</a></li>
+              </ul>
+            </li>
+            <li>
+              <svg
+                class="bi d-block mx-auto mb-1"
+                xmlns="http://www.w3.org/2000/svg"
+                width="40"
+                height="40"
+                fill="currentColor"
+                class="bi bi-person-circle"
+                viewBox="0 0 16 16"
+              >
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                <path
+                  fill-rule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                />
+              </svg>
+              <div class="btn-group">
+                <button
+                  class="btn btn-dark btn-md dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Account
+                </button>
+
+                <ul class="dropdown-menu" style="">
+                  <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
     </div>
-    
   </header>
-  
 </div>
 
 <div>
-  <div class="container py-4 my-5">
+  <div>
+    <div class="container py-4 my-5">
+      <!-- Main Welcome Section  -->
+      <div class="p-5 mb-4 bg-body-secondary rounded-3 shadow-sm">
+        <div class="container-fluid py-5 text-center">
+          <h1 class="display-5 fw-bold text-primary">
+            Welcome to Your Student Dashboard!
+          </h1>
+          <p class="lead fs-5 text-muted">
+            Your central hub to assess and communicate with your peers
+            efficiently.
+          </p>
+          <p class="col-md-8 mx-auto fs-4 text-muted">
+            Explore all features available to you for seamless collaboration,
+            communication, and peer engagement.
+          </p>
+        </div>
+      </div>
 
-    <!-- Main Welcome Section  -->
-    <div class="p-5 mb-4 bg-body-secondary rounded-3 shadow-sm">
-      <div class="container-fluid py-5 text-center">
-        <h1 class="display-5 fw-bold text-primary">Welcome to Your Student Dashboard!</h1>
-        <p class="lead fs-5 text-muted">Your central hub to assess and communicate with your peers efficiently.</p>
-        <p class="col-md-8 mx-auto fs-4 text-muted">Explore all features available to you for seamless collaboration, communication, and peer engagement.</p>
-      </div>
-    </div>
-  
-    <!-- Section: Your Team -->
-    <div class="my-5">
-      <div class="d-flex align-items-center mb-3">
-        <h2 class="text-primary">Your Team</h2>
-        <div class="ms-3">
-          <span class="badge bg-secondary">Collaboration</span>
+      <!-- Section: Your Team -->
+      <div class="my-5">
+        <div class="d-flex align-items-center mb-3">
+          <h2 class="text-primary">Your Team</h2>
+          <div class="ms-3">
+            <span class="badge bg-secondary">Collaboration</span>
+          </div>
+        </div>
+        <p class="text-muted">
+          Stay informed and connected with your team members for all
+          collaborative projects and tasks.
+        </p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card h-100 shadow-lg border-0">
+              <div class="card-body text-center">
+                <div class="mb-3">
+                  <i
+                    class="bi bi-people-fill text-primary"
+                    style="font-size: 2rem"
+                  ></i>
+                </div>
+                <h5 class="card-title">View Your Team</h5>
+                <p class="card-text text-muted">
+                  See who’s on your team and stay connected for collaborative
+                  projects.
+                </p>
+                <a
+                  href="/view-teams"
+                  class="btn btn-outline-primary btn-lg rounded-pill mt-3"
+                  >View Team</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <p class="text-muted">Stay informed and connected with your team members for all collaborative projects and tasks.</p>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card h-100 shadow-lg border-0">
-            <div class="card-body text-center">
-              <div class="mb-3">
-                <i class="bi bi-people-fill text-primary" style="font-size: 2rem;"></i>
+
+      <!-- Section: Peer Assessments and Reviews -->
+      <div class="my-5">
+        <div class="d-flex align-items-center mb-3">
+          <h2 class="text-primary">Peer Assessments and Reviews</h2>
+          <div class="ms-3">
+            <span class="badge bg-info">Feedback</span>
+          </div>
+        </div>
+        <p class="text-muted">
+          Gain insights, give and receive feedback, and build meaningful
+          collaborations through peer assessments and reviews.
+        </p>
+        <div class="row g-4">
+          <!-- Peer Assessment Card -->
+          <div class="col-md-4">
+            <div class="card h-100 shadow-lg border-0 bg-light">
+              <div class="card-body text-center">
+                <div class="mb-3">
+                  <i
+                    class="bi bi-card-checklist text-primary"
+                    style="font-size: 2rem"
+                  ></i>
+                </div>
+                <h5 class="card-title">Peer Assessment</h5>
+                <p class="card-text text-muted">
+                  Get and provide detailed feedback to improve teamwork and
+                  collaboration.
+                </p>
+                <a
+                  href="/peer-assessment"
+                  class="btn btn-outline-dark btn-lg rounded-pill mt-3"
+                  >Peer Assessment</a
+                >
               </div>
-              <h5 class="card-title">View Your Team</h5>
-              <p class="card-text text-muted">See who’s on your team and stay connected for collaborative projects.</p>
-              <a href="/view-teams" class="btn btn-outline-primary btn-lg rounded-pill mt-3">View Team</a>
+            </div>
+          </div>
+
+          <!-- View Reviews Card -->
+          <div class="col-md-4">
+            <div class="card h-100 shadow-lg border-0 bg-light">
+              <div class="card-body text-center">
+                <div class="mb-3">
+                  <i
+                    class="bi bi-star-fill text-primary"
+                    style="font-size: 2rem"
+                  ></i>
+                </div>
+                <h5 class="card-title">View Reviews</h5>
+                <p class="card-text text-muted">
+                  Access feedback and reviews from your peers and instructors to
+                  foster growth.
+                </p>
+                <a
+                  href="/view-reviews"
+                  class="btn btn-outline-info btn-lg rounded-pill mt-3"
+                  >View Reviews</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Chatrooms -->
+      <div class="my-5">
+        <div class="d-flex align-items-center mb-3">
+          <h2 class="text-primary">Chatrooms</h2>
+          <div class="ms-3">
+            <span class="badge bg-success">Community</span>
+          </div>
+        </div>
+        <p class="text-muted">
+          Engage in discussions, ask questions, and connect with your peers in a
+          vibrant community space.
+        </p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card h-100 shadow-lg border-0 bg-light">
+              <div class="card-body text-center">
+                <div class="mb-3">
+                  <i
+                    class="bi bi-chat-dots-fill text-primary"
+                    style="font-size: 2rem"
+                  ></i>
+                </div>
+                <h5 class="card-title">Connect with Peers</h5>
+                <p class="card-text text-muted">
+                  Share experiences, engage in discussions, and build stronger
+                  connections.
+                </p>
+                <a
+                  href="/student-chatrooms"
+                  class="btn btn-outline-secondary btn-lg rounded-pill mt-3"
+                  >Start a Conversation</a
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  
-    <!-- Section: Peer Assessments and Reviews -->
-    <div class="my-5">
-      <div class="d-flex align-items-center mb-3">
-        <h2 class="text-primary">Peer Assessments and Reviews</h2>
-        <div class="ms-3">
-          <span class="badge bg-info">Feedback</span>
-        </div>
-      </div>
-      <p class="text-muted">Gain insights, give and receive feedback, and build meaningful collaborations through peer assessments and reviews.</p>
-      <div class="row g-4">
-        <!-- Peer Assessment Card -->
-        <div class="col-md-4">
-          <div class="card h-100 shadow-lg border-0 bg-light">
-            <div class="card-body text-center">
-              <div class="mb-3">
-                <i class="bi bi-card-checklist text-primary" style="font-size: 2rem;"></i>
-              </div>
-              <h5 class="card-title">Peer Assessment</h5>
-              <p class="card-text text-muted">Get and provide detailed feedback to improve teamwork and collaboration.</p>
-              <a href="/peer-assessment" class="btn btn-outline-dark btn-lg rounded-pill mt-3">Peer Assessment</a>
-            </div>
-          </div>
-        </div>
-  
-        <!-- View Reviews Card -->
-        <div class="col-md-4">
-          <div class="card h-100 shadow-lg border-0 bg-light">
-            <div class="card-body text-center">
-              <div class="mb-3">
-                <i class="bi bi-star-fill text-primary" style="font-size: 2rem;"></i>
-              </div>
-              <h5 class="card-title">View Reviews</h5>
-              <p class="card-text text-muted">Access feedback and reviews from your peers and instructors to foster growth.</p>
-              <a href="/view-reviews" class="btn btn-outline-info btn-lg rounded-pill mt-3">View Reviews</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Section: Chatrooms -->
-    <div class="my-5">
-      <div class="d-flex align-items-center mb-3">
-        <h2 class="text-primary">Chatrooms</h2>
-        <div class="ms-3">
-          <span class="badge bg-success">Community</span>
-        </div>
-      </div>
-      <p class="text-muted">Engage in discussions, ask questions, and connect with your peers in a vibrant community space.</p>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card h-100 shadow-lg border-0 bg-light">
-            <div class="card-body text-center">
-              <div class="mb-3">
-                <i class="bi bi-chat-dots-fill text-primary" style="font-size: 2rem;"></i>
-              </div>
-              <h5 class="card-title">Connect with Peers</h5>
-              <p class="card-text text-muted">Share experiences, engage in discussions, and build stronger connections.</p>
-              <a href="/student-chatrooms" class="btn btn-outline-secondary btn-lg rounded-pill mt-3">Start a Conversation</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  
   </div>
-  </div>
+</div>
+<%- include('partials/footer') %>
