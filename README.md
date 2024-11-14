@@ -75,6 +75,6 @@ Create a new database, and run the queries from the two .sql files.
 ### Step 6: Start the server and Access the Website
 
 ```bash
-  nodemon app.js
+  nodemon server.js
 ```
 Open your web browser and navigate to localhost:3000. This will open the Peer Assessment Application.
