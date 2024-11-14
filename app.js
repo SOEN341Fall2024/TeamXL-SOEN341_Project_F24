@@ -81,9 +81,10 @@ app.get("/register", (req, res) => {
   res.render("register", { ajax: isAjax });
 });
 
-// ROute to handle the Student Dashboard view
+// Route to handle the Student Dashboard view
 app.get("/student-dashboard", (req, res) => {
-  const query = `
+  res.render("student-dashboard");
+  /*const query = `
       SELECT EVALUATION.ID_EVALUATEE, STUDENT.NAME AS evaluatee_name
       FROM EVALUATION
       JOIN STUDENT ON EVALUATION.ID_EVALUATEE = STUDENT.ID
@@ -99,7 +100,7 @@ app.get("/student-dashboard", (req, res) => {
     const pendingEvaluations = results.rows || [];
     console.log("Pending Evaluations:", pendingEvaluations);
     res.render("student-dashboard", { pendingEvaluations: pendingEvaluations });
-  });
+  });*/
 });
 
 // Route for the INSTRUCTOR DASHBOARD page
