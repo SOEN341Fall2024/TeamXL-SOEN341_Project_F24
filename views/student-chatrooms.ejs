@@ -141,7 +141,21 @@
 <body>
 
 
-   
+    <div class="chat-container">
+        <div class="messages">
+            <% messages.forEach(function(message) { %>
+                <div class="message">
+                    <p><strong><%= message.sender_name %></strong>: <%= message.CONTENT %></p>
+                    <span><%= message.time %></span>
+                </div>
+            <% }) %>
+        </div>
+
+        <form action="/send-message" method="POST">
+            <textarea name="message" placeholder="Type your message..." required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
 
 
 
