@@ -39,14 +39,65 @@
 
 <div class="container py-5 d-flex flex-column align-items-center">
   <!-- Page Title Section -->
-  <div class="text-center mb-5">
+  <div class="text-center mb-2">
     <h1 class="display-5 fw-bold text-dark">
       <i class="bi bi-journal-text me-2"></i> Peer Assessments
     </h1>
     <p class="text-muted fs-5">Instructors can access various views of student assessments here to monitor and analyze team and individual performance.</p>
   </div> 
 
-  <!-- Button Section -->
+ 
+
+  <div class="album py-5 bg-body-tertiary">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col">
+          <div class="card shadow-sm">
+            
+            <img src="/images/summary.jpg" class="card-img-top" alt="Image description" width="100%" height="300" style="object-fit: cover;">
+            <div class="card-body">
+              <p class="card-text">View a summarized report of student reviews, showing average scores across different criteria for each team member.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <button type="button" class="btn  btn-outline-success" onclick="location.href='/view-reviews-summary'">Reviews Summary</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm">
+            
+            <img src="/images/detailed.jpg" class="card-img-top" alt="Image description" width="100%" height="300" style="object-fit: cover;">
+            <div class="card-body">
+              <p class="card-text">Explore detailed feedback and scores provided for each student by their peers, with breakdowns by evaluation criteria.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <button type="button" class="btn  btn-outline-success" onclick="location.href='/view-reviews-detailed'">Detailed Reviews</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm">
+            
+            <img src="/images/completion.jpg" class="card-img-top" alt="Image description" width="100%" height="300" style="object-fit: cover;">
+            <div class="card-body">
+              <p class="card-text">Check the completion status of all peer assessments to ensure every student has been reviewed by their teammates.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <button type="button" class="btn  btn-success" onclick="location.href='/view-review-completion'">Reviews Completion</button>
+              </div>
+            </div>
+          </div>
+        </div>
+            </div>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- Button Section
   <div class="info-box"> 
     <p class="text-muted mb-0">View a summarized report of student reviews, showing average scores across different criteria for each team member.</p>
     <a href="/view-reviews-summary" class="btn btn-primary btn-custom">
@@ -69,8 +120,9 @@
   </div>
 </div>
 
-<!-- Include Bootstrap JS (Optional, for tooltips, popovers, etc.) -->
+Include Bootstrap JS (Optional, for tooltips, popovers, etc.) 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html> -->
  
+<%- include('partials/footer') %>
