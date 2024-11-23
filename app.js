@@ -140,6 +140,9 @@ app.get("/create-teams", async (req, res) => {
 
 app.get("/view-teams", async (req, res) => {
   console.log(req.session.userType);
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const userType = req.session.userType;
+
   if (req.session.userType == "INSTRUCTOR") {
     try {
       const DATA = await db.query(
