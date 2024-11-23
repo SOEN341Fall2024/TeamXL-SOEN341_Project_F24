@@ -174,18 +174,22 @@ app.get("/profile", async (req, res) => {
 
 // Route for the VIEW TEAMS page
 app.get("/view-teams", async (req, res) => {
-  console.log(req.session.userType);
   const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
-
+  console.log(req.session.userType);
   if (req.session.userType == "INSTRUCTOR") {
     try {
+      console.log("this is the " + instructorUsername);
+
       const DATA = await db.query(
         "SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY student.id_group ASC"
       );
 
       res.render("view-teams-instructor.ejs", {
         Teams: DATA,
+        instructorUsername: instructorUsername,
+        userType: userType,
       });
     } catch (err) {
       console.log(err);
