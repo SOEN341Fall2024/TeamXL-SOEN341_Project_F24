@@ -106,6 +106,7 @@ app.get("/student-dashboard", (req, res) => {
 // Route for the INSTRUCTOR DASHBOARD page
 app.get("/instructor-dashboard", async (req, res) => {
   const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
+  const userType = req.session.userType;
 
   if (!instructorUsername) {
     return res.status(400).send("Instructor username is required."); // Make sure to handle the case where instructorUsername is undefined
@@ -114,6 +115,7 @@ app.get("/instructor-dashboard", async (req, res) => {
   try {
     res.render("instructor-dashboard.ejs", {
       instructorUsername: instructorUsername, // Render the instructor-dashboard view, passing the instructor username
+      userType: userType,
     });
   } catch (error) {
     console.error("Error rendering instructor dashboard:", error);
@@ -123,6 +125,9 @@ app.get("/instructor-dashboard", async (req, res) => {
 
 // Route for the CREATE TEAMS page
 app.get("/create-teams", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
   try {
     const RESULT = await db.query(
       "SELECT * FROM student WHERE id_group is NULL"
@@ -130,6 +135,8 @@ app.get("/create-teams", async (req, res) => {
 
     res.render("create-teams.ejs", {
       StudentArr: RESULT,
+      instructorUsername: instructorUsername,
+      userType: userType,
     });
   } catch (err) {
     console.log(err);
@@ -602,6 +609,7 @@ app.post("/profile", async (req, res) => {
 app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
+
   try {
     if (IDs != null && TEAMNAME) {
       await db.query("INSERT INTO groups (group_name) VALUES ($1)", [TEAMNAME]);
