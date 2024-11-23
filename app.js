@@ -82,25 +82,47 @@ app.get("/register", (req, res) => {
 });
 
 // Route to handle the Student Dashboard view
-app.get("/student-dashboard", (req, res) => {
-  res.render("student-dashboard");
-  /*const query = `
-      SELECT EVALUATION.ID_EVALUATEE, STUDENT.NAME AS evaluatee_name
-      FROM EVALUATION
-      JOIN STUDENT ON EVALUATION.ID_EVALUATEE = STUDENT.ID
-      WHERE EVALUATION.cooperation IS NULL;  
-  `;
+app.get("/student-dashboard", async (req, res) => {
+  const studentID = req.session.userID;
 
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error fetching pending evaluations:", err);
-      return res.status(500).send("Database query error");
-    }
+  if (!studentID) {
+    console.error("Student ID is not found in session.");
+    return res.redirect("/");
+  }
 
-    const pendingEvaluations = results.rows || [];
-    console.log("Pending Evaluations:", pendingEvaluations);
-    res.render("student-dashboard", { pendingEvaluations: pendingEvaluations });
-  });*/
+  try {
+    // Query to get the number of teammates
+    const totalTeammatesQuery = await db.query(
+      `SELECT COUNT(*) AS total_teammates 
+       FROM student 
+       WHERE id_group = (SELECT id_group FROM student WHERE id = $1) 
+       AND id != $1`,
+      [studentID]
+    );
+    const totalTeammates = totalTeammatesQuery.rows[0]?.total_teammates || 0;
+
+    // Query to get the number of completed reviews
+    const completedReviewsQuery = await db.query(
+      `SELECT COUNT(*) AS completed_reviews 
+       FROM evaluation 
+       WHERE id_evaluator = $1`,
+      [studentID]
+    );
+    const completedReviews =
+      completedReviewsQuery.rows[0]?.completed_reviews || 0;
+
+    // Check if there are pending evaluations
+    const hasPendingReviews = completedReviews < totalTeammates;
+    console.log("HasPendingReviews: " + hasPendingReviews);
+
+    // Render the dashboard view with the computed data
+    res.render("student-dashboard", {
+      hasPendingReviews, // Pass the boolean indicating if there are pending reviews
+    });
+  } catch (err) {
+    console.error("Error fetching data for student dashboard:", err);
+    res.redirect("/"); // Redirect to homepage or an error page in case of failure
+  }
 });
 
 // Route for the INSTRUCTOR DASHBOARD page
