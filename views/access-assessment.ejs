@@ -59,7 +59,7 @@
             <div class="card-body">
               <p class="card-text">View a summarized report of student reviews, showing average scores across different criteria for each team member.</p>
               <div class="d-flex justify-content-between align-items-center">
-                <button type="button" class="btn  btn-outline-success" onclick="location.href='/view-reviews-summary'">Reviews Summary</button>
+                <button type="button" class="btn  btn-outline-success" onclick="location.href='/view-reviews-summary?instructorUsername=<%= instructorUsername %>'">Reviews Summary</button>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@
             <div class="card-body">
               <p class="card-text">Explore detailed feedback and scores provided for each student by their peers, with breakdowns by evaluation criteria.</p>
               <div class="d-flex justify-content-between align-items-center">
-                <button type="button" class="btn  btn-outline-success" onclick="location.href='/view-reviews-detailed'">Detailed Reviews</button>
+                <button type="button" class="btn  btn-outline-success" onclick="location.href='/view-reviews-detailed?instructorUsername=<%= instructorUsername %>'">Detailed Reviews</button>
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@
             <div class="card-body">
               <p class="card-text">Check the completion status of all peer assessments to ensure every student has been reviewed by their teammates.</p>
               <div class="d-flex justify-content-between align-items-center">
-                <button type="button" class="btn  btn-success" onclick="location.href='/view-review-completion'">Reviews Completion</button>
+                <button type="button" class="btn  btn-success" onclick="location.href='/view-review-completion?instructorUsername=<%= instructorUsername %>'">Reviews Completion</button>
               </div>
             </div>
           </div>

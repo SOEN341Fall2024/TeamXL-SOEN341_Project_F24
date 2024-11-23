@@ -369,6 +369,9 @@ app.get("/edit-evaluation", async (req, res) => {
 });
 
 app.get("/view-reviews-summary", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
   const result1 = await db.query(
     "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
@@ -387,10 +390,15 @@ app.get("/view-reviews-summary", async (req, res) => {
     getAverage,
     student_info,
     groups,
+    instructorUsername: instructorUsername,
+    userType: userType,
   });
 });
 
 app.get("/view-reviews-detailed", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
   const result1 = await db.query(
     "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
@@ -411,10 +419,15 @@ app.get("/view-reviews-detailed", async (req, res) => {
     student_info,
     groups,
     sorted_students,
+    instructorUsername: instructorUsername,
+    userType: userType,
   });
 });
 
 app.get("/view-review-completion", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
   const result1 = await db.query(
     "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
@@ -434,6 +447,8 @@ app.get("/view-review-completion", async (req, res) => {
     student_info,
     groups,
     sorted_students,
+    instructorUsername: instructorUsername,
+    userType: userType,
   });
 });
 
