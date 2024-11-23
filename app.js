@@ -136,8 +136,36 @@ app.get("/create-teams", async (req, res) => {
   }
 });
 
-// Route for the VIEW TEAMS page
+// Fetch student profile
+app.get("/profile", async (req, res) => {
+  try {
+    const userId = req.session.userID;
+    console.log("User ID from session:", userId);
 
+    if (!userId) {
+      throw new Error("User ID not found in session.");
+    }
+
+    // Check if the user has a profile
+    const selectQuery = "SELECT * FROM PROFILE WHERE ID_STUDENT = $1";
+    console.log("Executing SELECT query:", selectQuery, [userId]);
+    const result = await db.query(selectQuery, [userId]);
+
+    if (result.rows.length > 0) {
+      const profile = result.rows[0];
+      console.log("Profile found:", profile);
+      return res.render("profile", { profile });
+    } else {
+      console.log("Profile not found, redirecting to profile creation.");
+      return res.render("create-profile", { userId });
+    }
+  } catch (err) {
+    console.error("Error retrieving profile:", err);
+    res.status(500).send("An error occurred while retrieving your profile.");
+  }
+});
+
+// Route for the VIEW TEAMS page
 app.get("/view-teams", async (req, res) => {
   console.log(req.session.userType);
   const query = req.query.query ? req.query.query.toLowerCase() : "";
@@ -185,21 +213,6 @@ app.get("/view-teams", async (req, res) => {
 //Route for EDIT TEAMS page
 app.get("/edit-team", (req, res) => {
   res.render("edit-team.ejs");
-});
-
-// Route for the PROFILE page
-app.get("/profile", (req, res) => {
-  const instructorUsername = req.query.instructorUsername;
-  const userType = req.session.userType;
-
-  if (userType) {
-    res.render("profile.ejs", {
-      userType,
-      instructorUsername,
-    });
-  } else {
-    res.redirect("/login");
-  }
 });
 
 async function getIncompleteAssessments() {
@@ -532,7 +545,60 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Route to handle CREATE TEAMS form data
+// Update student profile
+app.post("/profile", async (req, res) => {
+  const { firstName, lastName, email, address, address2, province, zip } =
+    req.body;
+
+  try {
+    const userId = req.session.userID;
+    if (!userId) throw new Error("User ID not found in session.");
+
+    const selectQuery = "SELECT * FROM PROFILE WHERE ID_STUDENT = $1";
+    const result = await db.query(selectQuery, [userId]);
+
+    if (result.rows.length > 0) {
+      const updateQuery = `
+        UPDATE PROFILE
+        SET FIRST_NAME = $1, LAST_NAME = $2, EMAIL = $3, ADDRESS = $4, ADDRESS2 = $5, PROVINCE = $6, ZIP = $7
+        WHERE ID_STUDENT = $8
+      `;
+      console.log("Executing UPDATE query:", updateQuery);
+      await db.query(updateQuery, [
+        firstName,
+        lastName,
+        email,
+        address,
+        address2,
+        province,
+        zip,
+        userId,
+      ]);
+    } else {
+      const insertQuery = `
+        INSERT INTO PROFILE (ID_STUDENT, FIRST_NAME, LAST_NAME, EMAIL, ADDRESS, ADDRESS2, PROVINCE, ZIP)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `;
+      console.log("Executing INSERT query:", insertQuery);
+      await db.query(insertQuery, [
+        userId,
+        firstName,
+        lastName,
+        email,
+        address,
+        address2,
+        province,
+        zip,
+      ]);
+    }
+
+    res.redirect("/profile");
+  } catch (err) {
+    console.error("Error saving profile:", err);
+    res.status(500).send("An error occurred while saving your profile.");
+  }
+});
+
 app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
