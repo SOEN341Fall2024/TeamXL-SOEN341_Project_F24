@@ -174,11 +174,10 @@ app.get("/profile", async (req, res) => {
 
 // Route for the VIEW TEAMS page
 app.get("/view-teams", async (req, res) => {
-  const query = req.query.query ? req.query.query.toLowerCase() : "";
-  const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   console.log(req.session.userType);
   if (req.session.userType == "INSTRUCTOR") {
+    const instructorUsername = req.query.instructorUsername;
     try {
       console.log("this is the " + instructorUsername);
 
@@ -459,7 +458,12 @@ app.get("/view-review-completion", (req, res) => {
 
 // Route for access assessment page
 app.get("/access-assessment", (req, res) => {
-  res.render("access-assessment.ejs");
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+  res.render("access-assessment.ejs", {
+    instructorUsername: instructorUsername,
+    userType: userType,
+  });
 });
 
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//

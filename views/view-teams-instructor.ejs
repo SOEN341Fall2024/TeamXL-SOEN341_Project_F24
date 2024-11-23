@@ -1,28 +1,29 @@
-<%- include('partials/instructor-header', { title: 'Instructor team view', headerTitle: 'Instructor team view' , userType, instructorUsername }) %>
+<%- include('partials/instructor-header', { title: 'Instructor team view', headerTitle: 'Instructor team view', userType, instructorUsername }) %>
 
   <style>
     body {
       background-color: #f8f9fa;
     }
     .table-container {
-      background-color: #ffffff;
+      background-color: #d1def4;
       border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      
       margin-bottom: 20px;
     }
     .table thead th {
-      background-color: #2b5681;
+      background-color: #6b98e6;
       font-weight: 600;
       border-top: none;
+      border-bottom: none;
     }
     .table th, .table td {
       vertical-align: middle;
     }
     .caption-style {
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       font-weight: bold;
-      color: #6c757d;
+      color: #000000;
     }
   </style>
 </head>
@@ -32,7 +33,7 @@
   <!-- Page Title -->
   <div class="text-center mb-5">
     <h1 class="display-5 fw-bold text-dark">
-      <i class="bi bi-people-fill me-2"></i> Teams Overview 
+       Teams Overview 
     </h1>
     <p class="text-muted fs-5">Detailed information on team members across all groups, including student names and IDs.</p>
   </div>
@@ -42,9 +43,11 @@
     <% if(i == 0 || Teams.rows[i].group_name != Teams.rows[i - 1].group_name) { %>
       <div class="table-container">
         <h2 class="caption-style mb-3">
-          <i class="bi bi-folder-fill me-2"></i><%= Teams.rows[i].group_name %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-people-fill m-2" viewBox="0 0 16 16">
+            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+          </svg><%= Teams.rows[i].group_name %>
         </h2>
-        <table class="table table-bordered table-striped table-hover align-middle">
+        <table class="table  table-striped table-hover align-middle">
           <thead class="table-dark">
             <tr>
               <th scope="col">Student Name</th>
@@ -65,7 +68,4 @@
   <% } %>
 </div>
 
-<!-- Include Bootstrap JS (Optional, for tooltips, popovers, etc.) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<%- include('partials/footer') %>
