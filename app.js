@@ -37,6 +37,14 @@ const saltRounds = 10;
 const upload = multer({ dest: "uploads/" }); // Files will be uploaded to the 'uploads' directory
 
 
+// Create and export the app instance with a real DB connection
+const db = createDbConnection();
+
+// Only connect to the database when not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  db.connect();
+}
+
 export const createApp = (db) => {
 
 const app = express();
