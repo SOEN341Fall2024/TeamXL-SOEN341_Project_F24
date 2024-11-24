@@ -908,6 +908,7 @@ app.post("/thank-you", (req, res) => {
   res.render("thank-you.ejs");
 });
 
+return app;
 
 }
 export default createApp(db);
