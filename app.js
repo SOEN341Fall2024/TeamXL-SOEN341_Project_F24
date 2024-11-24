@@ -9,7 +9,7 @@ import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
-const db =require("db.config.js");
+import { createDbConnection } from './db.config.js';
 import { group } from "console";
 import {
   getCooperation,
