@@ -267,3 +267,14 @@ export function getWorkEthicAvg(student_info){
 
     return parseFloat(total / AmountOfReviews * 20).toFixed(2);
 }
+
+export function appendGroupMembers(group, student_info){
+    var studentArr = [];
+    for(var i = 0; i < student_info.length; i++){
+        if(group.id_group == student_info[i].id_group){
+            studentArr.push(student_info[i]);
+        }
+    }
+
+    group.members = studentArr;
+}
