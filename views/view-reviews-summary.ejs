@@ -114,7 +114,7 @@
       </thead>
       <tbody>
         <% for(var i = 0, j = 0; i < student_info.length; i++) { %>
-          <% if(i + 1 < student_info.length && i > 0 && student_info[i].id == student_info[i - 1].id) { i++; } %>
+          <% if(i + 1 < student_info.length && i > 0 && student_info[i].id == student_info[i - 1].id) { continue; } %>
           <% if(groups[j].id_group != student_info[i].id_group) { j++; } %>
           <tr>
             <td><%= student_info[i].id %></td>

@@ -249,15 +249,27 @@ app.get("/edit-team", (req, res) => {
 
 async function getIncompleteAssessments() {
   const query = `
-    SELECT s1.ID AS evaluator_id, s1.NAME AS evaluator_name, s2.ID AS evaluatee_id, s2.NAME AS evaluatee_name
-    FROM STUDENT s1
-    JOIN STUDENT s2 ON s1.ID_GROUP = s2.ID_GROUP AND s1.ID <> s2.ID
-    LEFT JOIN EVALUATION e ON e.ID_EVALUATOR = s1.ID AND e.ID_EVALUATEE = s2.ID
-    WHERE e.ID_EVALUATOR IS NULL;
+    SELECT s2.ID AS evaluatee_id, s2.NAME AS evaluatee_name
+    FROM STUDENT s2
+    LEFT JOIN EVALUATION e 
+      ON e.ID_EVALUATOR = $1 
+      AND e.ID_EVALUATEE = s2.ID
+    WHERE s2.ID_GROUP = (
+        SELECT ID_GROUP 
+        FROM STUDENT 
+        WHERE ID = $1
+    ) 
+      AND s2.ID <> $1 
+      AND e.ID_EVALUATOR IS NULL;
   `;
 
-  const result = await pool.query(query);
-  return result.rows; // List of students who haven't completed assessments
+  try {
+    const result = await db.query(query, [userId]);
+    return result.rows; // List of students not yet reviewed by the user
+  } catch (error) {
+    console.error("Database Query Error:", error);
+    return [];
+  }
 }
 
 // Route for the PEER ASSESSMENT page
@@ -351,7 +363,22 @@ app.get("/cancel-review", async (req, res) => {
 
 app.get("/assess-notification", async (req, res) => {
   try {
-    const incompleteAssessments = await getIncompleteAssessments();
+    const userId = req.session.userID;
+
+    if (!userId) {
+      console.error("No User ID in session.");
+      return res.redirect("/login");
+    }
+
+    const incompleteAssessments = await getIncompleteAssessments(userId);
+
+    // Log for debugging
+    console.log(
+      "Incomplete Assessments for user:",
+      userId,
+      incompleteAssessments
+    );
+
     res.render("assess-notification", { incompleteAssessments });
   } catch (error) {
     console.error("Error fetching incomplete assessments:", error);
@@ -363,7 +390,6 @@ app.get("/edit-evaluation", async (req, res) => {
   const studentId = req.params.id;
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
-
   try {
     const answers = await db.query(
       "SELECT cooperation, conceptual_contribution, practical_contribution, work_ethic, comments FROM EVALUATION WHERE" +
