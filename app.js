@@ -291,7 +291,7 @@ app.get("/peer-assessment", async (req, res) => {
       );
       const groupID = r_temp.rows[0].id_group;
       const result = await db.query(
-        "SELECT * FROM student WHERE LOWER(name) LIKE $1 AND id != $2 AND id_group = $3",
+        "SELECT DISTINCT id, name, id_group FROM student JOIN evaluation ON id != $2 AND id_group = $3 WHERE NOT EXISTS (SELECT * FROM evaluation WHERE id_evaluator = $2 AND id_evaluatee = id) AND LOWER(name) LIKE $1",
         [`%${query}%`, req.session.userID, groupID]
       );
       res.render("peer-assessment.ejs", {
