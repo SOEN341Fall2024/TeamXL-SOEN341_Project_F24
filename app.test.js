@@ -28,9 +28,8 @@ describe('App Tests', () => {
     mockDb.query.mockClear();
   });
 
-  // Close server after all tests
   afterAll((done) => {
-    app.close(() => {
+    createApp(mockDb).close(() => {
       done();
     });
   });
@@ -119,6 +118,7 @@ describe('App Tests', () => {
   });
 
   describe('Peer Evaluation', () => {
+
     test('GET /peer-assessment should render peer assessment page', async () => {
       // Set up mock data and queries
       mockDb.query.mockResolvedValueOnce({
@@ -195,11 +195,11 @@ describe('App Tests', () => {
           username: 'testuser',
           password: 'testpass'
         });
-  
+    
       // Set session variables
       agent.session.userID = 1;
       agent.session.peerID = 2;
-  
+    
       // Make the request
       const response = await agent
         .post('/submit-evaluation')
@@ -215,14 +215,14 @@ describe('App Tests', () => {
           work_ethic_comments: 'Excellent work ethic',
           comments: 'Overall, a strong performer'
         });
-  
+    
       expect(response.status).toBe(200);
       expect(response.text).toContain('Evaluation Submitted');
       expect(mockDb.query).toHaveBeenCalledWith(
         'INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)',
         [1, 2, 4, 3, 4, 5, expect.any(String)]
       );
-    });
+    }); 
   });
 
 });
