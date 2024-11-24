@@ -35,7 +35,7 @@ app.get("/chat/:groupId", async (req, res) => {
       [groupId]
     );
 
-    res.render("chat.ejs", {
+    res.render("student-chatrooms.ejs", {
       groupId,
       studentId,
       members: membersQuery.rows,

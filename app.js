@@ -533,19 +533,92 @@ app.get("/access-assessment", (req, res) => {
   });
 });
 
+// Replace the existing student-chatrooms route with this:
 app.get("/student-chatrooms", async (req, res) => {
-  const studentId = req.session.userID;
-  const groupQuery = await db.query(
-    "SELECT id_group FROM student WHERE id = $1",
-    [studentId]
-  );
-  const groupId = groupQuery.rows[0].id_group;
-  
-  res.redirect(`student-chatrooms.ejs/${groupId}`);
+  try {
+    const studentId = req.session.userID;
+    
+    // Get the student's group
+    const groupQuery = await db.query(
+      "SELECT s.id_group, g.group_name FROM student s JOIN groups g ON s.id_group = g.id_group WHERE s.id = $1",
+      [studentId]
+    );
+    
+    if (!groupQuery.rows[0]) {
+      return res.status(400).send("You must be assigned to a group to use chat.");
+    }
+    
+    const groupId = groupQuery.rows[0].id_group;
+    const groupName = groupQuery.rows[0].group_name;
+
+    // Get group members
+    const membersQuery = await db.query(
+      `SELECT s.id, s.name 
+       FROM student s 
+       WHERE s.id_group = $1`,
+      [groupId]
+    );
+
+    // Get recent messages
+    const messagesQuery = await db.query(
+      `SELECT m.*, s.name as sender_name 
+       FROM messages m 
+       JOIN student s ON m.sender = s.id 
+       WHERE m.id_group = $1 
+       ORDER BY m.time DESC 
+       LIMIT 50`,
+      [groupId]
+    );
+
+    res.render("student-chatrooms", {
+      title: 'Chatroom',
+      groupId,
+      groupName,
+      studentId,
+      members: membersQuery.rows,
+      messages: messagesQuery.rows.reverse() || [],
+      currentUser: studentId
+    });
+  } catch (err) {
+    console.error("Error loading chat:", err);
+    res.status(500).send("Error loading chat");
+  }
 });
+
 
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
 
+
+// Add this route to handle message sending
+app.post("/send-message", async (req, res) => {
+  try {
+    const { message } = req.body;
+    const senderId = req.session.userID;
+    
+    // Get sender's group
+    const groupQuery = await db.query(
+      "SELECT id_group FROM student WHERE id = $1",
+      [senderId]
+    );
+    const groupId = groupQuery.rows[0].id_group;
+
+    // Save message to database
+    const result = await db.query(
+      `INSERT INTO messages (id_group, sender, content) 
+       VALUES ($1, $2, $3) 
+       RETURNING *`,
+      [groupId, senderId, message]
+    );
+
+    res.json({ success: true, message: "Message sent successfully" });
+  } catch (err) {
+    console.error("Error sending message:", err);
+    res.status(500).json({ success: false, error: "Failed to send message" });
+  }
+});
+
+// For chatbot
+/*
 app.post("/send-message", async (req, res) => {
 
 console.log(req.body.message);
@@ -557,6 +630,7 @@ console.log(req.body.message);
    console.log(result.response.text());
 
 });
+*/
 
 // Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
