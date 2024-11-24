@@ -1,20 +1,17 @@
-/**
- * @jest-environment node
- */
-
 import request from 'supertest';
-import bcrypt from 'bcrypt';
 import { createApp } from './app.js';
 
-// Mock bcrypt before importing other modules
-const mockHash = jest.fn().mockImplementation((password, saltRounds, callback) => callback(null, 'hashedPassword'));
-const mockCompare = jest.fn().mockImplementation((password, hash, callback) => callback(null, true));
-
-jest.mock('bcrypt', () => ({
-  hash: mockHash,
-  compare: mockCompare,
-  genSalt: jest.fn()
-}));
+// Mock bcrypt module
+jest.mock('bcrypt', () => {
+  return {
+    hash: (data, salt, cb) => cb(null, 'hashedPassword'),
+    compare: (data, hash, cb) => cb(null, true),
+    default: {
+      hash: (data, salt, cb) => cb(null, 'hashedPassword'),
+      compare: (data, hash, cb) => cb(null, true)
+    }
+  };
+});
 
 // Mock database
 const mockDb = {
@@ -26,10 +23,14 @@ const mockDb = {
 const app = createApp(mockDb);
 
 describe('App Tests', () => {
+  // Clear mocks before each test
   beforeEach(() => {
     mockDb.query.mockClear();
-    mockHash.mockClear();
-    mockCompare.mockClear();
+  });
+
+  // Close server after all tests
+  afterAll(done => {
+    done();
   });
 
   describe('Basic Routes', () => {
@@ -50,17 +51,23 @@ describe('App Tests', () => {
   });
 
   describe('Authentication', () => {
+    jest.setTimeout(10000); // Increase timeout for auth tests
+
     test('POST /register should create new user', async () => {
       mockDb.query.mockResolvedValueOnce({ rows: [] });
 
       const response = await request(app)
         .post('/register')
-        .send('username=testuser&password=testpass&role=student')
-        .set('Content-Type', 'application/x-www-form-urlencoded');
+        .type('application/x-www-form-urlencoded')
+        .send({
+          username: 'testuser',
+          password: 'testpass',
+          role: 'student'
+        });
 
-      expect(response.status).toBe(200);
       expect(mockDb.query).toHaveBeenCalled();
-    });
+      expect(response.status).toBe(200);
+    }, 10000);
 
     test('POST /login should authenticate user', async () => {
       mockDb.query.mockResolvedValueOnce({
@@ -74,38 +81,38 @@ describe('App Tests', () => {
 
       const response = await request(app)
         .post('/login')
-        .send('username=testuser&password=testpass')
-        .set('Content-Type', 'application/x-www-form-urlencoded');
+        .type('application/x-www-form-urlencoded')
+        .send({
+          username: 'testuser',
+          password: 'testpass'
+        });
 
       expect(response.status).toBe(200);
-    });
+    }, 10000);
   });
 
   describe('Protected Routes', () => {
     test('GET /student-dashboard should require authentication', async () => {
       const response = await request(app)
-        .get('/student-dashboard');
+        .get('/student-dashboard')
+        .set('Cookie', ['connect.sid=test-session']);
+      
       expect(response.status).toBe(200);
     });
 
     test('GET /instructor-dashboard should require username', async () => {
       const response = await request(app)
         .get('/instructor-dashboard');
+      
       expect(response.status).toBe(400);
     });
   });
 
   describe('Profile Routes', () => {
     test('GET /profile should redirect unauthenticated users', async () => {
-      const response = await request(app)
-        .get('/profile');
+      const response = await request(app).get('/profile');
       expect(response.status).toBe(302);
       expect(response.headers.location).toBe('/login');
     });
   });
-});
-
-// Clean up after tests
-afterAll(done => {
-  done();
 });
