@@ -164,14 +164,15 @@ app.get("/create-teams", async (req, res) => {
 // Fetch student profile
 app.get("/profile", async (req, res) => {
   try {
-    const userId = req.session.userID;
+    const userId = req.session.userID; // Check if user is logged in
     console.log("User ID from session:", userId);
 
     if (!userId) {
-      throw new Error("User ID not found in session.");
+      // If no user is logged in, redirect to login page
+      return res.redirect("/login");
     }
 
-    // Check if the user has a profile
+    // Query to check if the user has a profile
     const selectQuery = "SELECT * FROM PROFILE WHERE ID_STUDENT = $1";
     console.log("Executing SELECT query:", selectQuery, [userId]);
     const result = await db.query(selectQuery, [userId]);
@@ -186,7 +187,11 @@ app.get("/profile", async (req, res) => {
     }
   } catch (err) {
     console.error("Error retrieving profile:", err);
-    res.status(500).send("An error occurred while retrieving your profile.");
+    res
+      .status(500)
+      .send(
+        "An error occurred while retrieving your profile. Please try again later."
+      );
   }
 });
 
