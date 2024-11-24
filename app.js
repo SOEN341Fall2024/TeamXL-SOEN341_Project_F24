@@ -533,6 +533,17 @@ app.get("/access-assessment", (req, res) => {
   });
 });
 
+app.get("/student-chatrooms", async (req, res) => {
+  const studentId = req.session.userID;
+  const groupQuery = await db.query(
+    "SELECT id_group FROM student WHERE id = $1",
+    [studentId]
+  );
+  const groupId = groupQuery.rows[0].id_group;
+  
+  res.redirect(`/chat/${groupId}`);
+});
+
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
 
 app.post("/send-message", async (req, res) => {
