@@ -222,7 +222,7 @@ describe('App Tests', () => {
         'INSERT INTO evaluation (id_evaluator, id_evaluatee, cooperation, conceptual_contribution, practical_contribution, work_ethic, comments) VALUES ($1, $2, $3, $4, $5, $6, $7)',
         [1, 2, 4, 3, 4, 5, expect.any(String)]
       );
-    },100000);
+    });
   });
 
 });
