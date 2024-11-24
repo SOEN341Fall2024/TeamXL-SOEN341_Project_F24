@@ -9,6 +9,7 @@ import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
+import db from "db.config.js";
 import { group } from "console";
 import {
   getCooperation,
@@ -29,11 +30,16 @@ import {
 
 dotenv.config();
 
-// Create an instance of an Express application, specify port for
-//the server to listen on, define the number of rounds for bcrypt hashing
-const app = express();
-const port = 3000;
+//Define the number of rounds for bcrypt hashing
 const saltRounds = 10;
+
+// Setup for file uploads (Multer)
+const upload = multer({ dest: "uploads/" }); // Files will be uploaded to the 'uploads' directory
+
+
+export const createApp = (db) => {
+
+const app = express();
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,18 +47,6 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(session({ secret: "key", resave: false, saveUninitialized: true }));
 
-// Setup for file uploads (Multer)
-const upload = multer({ dest: "uploads/" }); // Files will be uploaded to the 'uploads' directory
-
-// Create a new PostgreSQL client for database connection
-const db = new pg.Client({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
-db.connect();
 
 //--------GET REQUESTS TO ROUTE TO ALL WEBPAGES OF THE WEBSITE--------//
 
@@ -906,4 +900,6 @@ app.post("/thank-you", (req, res) => {
   res.render("thank-you.ejs");
 });
 
-export default app;
+}
+
+export default createApp(db);
