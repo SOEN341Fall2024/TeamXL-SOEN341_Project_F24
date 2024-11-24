@@ -141,46 +141,20 @@
 <body>
 
 
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-4">
-                <h3>Chatrooms</h3>
-                <div class="chatroom-list">
-                    <!-- Loop through the chatrooms for the current user -->
-                    <% chatrooms.forEach((chatroom) => { %>
-                        <div class="card mb-2">
-                            <div class="card-body">
-                                <a href="/chatroom/<%= chatroom.ID_GROUP %>">
-                                    <h5 class="card-title"><%= chatroom.GROUP_NAME %></h5>
-                                </a>
-                            </div>
-                        </div>
-                    <% }); %>
+    <div class="chat-container">
+        <div class="messages">
+            <% messages.forEach(function(message) { %>
+                <div class="message">
+                    <p><strong><%= message.sender_name %></strong>: <%= message.CONTENT %></p>
+                    <span><%= message.time %></span>
                 </div>
-            </div>
-            <div class="col-md-8">
-                <h3>Messages</h3>
-                <div class="message-list">
-                    <% if (messages && messages.length > 0) { %>
-                        <% messages.forEach((message) => { %>
-                            <div class="message-box <%= message.SENDER === userId ? 'message-box-you' : 'message-box-others' %>">
-                                <p><strong><%= message.sender_name %>:</strong> <%= message.CONTENT %></p>
-                                <small><%= message.time %></small>
-                            </div>
-                        <% }); %>
-                    <% } else { %>
-                        <p>No messages yet. Be the first to send a message!</p>
-                    <% } %>
-                    </div>
-                <form action="/send-message" method="POST" class="mt-3">
-                    <div class="mb-3">
-                        <label for="message" class="form-label">Your Message</label>
-                        <textarea id="message" name="message" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send</button>
-                </form>
-            </div>
+            <% }) %>
         </div>
+
+        <form action="/send-message" method="POST">
+            <textarea name="message" placeholder="Type your message..." required></textarea>
+            <button type="submit">Send</button>
+        </form>
     </div>
 
 

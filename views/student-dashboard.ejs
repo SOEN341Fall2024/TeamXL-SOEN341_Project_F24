@@ -1,4 +1,4 @@
-<%- include('partials/header', { title: 'Student-dashboard' }) %>
+<%- include('partials/header', { title: 'Student-dashboard'}) %>
 <div>
   <header>
     <div class="px-3 py-2 text-bg-dark border-bottom">
@@ -112,58 +112,38 @@
                 />
               </svg>
               <div class="btn-group">
-                <button
-                  class="btn btn-dark btn-md dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Notifications
-                </button>
+                
                 <div class="pending-evaluations-section">
-              
-                 
-              </div>
-                <ul class="dropdown-menu">
-                  <div class="m-2"><div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary" style="width: 380px;">
-                    <a href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope m-2" viewBox="0 0 16 16">
-                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
-                      </svg>
-                      <span class="fs-5 fw-semibold">Your messages</span>
-                    </a>
-                    <div class="list-group list-group-flush border-bottom scrollarea">
-                      <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
-                        <div class="d-flex w-100 align-items-center justify-content-between">
-                          <strong class="mb-1">List group item heading</strong>
-                          <small class="text-body-secondary">Tues</small>
-                        </div>
-                        <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-                      </a>
-                      <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
-                        <div class="d-flex w-100 align-items-center justify-content-between">
-                          <strong class="mb-1">List group item heading</strong>
-                          <small class="text-body-secondary">Mon</small>
-                        </div>
-                        <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
-                      </a>
-                    </div>
-                  </div></div>
-                  
-                </ul>
-              </div>
+             <!-- Button trigger modal -->
+<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Notification
+</button>
 
-              <!-- Dropdown Menu -->
-              <ul
-                class="dropdown-menu p-2"
-                aria-labelledby="notificationsDropdown"
-              >
-                <!-- Dropdown Items -->
-                <li>
-                  <a class="dropdown-item" href="/private-messages">Private messages</a>
-                </li>
-                <li><a class="dropdown-item" href="/contacts">Contacts</a></li>
-              </ul>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Pending Reviews</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <% if (typeof hasPendingReviews !== 'undefined' && hasPendingReviews) { %>
+          You have not completed the peer assessment for your team members. Please make sure to submit your evaluations.
+        <% } else { %>
+          No pending reviews at the moment.
+        <% } %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
             </li>
             <li>
               <svg

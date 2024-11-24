@@ -52,13 +52,13 @@ const db = new pg.Client({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
 });
-db.connect(); 
+db.connect();
 
 //--------GET REQUESTS TO ROUTE TO ALL WEBPAGES OF THE WEBSITE--------//
 
 // Route for the HOME PAGE, render the home.ejs view
 app.get("/", (req, res) => {
-  res.render("home.ejs"); 
+  res.render("home.ejs");
 });
 
 // Route for the LOGIN PAGE, render the login.ejs view
@@ -69,7 +69,7 @@ app.get("/login", (req, res) => {
 
   // Render the login view, passing in the `ajax` variable
   res.render("login", { ajax: isAjax });
-}); 
+});
 
 // Route for the REGISTER PAGE, render the register.ejs view
 app.get("/register", (req, res) => {
@@ -82,30 +82,49 @@ app.get("/register", (req, res) => {
 });
 
 // Route to handle the Student Dashboard view
-app.get("/student-dashboard", (req, res) => {
+app.get("/student-dashboard", async (req, res) => {
+  const studentID = req.session.userID;
   res.render("student-dashboard");
-  /*const query = `
-      SELECT EVALUATION.ID_EVALUATEE, STUDENT.NAME AS evaluatee_name
-      FROM EVALUATION
-      JOIN STUDENT ON EVALUATION.ID_EVALUATEE = STUDENT.ID
-      WHERE EVALUATION.cooperation IS NULL;  
-  `;
 
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error fetching pending evaluations:", err);
-      return res.status(500).send("Database query error");
-    }
+  // try {
+  //   // Query to get the number of teammates
+  //   const totalTeammatesQuery = await db.query(
+  //     `SELECT COUNT(*) AS total_teammates
+  //      FROM student
+  //      WHERE id_group = (SELECT id_group FROM student WHERE id = $1)
+  //      AND id != $1`,
+  //     [studentID]
+  //   );
+  //   const totalTeammates = totalTeammatesQuery.rows[0]?.total_teammates || 0;
 
-    const pendingEvaluations = results.rows || [];
-    console.log("Pending Evaluations:", pendingEvaluations);
-    res.render("student-dashboard", { pendingEvaluations: pendingEvaluations });
-  });*/
+  //   // Query to get the number of completed reviews
+  //   const completedReviewsQuery = await db.query(
+  //     `SELECT COUNT(*) AS completed_reviews
+  //      FROM evaluation
+  //      WHERE id_evaluator = $1`,
+  //     [studentID]
+  //   );
+  //   const completedReviews =
+  //     completedReviewsQuery.rows[0]?.completed_reviews || 0;
+
+  //   // Check if there are pending evaluations
+  //   const hasPendingReviews = completedReviews < totalTeammates;
+  //   console.log("HasPendingReviews: " + hasPendingReviews);
+
+  //   // Render the dashboard view with the computed data
+  //   res.render("student-dashboard", {
+  //     hasPendingReviews, // Pass the boolean indicating if there are pending reviews
+  //   });
+  // } catch (err) {
+  //   console.error("Error fetching data for student dashboard:", err);
+  //   res.redirect("/"); // Redirect to homepage or an error page in case of failure
+  // }
 });
 
 // Route for the INSTRUCTOR DASHBOARD page
 app.get("/instructor-dashboard", async (req, res) => {
   const instructorUsername = req.query.instructorUsername; // Get instructor username from query params
+  const userType = req.session.userType;
 
   if (!instructorUsername) {
     return res.status(400).send("Instructor username is required."); // Make sure to handle the case where instructorUsername is undefined
@@ -114,6 +133,7 @@ app.get("/instructor-dashboard", async (req, res) => {
   try {
     res.render("instructor-dashboard.ejs", {
       instructorUsername: instructorUsername, // Render the instructor-dashboard view, passing the instructor username
+      userType: userType,
     });
   } catch (error) {
     console.error("Error rendering instructor dashboard:", error);
@@ -123,6 +143,9 @@ app.get("/instructor-dashboard", async (req, res) => {
 
 // Route for the CREATE TEAMS page
 app.get("/create-teams", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
   try {
     const RESULT = await db.query(
       "SELECT * FROM student WHERE id_group is NULL"
@@ -130,24 +153,65 @@ app.get("/create-teams", async (req, res) => {
 
     res.render("create-teams.ejs", {
       StudentArr: RESULT,
+      instructorUsername: instructorUsername,
+      userType: userType,
     });
   } catch (err) {
     console.log(err);
   }
 });
 
-// Route for the VIEW TEAMS page
+// Fetch student profile
+app.get("/profile", async (req, res) => {
+  try {
+    const userId = req.session.userID; // Check if user is logged in
+    console.log("User ID from session:", userId);
 
+    if (!userId) {
+      // If no user is logged in, redirect to login page
+      return res.redirect("/login");
+    }
+
+    // Query to check if the user has a profile
+    const selectQuery = "SELECT * FROM PROFILE WHERE ID_STUDENT = $1";
+    console.log("Executing SELECT query:", selectQuery, [userId]);
+    const result = await db.query(selectQuery, [userId]);
+
+    if (result.rows.length > 0) {
+      const profile = result.rows[0];
+      console.log("Profile found:", profile);
+      return res.render("profile", { profile });
+    } else {
+      console.log("Profile not found, redirecting to profile creation.");
+      return res.render("create-profile", { userId });
+    }
+  } catch (err) {
+    console.error("Error retrieving profile:", err);
+    res
+      .status(500)
+      .send(
+        "An error occurred while retrieving your profile. Please try again later."
+      );
+  }
+});
+
+// Route for the VIEW TEAMS page
 app.get("/view-teams", async (req, res) => {
+  const userType = req.session.userType;
   console.log(req.session.userType);
   if (req.session.userType == "INSTRUCTOR") {
+    const instructorUsername = req.query.instructorUsername;
     try {
+      console.log("this is the " + instructorUsername);
+
       const DATA = await db.query(
         "SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY student.id_group ASC"
       );
 
       res.render("view-teams-instructor.ejs", {
         Teams: DATA,
+        instructorUsername: instructorUsername,
+        userType: userType,
       });
     } catch (err) {
       console.log(err);
@@ -184,22 +248,7 @@ app.get("/edit-team", (req, res) => {
   res.render("edit-team.ejs");
 });
 
-// Route for the PROFILE page
-app.get("/profile", (req, res) => {
-  const instructorUsername = req.query.instructorUsername;
-  const userType = req.session.userType;
-
-  if (userType) {
-    res.render("profile.ejs", {
-      userType,
-      instructorUsername,
-    });
-  } else {
-    res.redirect("/login");
-  }
-});
-
-async function getIncompleteAssessments(userId) {
+async function getIncompleteAssessments() {
   const query = `
     SELECT s2.ID AS evaluatee_id, s2.NAME AS evaluatee_name
     FROM STUDENT s2
@@ -325,7 +374,11 @@ app.get("/assess-notification", async (req, res) => {
     const incompleteAssessments = await getIncompleteAssessments(userId);
 
     // Log for debugging
-    console.log("Incomplete Assessments for user:", userId, incompleteAssessments);
+    console.log(
+      "Incomplete Assessments for user:",
+      userId,
+      incompleteAssessments
+    );
 
     res.render("assess-notification", { incompleteAssessments });
   } catch (error) {
@@ -365,6 +418,9 @@ app.get("/edit-evaluation", async (req, res) => {
 });
 
 app.get("/view-reviews-summary", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
   const result1 = await db.query(
     "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
@@ -383,10 +439,15 @@ app.get("/view-reviews-summary", async (req, res) => {
     getAverage,
     student_info,
     groups,
+    instructorUsername: instructorUsername,
+    userType: userType,
   });
 });
 
 app.get("/view-reviews-detailed", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
   const result1 = await db.query(
     "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
@@ -407,10 +468,15 @@ app.get("/view-reviews-detailed", async (req, res) => {
     student_info,
     groups,
     sorted_students,
+    instructorUsername: instructorUsername,
+    userType: userType,
   });
 });
 
 app.get("/view-review-completion", async (req, res) => {
+  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
   const result1 = await db.query(
     "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
   );
@@ -430,6 +496,8 @@ app.get("/view-review-completion", async (req, res) => {
     student_info,
     groups,
     sorted_students,
+    instructorUsername: instructorUsername,
+    userType: userType,
   });
 });
 
@@ -454,7 +522,12 @@ app.get("/view-review-completion", (req, res) => {
 
 // Route for access assessment page
 app.get("/access-assessment", (req, res) => {
-  res.render("access-assessment.ejs");
+  const instructorUsername = req.query.instructorUsername;
+  const userType = req.session.userType;
+  res.render("access-assessment.ejs", {
+    instructorUsername: instructorUsername,
+    userType: userType,
+  });
 });
 
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
@@ -551,10 +624,64 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Route to handle CREATE TEAMS form data
+// Update student profile
+app.post("/profile", async (req, res) => {
+  const { firstName, lastName, email, address, address2, province, zip } =
+    req.body;
+
+  try {
+    const userId = req.session.userID;
+    if (!userId) throw new Error("User ID not found in session.");
+
+    const selectQuery = "SELECT * FROM PROFILE WHERE ID_STUDENT = $1";
+    const result = await db.query(selectQuery, [userId]);
+
+    if (result.rows.length > 0) {
+      const updateQuery = `
+        UPDATE PROFILE
+        SET FIRST_NAME = $1, LAST_NAME = $2, EMAIL = $3, ADDRESS = $4, ADDRESS2 = $5, PROVINCE = $6, ZIP = $7
+        WHERE ID_STUDENT = $8
+      `;
+      console.log("Executing UPDATE query:", updateQuery);
+      await db.query(updateQuery, [
+        firstName,
+        lastName,
+        email,
+        address,
+        address2,
+        province,
+        zip,
+        userId,
+      ]);
+    } else {
+      const insertQuery = `
+        INSERT INTO PROFILE (ID_STUDENT, FIRST_NAME, LAST_NAME, EMAIL, ADDRESS, ADDRESS2, PROVINCE, ZIP)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `;
+      console.log("Executing INSERT query:", insertQuery);
+      await db.query(insertQuery, [
+        userId,
+        firstName,
+        lastName,
+        email,
+        address,
+        address2,
+        province,
+        zip,
+      ]);
+    }
+
+    res.redirect("/profile");
+  } catch (err) {
+    console.error("Error saving profile:", err);
+    res.status(500).send("An error occurred while saving your profile.");
+  }
+});
+
 app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
+
   try {
     if (IDs != null && TEAMNAME) {
       await db.query("INSERT INTO groups (group_name) VALUES ($1)", [TEAMNAME]);
