@@ -5,10 +5,6 @@ import { createServer } from "http";
 
 const port = 3000;
 
-// Start the server for production/development use
-const server = app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
 
 // Modify your existing server setup
 const server = createServer(app);
@@ -93,4 +89,9 @@ io.on("connection", (socket) => {
       socket.emit("error", "Failed to send message");
     }
   });
+});
+
+// Update your server startup
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
