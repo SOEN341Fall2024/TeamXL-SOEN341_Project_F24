@@ -25,6 +25,10 @@ import {
   getComments,
   getCommentsObj,
   stringprint,
+  getCooperationAvg,
+  getConceptualAvg,
+  getPracticalAvg,
+  getWorkEthicAvg,
 } from "./helper.js";
 
 dotenv.config();
@@ -437,6 +441,10 @@ app.get("/view-reviews-summary", async (req, res) => {
     getWorkEthic,
     getPeers,
     getAverage,
+    getCooperationAvg,
+    getConceptualAvg,
+    getPracticalAvg,
+    getWorkEthicAvg,
     student_info,
     groups,
     instructorUsername: instructorUsername,
@@ -465,6 +473,10 @@ app.get("/view-reviews-detailed", async (req, res) => {
     getTeammateInfo,
     getCommentMadeByStudent,
     getGradesGivenByStudent,
+    getCooperationAvg,
+    getConceptualAvg,
+    getPracticalAvg,
+    getWorkEthicAvg,
     student_info,
     groups,
     sorted_students,
@@ -513,11 +525,6 @@ app.use("/uploads", express.static("uploads"));
 // Route for the STUDENT CHATROOMS page
 app.get("/student-chatrooms", (req, res) => {
   res.render("student-chatrooms.ejs");
-});
-
-// Route for the View Review Completion page
-app.get("/view-review-completion", (req, res) => {
-  res.render("view-review-completion.ejs");
 });
 
 // Route for access assessment page
