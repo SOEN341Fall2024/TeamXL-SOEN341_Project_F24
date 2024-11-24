@@ -541,7 +541,7 @@ app.get("/student-chatrooms", async (req, res) => {
   );
   const groupId = groupQuery.rows[0].id_group;
   
-  res.redirect(`/chat/${groupId}`);
+  res.redirect(`student-chatrooms.ejs/${groupId}`);
 });
 
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
