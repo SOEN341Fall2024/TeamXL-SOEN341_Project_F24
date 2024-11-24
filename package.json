@@ -30,5 +30,11 @@
   "scripts": {
     "start": "node server.js",
     "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "testEnvironment": "node"
   }
 }
