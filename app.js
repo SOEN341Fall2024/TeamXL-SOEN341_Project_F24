@@ -9,6 +9,7 @@ import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { group } from "console";
 import { Parser } from "json2csv"; 
 import {
@@ -41,6 +42,8 @@ dotenv.config();
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+
+app.use(express.json()); 
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -548,10 +551,6 @@ app.get("/logout", (req, res) => {
 
 app.use("/uploads", express.static("uploads"));
 
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
 
 // Route for access assessment page
 app.get("/access-assessment", (req, res) => {
@@ -563,167 +562,128 @@ app.get("/access-assessment", (req, res) => {
   });
 });
 
-//Route for export reviews as CSV
-app.get("/export-reviews-csv", async (req, res) => {
+// Server-side route
+app.get("/student-chatrooms", async (req, res) => {
   try {
-    // Fetch the detailed review data from your database
-    const result = await db.query(`
-      SELECT 
-        e.id_evaluatee AS evaluatee_id,
-        s.name AS evaluatee_name,
-        e.cooperation,
-        e.conceptual_contribution AS conceptual,
-        e.practical_contribution AS practical,
-        e.work_ethic,
-        e.comments
-      FROM 
-        evaluation e
-      JOIN 
-        student s
-      ON 
-        e.id_evaluatee = s.id
-      ORDER BY 
-        s.id_group, e.id_evaluatee
-    `);
+    const studentId = req.session.userID;
 
-    const reviews = result.rows;
+    const nameQuery = await db.query(
+      "SELECT NAME FROM student WHERE id = $1 ",
+      [studentId]
+    );
+   
+    const student_name = nameQuery.rows[0].name.toString()
 
-    if (!reviews || reviews.length === 0) {
-      return res.status(404).send("No review data available to export.");
+    // Get the student's group
+    const groupQuery = await db.query(
+      "SELECT s.id_group, g.group_name FROM student s JOIN groups g ON s.id_group = g.id_group WHERE s.id = $1",
+      [studentId]
+    );
+   
+    if (!groupQuery.rows[0]) {
+      return res.status(400).send("You must be assigned to a group to use chat.");
+    }
+   
+    const groupId = groupQuery.rows[0].id_group;
+    const groupName = groupQuery.rows[0].group_name;
+   
+    // Get group members
+    const membersQuery = await db.query(
+      `SELECT s.id, s.name
+       FROM student s
+       WHERE s.id_group = $1`,
+      [groupId]
+    );
+   
+    let messagesQuery = null;
+    try {
+      messagesQuery = await db.query(
+        `SELECT m.*, s.name as sender_name 
+         FROM messages m 
+         JOIN student s ON m.sender = s.id 
+         WHERE m.id_group = $1 
+         ORDER BY m.time DESC 
+         LIMIT 50`,
+        [groupId]
+      );
+    } catch (error) {
+      // Silently ignore the error and proceed with `messagesQuery` as null or an empty array
+      messagesQuery = [];
     }
 
-    // Process comments to separate each type
-    const processedReviews = reviews.map(review => {
-      const commentParts = {
-        cooperation_comment: "",
-        conceptual_comment: "",
-        practical_comment: "",
-        work_ethic_comment: "",
-        additional_comment: "",
-      };
+    // Initialize messages as an empty array if null
+    const messages = messagesQuery.rows ? messagesQuery.rows.reverse() : [];
 
-      // Split comments by type if they follow a structured format (e.g., labeled sections)
-      const commentLines = review.comments.split("<br/><br/>").map(line => line.trim());
-      commentLines.forEach(line => {
-        if (line.startsWith("Cooperation Contribution Comment:")) {
-          commentParts.cooperation_comment = line.replace("Cooperation Contribution Comment:", "").trim();
-        } else if (line.startsWith("Conceptual Contribution Comment:")) {
-          commentParts.conceptual_comment = line.replace("Conceptual Contribution Comment:", "").trim();
-        } else if (line.startsWith("Practical Contribution Comment:")) {
-          commentParts.practical_comment = line.replace("Practical Contribution Comment:", "").trim();
-        } else if (line.startsWith("Work Ethic Comment:")) {
-          commentParts.work_ethic_comment = line.replace("Work Ethic Comment:", "").trim();
-        } else if (line.startsWith("Additional Comment:")) {
-          commentParts.additional_comment = line.replace("Additional Comment:", "").trim();
-        }
-      });
-
-      return {
-        ...review,
-        ...commentParts, // Add separated comments to the review object
-      };
-    });
-
-    // Define the fields/columns for the CSV
-    const fields = [
-      { label: "Evaluatee ID", value: "evaluatee_id" },
-      { label: "Evaluatee Name", value: "evaluatee_name" },
-      { label: "Cooperation", value: "cooperation" },
-      { label: "Conceptual Contribution", value: "conceptual" },
-      { label: "Practical Contribution", value: "practical" },
-      { label: "Work Ethic", value: "work_ethic" },
-      { label: "Cooperation Comment", value: "cooperation_comment" },
-      { label: "Conceptual Comment", value: "conceptual_comment" },
-      { label: "Practical Comment", value: "practical_comment" },
-      { label: "Work Ethic Comment", value: "work_ethic_comment" },
-      { label: "Additional Comment", value: "additional_comment" },
-    ];
-
-    // Create the CSV using json2csv
-    const json2csv = new Parser({ fields });
-    const csv = json2csv.parse(processedReviews);
-
-    // Set headers and send the CSV file
-    res.header("Content-Type", "text/csv");
-    res.attachment("detailed_reviews.csv");
-    res.send(csv);
+  
+   
+    res.render("./student-chatrooms.ejs", {
+      me: student_name,
+      messages: messages,
+      groupName: groupName,
+      members: membersQuery.rows,
+      title: 'Chatroom',
+      studentId: studentId
+  });
   } catch (err) {
-    console.error("Error generating CSV export:", err);
-    res.status(500).send("An error occurred while exporting reviews as CSV.");
+    console.error("Error loading chat:", err);
+    res.status(500).send("Error loading chat");
   }
 });
 
-// Define the fields/columns for the summary CSV page
-app.get("/export-summary-csv", async (req, res) => {
-  try {
-    // SQL Query to fetch required data
-    const result = await db.query(`
-      SELECT 
-        s.id AS student_id,
-        s.name AS student_name,
-        g.group_name AS team_name,
-        ROUND(MAX(e.cooperation), 2) AS cooperation,
-        ROUND(MAX(e.conceptual_contribution), 2) AS conceptual_contribution,
-        ROUND(MAX(e.practical_contribution), 2) AS practical_contribution,
-        ROUND(MAX(e.work_ethic), 2) AS work_ethic,
-        ROUND(AVG((e.cooperation + e.conceptual_contribution + e.practical_contribution + e.work_ethic) / 4.0), 2) AS average
-      FROM 
-        student s
-      LEFT JOIN 
-        evaluation e ON s.id = e.id_evaluatee
-      LEFT JOIN 
-        groups g ON s.id_group = g.id_group
-      GROUP BY 
-        s.id, g.group_name
-      ORDER BY 
-        g.group_name, s.id;
-    `);
 
-    const rows = result.rows;
-
-    if (!rows || rows.length === 0) {
-      return res.status(404).send("No data available to export.");
-    }
-
-    // Replace null or undefined values with 0
-    const processedRows = rows.map(row => ({
-      student_id: row.student_id,
-      student_name: row.student_name || "N/A", // Default for missing names
-      team_name: row.team_name || "N/A", // Default for missing teams
-      cooperation: row.cooperation !== null ? row.cooperation : 0,
-      conceptual_contribution: row.conceptual_contribution !== null ? row.conceptual_contribution : 0,
-      practical_contribution: row.practical_contribution !== null ? row.practical_contribution : 0,
-      work_ethic: row.work_ethic !== null ? row.work_ethic : 0,
-      average: row.average !== null ? row.average : 0,
-    }));
-
-    // Define CSV fields
-    const fields = [
-      { label: "Student ID", value: "student_id" },
-      { label: "Name", value: "student_name" },
-      { label: "Team", value: "team_name" },
-      { label: "Cooperation", value: "cooperation" },
-      { label: "Conceptual Contribution", value: "conceptual_contribution" },
-      { label: "Practical Contribution", value: "practical_contribution" },
-      { label: "Work Ethic", value: "work_ethic" },
-      { label: "Average", value: "average" },
-    ];
-
-    // Generate CSV
-    const json2csv = new Parser({ fields });
-    const csv = json2csv.parse(processedRows);
-
-    // Send CSV file
-    res.header("Content-Type", "text/csv");
-    res.attachment("reviews_summary.csv");
-    res.send(csv);
-  } catch (err) {
-    console.error("Error generating CSV export:", err);
-    res.status(500).send("An error occurred while exporting the summary as CSV.");
-  }
-});
 
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
+
+
+// Add this route to handle message sending
+app.post("/send-message", async (req, res) => {
+  try {
+
+    const { message } = req.body;
+    const senderId = req.session.userID;
+    const messageOneObject = message.toString();
+    
+
+
+    const groupQuery = await db.query(
+      "SELECT id_group FROM student WHERE id = $1",
+      [senderId]
+    );
+    const groupId = groupQuery.rows[0].id_group;
+
+    // Save message to database
+    const result = await db.query(
+      `INSERT INTO messages (id_group, sender, content) 
+       VALUES ($1, $2, $3) 
+       RETURNING *`,
+      [groupId, senderId, message]
+    );
+
+    if(messageOneObject.startsWith("@chat") ){
+
+      const aiPrompt = message.substring(5).trim();
+
+      console.log(aiPrompt);
+      const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+      const result = await model.generateContent(aiPrompt);
+      console.log(result.response.text());
+
+      await db.query(
+        `INSERT INTO messages (id_group, sender, content) 
+         VALUES ($1, $2, $3) 
+         RETURNING *`,
+        [groupId, senderId, "Chat: " + result.response.text()]
+      );
+    }
+
+
+  } catch (err) {
+    console.error("Error sending message:", err);
+  }
+});
+
 
 // Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
@@ -1003,6 +963,7 @@ app.post("/edit-teams", async (req, res) => {
       IDsToRemove = [IDsToRemove];
     }
     for(var i = 0; i < IDsToRemove.length; i++){
+      await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 OR id_evaluatee = $1", [IDsToRemove[i]]);
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         null,
         IDsToRemove[i],

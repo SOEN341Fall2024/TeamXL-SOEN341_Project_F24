@@ -2,71 +2,68 @@
 
 <div class="container my-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-lg-10 col-md-12">
       <!-- Profile Card -->
       <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary text-white text-center">
-          <h4 class="mb-0">Profile</h4>
+        <!-- Header -->
+        <div class="card-header bg-gradient bg-primary text-white text-center py-4">
+          <h3 class="mb-0">Your Profile</h3>
+          <p class="mb-0 fs-6">View and manage your account details</p>
         </div>
-        <div class="card-body">
-          <!-- Profile Info -->
+
+        <!-- Body -->
+        <div class="card-body py-5">
           <div class="row g-4">
-
-            <!-- First Name -->
+            <!-- Name -->
             <div class="col-md-6">
-              <label class="form-label text-muted">First Name</label>
-              <p class="fw-bold fs-5"><%= profile?.first_name || 'N/A' %></p>
-            </div>
-
-            <!-- Last Name -->
-            <div class="col-md-6">
-              <label class="form-label text-muted">Last Name</label>
-              <p class="fw-bold fs-5"><%= profile?.last_name || 'N/A' %></p>
+              <label class="form-label text-muted">Name</label>
+              <p class="fw-bold fs-5 text-dark">
+                <%= profile?.first_name || 'N/A' %> <%= profile?.last_name || '' %>
+              </p>
             </div>
 
             <!-- Email -->
-            <div class="col-12">
+            <div class="col-md-6">
               <label class="form-label text-muted">Email</label>
-              <p class="fw-bold fs-5"><%= profile?.email || 'N/A' %></p>
+              <p class="fw-bold fs-5 text-dark"><%= profile?.email || 'N/A' %></p>
             </div>
 
             <!-- Address -->
-            <div class="col-12">
+            <div class="col-md-6">
               <label class="form-label text-muted">Address</label>
-              <p class="fw-bold fs-5"><%= profile?.address || 'N/A' %></p>
+              <p class="fw-bold fs-5 text-dark"><%= profile?.address || 'N/A' %></p>
             </div>
 
             <!-- Address 2 -->
-            <div class="col-12">
+            <div class="col-md-6">
               <label class="form-label text-muted">Address 2</label>
-              <p class="fw-bold fs-5"><%= profile?.address2 || 'N/A' %></p>
+              <p class="fw-bold fs-5 text-dark"><%= profile?.address2 || 'N/A' %></p>
             </div>
 
             <!-- Country -->
-            <div class="col-md-5">
+            <div class="col-md-6">
               <label class="form-label text-muted">Country</label>
-              <p class="fw-bold fs-5">Canada</p>
+              <p class="fw-bold fs-5 text-dark">Canada</p>
             </div>
 
             <!-- Province -->
-            <div class="col-md-3">
+            <div class="col-md-6">
               <label class="form-label text-muted">Province</label>
-              <p class="fw-bold fs-5"><%= profile?.province || 'N/A' %></p>
+              <p class="fw-bold fs-5 text-dark"><%= profile?.province || 'N/A' %></p>
             </div>
 
-            <!-- Zip Code -->
-            <div class="col-md-4">
-              <label class="form-label text-muted">Zip</label>
-              <p class="fw-bold fs-5"><%= profile?.zip || 'N/A' %></p>
+            <!-- Zip -->
+            <div class="col-md-6">
+              <label class="form-label text-muted">Zip Code</label>
+              <p class="fw-bold fs-5 text-dark"><%= profile?.zip || 'N/A' %></p>
             </div>
-
           </div>
         </div>
 
         <!-- Footer -->
-        <div class="card-footer text-center bg-light">
-          <button class="btn btn-outline-primary" onclick="location.href='/edit-profile'">
-            Edit Profile
+        <div class="card-footer bg-light text-center py-4">
+          <button class="btn btn-primary btn-lg shadow-sm" onclick="location.href='/edit-profile'">
+            Edit Profile <i class="bi bi-pencil ms-2"></i>
           </button>
         </div>
       </div>
