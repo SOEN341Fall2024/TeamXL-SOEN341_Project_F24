@@ -563,6 +563,7 @@ app.get("/access-assessment", (req, res) => {
   });
 });
 
+//Route for export reviews as CSV
 app.get("/export-reviews-csv", async (req, res) => {
   try {
     // Fetch the detailed review data from your database
@@ -627,24 +628,24 @@ app.get("/export-reviews-csv", async (req, res) => {
     const fields = [
       { label: "Evaluatee ID", value: "evaluatee_id" },
       { label: "Evaluatee Name", value: "evaluatee_name" },
-      { label: "Cooperation Score (%)", value: row => `${row.cooperation}%` },
-      { label: "Conceptual Contribution (%)", value: row => `${row.conceptual}%` },
-      { label: "Practical Contribution (%)", value: row => `${row.practical}%` },
-      { label: "Work Ethic (%)", value: row => `${row.work_ethic}%` },
+      { label: "Cooperation", value: "cooperation" },
+      { label: "Conceptual Contribution", value: "conceptual" },
+      { label: "Practical Contribution", value: "practical" },
+      { label: "Work Ethic", value: "work_ethic" },
       { label: "Cooperation Comment", value: "cooperation_comment" },
       { label: "Conceptual Comment", value: "conceptual_comment" },
       { label: "Practical Comment", value: "practical_comment" },
       { label: "Work Ethic Comment", value: "work_ethic_comment" },
-      { label: "Additional Remarks", value: "additional_comment" },
+      { label: "Additional Comment", value: "additional_comment" },
     ];
 
-    // Use json2csv to generate the CSV
+    // Create the CSV using json2csv
     const json2csv = new Parser({ fields });
     const csv = json2csv.parse(processedReviews);
 
     // Set headers and send the CSV file
     res.header("Content-Type", "text/csv");
-    res.attachment("Detailed_Reviews.csv");
+    res.attachment("detailed_reviews.csv");
     res.send(csv);
   } catch (err) {
     console.error("Error generating CSV export:", err);
@@ -652,7 +653,74 @@ app.get("/export-reviews-csv", async (req, res) => {
   }
 });
 
+app.get("/export-summary-csv", async (req, res) => {
+  try {
+    // SQL Query to fetch required data
+    const result = await db.query(`
+      SELECT 
+        s.id AS student_id,
+        s.name AS student_name,
+        g.group_name AS team_name,
+        ROUND(MAX(e.cooperation), 2) AS cooperation,
+        ROUND(MAX(e.conceptual_contribution), 2) AS conceptual_contribution,
+        ROUND(MAX(e.practical_contribution), 2) AS practical_contribution,
+        ROUND(MAX(e.work_ethic), 2) AS work_ethic,
+        ROUND(AVG((e.cooperation + e.conceptual_contribution + e.practical_contribution + e.work_ethic) / 4.0), 2) AS average
+      FROM 
+        student s
+      LEFT JOIN 
+        evaluation e ON s.id = e.id_evaluatee
+      LEFT JOIN 
+        groups g ON s.id_group = g.id_group
+      GROUP BY 
+        s.id, g.group_name
+      ORDER BY 
+        g.group_name, s.id;
+    `);
 
+    const rows = result.rows;
+
+    if (!rows || rows.length === 0) {
+      return res.status(404).send("No data available to export.");
+    }
+
+    // Replace null or undefined values with 0
+    const processedRows = rows.map(row => ({
+      student_id: row.student_id,
+      student_name: row.student_name || "N/A", // Default for missing names
+      team_name: row.team_name || "N/A", // Default for missing teams
+      cooperation: row.cooperation !== null ? row.cooperation : 0,
+      conceptual_contribution: row.conceptual_contribution !== null ? row.conceptual_contribution : 0,
+      practical_contribution: row.practical_contribution !== null ? row.practical_contribution : 0,
+      work_ethic: row.work_ethic !== null ? row.work_ethic : 0,
+      average: row.average !== null ? row.average : 0,
+    }));
+
+    // Define CSV fields
+    const fields = [
+      { label: "Student ID", value: "student_id" },
+      { label: "Name", value: "student_name" },
+      { label: "Team", value: "team_name" },
+      { label: "Cooperation", value: "cooperation" },
+      { label: "Conceptual Contribution", value: "conceptual_contribution" },
+      { label: "Practical Contribution", value: "practical_contribution" },
+      { label: "Work Ethic", value: "work_ethic" },
+      { label: "Average", value: "average" },
+    ];
+
+    // Generate CSV
+    const json2csv = new Parser({ fields });
+    const csv = json2csv.parse(processedRows);
+
+    // Send CSV file
+    res.header("Content-Type", "text/csv");
+    res.attachment("reviews_summary.csv");
+    res.send(csv);
+  } catch (err) {
+    console.error("Error generating CSV export:", err);
+    res.status(500).send("An error occurred while exporting the summary as CSV.");
+  }
+});
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
 
 // Route to handle user REGISTRATION
