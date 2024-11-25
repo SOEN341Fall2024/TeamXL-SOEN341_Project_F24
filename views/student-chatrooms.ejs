@@ -1,7 +1,6 @@
-<%- include('partials/student-header', { title: 'Chatroom' , messages  }) %>
-   
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Chatroom</title>
     <!-- Include Bootstrap CSS -->
@@ -10,13 +9,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         /* General page styling */
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
             padding: 0;
-            font-family: 'YourExistingFont', sans-serif; /* Use the same font as Student Dashboard */
+            font-family: 'YourExistingFont', sans-serif;
+            /* Use the same font as Student Dashboard */
             background-color: #f8f9fa;
         }
+
         .chat-container {
             display: flex;
             height: 100vh;
@@ -25,12 +27,14 @@
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .user-list {
             width: 250px;
             background-color: #f7f7f7;
             border-right: 1px solid #ddd;
             overflow-y: auto;
         }
+
         .user-list h5 {
             background-color: #000000;
             color: white;
@@ -40,6 +44,7 @@
             font-size: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .user {
             display: flex;
             align-items: center;
@@ -48,31 +53,38 @@
             border-radius: 5px;
             transition: background-color 0.2s;
         }
+
         .user:hover {
             background-color: #e9ecef;
             cursor: pointer;
         }
+
         .user-icon {
             font-size: 1.5rem;
             margin-right: 10px;
         }
+
         .user-status {
             height: 10px;
             width: 10px;
             border-radius: 50%;
             margin-left: auto;
         }
+
         .online {
             background-color: #007bff;
         }
+
         .offline {
             background-color: #6c757d;
         }
+
         .chat-section {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
+
         .chat-header {
             background-color: #000000;
             color: white;
@@ -82,12 +94,14 @@
             font-size: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
             background-color: #f8f9fa;
         }
+
         .chat-bubble {
             display: inline-block;
             max-width: 70%;
@@ -99,24 +113,28 @@
             word-wrap: break-word;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+
         .chat-bubble.user {
             background-color: #007bff;
             color: white;
             align-self: flex-end;
             border-radius: 20px 20px 0 20px;
         }
+
         .chat-bubble.other {
-            background-color: #ffffffba;
+            background-color: #ce1a1aba;
             border: 1px solid #ddd;
             align-self: flex-start;
             border-radius: 20px 20px 20px 0;
         }
+
         .chat-input {
             display: flex;
             padding: 15px;
             border-top: 1px solid #ddd;
             background-color: #f0f0f0;
         }
+
         .chat-input input {
             flex: 1;
             padding: 10px;
@@ -125,6 +143,7 @@
             outline: none;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+
         .chat-input button {
             margin-left: 10px;
             background-color: #007bff;
@@ -135,123 +154,145 @@
             transition: background-color 0.3s;
             font-weight: bold;
         }
+
         .chat-input button:hover {
             background-color: #0056b3;
         }
-    </style>    
+    </style>
 </head>
+
 <body>
 
 
     <div class="chat-container">
-        <div class="messages">
-            <% messages.forEach(function(message) { %>
-                <div class="message">
-                    <p><strong><%= message.sender_name %></strong>: <%= message.CONTENT %></p>
-                    <span><%= message.time %></span>
-                </div>
-            <% }) %>
-        </div>
-
-        <form action="/send-message" method="POST">
-            <textarea name="message" placeholder="Type your message..." required></textarea>
-            <button type="submit">Send</button>
-        </form>
-    </div>
-
-
-
-
-
-    <div class="chat-container">
-        <!-- Sidebar with User List -->
         <div class="user-list" id="userList">
-            <h5>Team A</h5>
-            <div class="user" data-status="online">
-                <i class="bi bi-person-circle user-icon"></i>
-                <span>Kevin</span>
-                <span class="user-status online"></span>
-            </div>
-            <div class="user" data-status="offline">
-                <i class="bi bi-person-circle user-icon"></i>
-                <span>Aditi</span>
-                <span class="user-status offline"></span>
-            </div>
-            <div class="user" data-status="online">
-                <i class="bi bi-person-circle user-icon"></i>
-                <span>Jonathan</span>
-                <span class="user-status online"></span>
-            </div>
-            <!-- Add more users as needed -->
+            <h5>
+                <%= groupName %>
+            </h5>
+
+            <% members.forEach(function(member) { %>
+                <div class="user" data-status="online">
+                    <i class="bi bi-person-circle user-icon"></i>
+                    <span>
+                        <%= member.name %>
+                    </span>
+                    <span class="user-status online"></span>
+                </div>
+
+                <% }); %>
+
         </div>
 
-        <!-- Chat Section -->
+
         <div class="chat-section">
-            <!-- Header -->
             <div class="chat-header">
                 Chatroom
             </div>
-            <!-- Chat Messages -->
             <div class="chat-messages d-flex flex-column">
-                <div class="chat-bubble other">
-                    <strong>Aditi:</strong> Hello everyone!
-                </div>
-                <div class="chat-bubble user">
-                    <strong>You:</strong> Hi there!
-                </div>
+                <% if (messages && messages.length> 0) { %>
+                    <% messages.forEach(function(message) { %>
+                        <div class="chat-bubble <%= message.sender === studentId ? 'user' : 'other' %>">
+                            <strong>
+                                <%= message.sender_name %>:
+                            </strong>
+                            <%= message.content %>
+                        </div>
+                        <% }); %>
+                            <% } else { %>
+                                <p class="no-messages">No messages yet. Start the conversation!</p>
+                                <% } %>
             </div>
+
+
             <!-- Input Area -->
             <div class="chat-input">
-                <input type="text" id="message" placeholder="Type a message...">
+                <input type="text" id="message" placeholder="Type a message..." required>
                 <button id="sendButton">Send</button>
             </div>
         </div>
     </div>
 
-    
 
     <!-- Include Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        // JavaScript to sort users by online status
-        window.onload = function() {
-            const userList = document.getElementById('userList');
-            const users = Array.from(userList.getElementsByClassName('user'));
 
-            // Sort users: online first, then offline
-            users.sort((a, b) => {
-                const statusA = a.getAttribute('data-status') === 'online' ? 1 : 0;
-                const statusB = b.getAttribute('data-status') === 'online' ? 1 : 0;
-                return statusB - statusA;
+        let refreshInterval;
+
+        // Function to refresh the page
+        function refreshPage() {
+            location.reload();
+        }
+
+        // Function to start auto-refresh
+        function startAutoRefresh() {
+            if (!refreshInterval) {
+                refreshInterval = setInterval(refreshPage, 1000);
+                console.log('Auto-refresh started');
+            }
+        }
+
+        // Function to stop auto-refresh
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+                console.log('Auto-refresh stopped');
+            }
+        }
+
+        // Function to check input and manage refresh
+        function checkInput() {
+            const messageInput = document.getElementById('message');
+            console.log(messageInput.value.trim());
+            if (messageInput.value.trim() === '') {
+                startAutoRefresh();
+            } else {
+                stopAutoRefresh();
+            }
+        }
+
+        // Set up event listeners when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            const messageInput = document.getElementById('message');
+            const sendButton = document.getElementById('sendButton');
+
+            // Start auto-refresh initially if input is empty
+            checkInput();
+
+            // Monitor input changes
+            messageInput.addEventListener('input', checkInput);
+
+            // Handle send button click
+            sendButton.addEventListener('click', async () => {
+                const message = messageInput.value.trim();
+                if (message) {
+                    try {
+                        const response = await fetch('/send-message', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ message }),
+                        });
+                        const result = await response.json();
+                        console.log('Message sent:', result);
+                    } catch (error) {
+                        console.error('Error sending message:', error);
+                    }
+                }
+
+                // Clear input and restart auto-refresh
+                messageInput.value = '';
+                startAutoRefresh();
+                refreshPage(); // Immediate refresh after sending
             });
+        });
 
-            // Append sorted users back to the user list
-            users.forEach(user => userList.appendChild(user));
-        };
-
-        document.getElementById('sendButton').addEventListener('click', async () => {
-    const message = document.getElementById('message').value;
-    
-    if (message) {
-      console.log("Sending message:", message);  // Check the message before sending
-
-      const response = await fetch('/send-message', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message }),  // Send message as JSON
-      });
-
-      const result = await response.json(); // Assuming server returns JSON
-      console.log(result);  // Handle the response
-    } else {
-      console.log("No message to send.");
-    }
-  });
 
     </script>
 </body>
+
 </html>

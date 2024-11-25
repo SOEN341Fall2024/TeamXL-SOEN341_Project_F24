@@ -513,11 +513,6 @@ app.get("/logout", (req, res) => {
 
 app.use("/uploads", express.static("uploads"));
 
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
-
 // Route for the View Review Completion page
 app.get("/view-review-completion", (req, res) => {
   res.render("view-review-completion.ejs");
@@ -533,57 +528,74 @@ app.get("/access-assessment", (req, res) => {
   });
 });
 
-// Replace the existing student-chatrooms route with this:
+// Server-side route
 app.get("/student-chatrooms", async (req, res) => {
   try {
     const studentId = req.session.userID;
-    
+
+    const nameQuery = await db.query(
+      "SELECT NAME FROM student WHERE id = $1 ",
+      [studentId]
+    );
+   
+    const student_name = nameQuery.rows[0].name.toString()
+
     // Get the student's group
     const groupQuery = await db.query(
       "SELECT s.id_group, g.group_name FROM student s JOIN groups g ON s.id_group = g.id_group WHERE s.id = $1",
       [studentId]
     );
-    
+   
     if (!groupQuery.rows[0]) {
       return res.status(400).send("You must be assigned to a group to use chat.");
     }
-    
+   
     const groupId = groupQuery.rows[0].id_group;
     const groupName = groupQuery.rows[0].group_name;
-
+   
     // Get group members
     const membersQuery = await db.query(
-      `SELECT s.id, s.name 
-       FROM student s 
+      `SELECT s.id, s.name
+       FROM student s
        WHERE s.id_group = $1`,
       [groupId]
     );
+   
+    let messagesQuery = null;
+    try {
+      messagesQuery = await db.query(
+        `SELECT m.*, s.name as sender_name 
+         FROM messages m 
+         JOIN student s ON m.sender = s.id 
+         WHERE m.id_group = $1 
+         ORDER BY m.time DESC 
+         LIMIT 50`,
+        [groupId]
+      );
+    } catch (error) {
+      // Silently ignore the error and proceed with `messagesQuery` as null or an empty array
+      messagesQuery = [];
+    }
 
-    // Get recent messages
-    const messagesQuery = await db.query(
-      `SELECT m.*, s.name as sender_name 
-       FROM messages m 
-       JOIN student s ON m.sender = s.id 
-       WHERE m.id_group = $1 
-       ORDER BY m.time DESC 
-       LIMIT 50`,
-      [groupId]
-    );
+    // Initialize messages as an empty array if null
+    const messages = messagesQuery.rows ? messagesQuery.rows.reverse() : [];
 
-    res.render("student-chatrooms", {
-      title: 'Chatroom',
-      groupId,
-      groupName,
-      studentId,
+  
+   
+    res.render("./student-chatrooms.ejs", {
+      me: student_name,
+      messages: messages,
+      groupName: groupName,
       members: membersQuery.rows,
-      messages: messagesQuery.rows.reverse() || [],
-      currentUser: studentId
-    });
+      title: 'Chatroom',
+      studentId: studentId
+  });
   } catch (err) {
     console.error("Error loading chat:", err);
     res.status(500).send("Error loading chat");
   }
 });
+
 
 
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
@@ -610,10 +622,8 @@ app.post("/send-message", async (req, res) => {
       [groupId, senderId, message]
     );
 
-    res.json({ success: true, message: "Message sent successfully" });
   } catch (err) {
     console.error("Error sending message:", err);
-    res.status(500).json({ success: false, error: "Failed to send message" });
   }
 });
 
