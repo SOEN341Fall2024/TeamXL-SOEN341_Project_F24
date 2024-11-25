@@ -418,6 +418,8 @@ app.get("/assess-notification", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+//------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
 
 app.get("/edit-evaluation", async (req, res) => {
   const studentId = req.params.id;
@@ -433,6 +435,14 @@ app.get("/edit-evaluation", async (req, res) => {
 
     const student = await getStudentById(studentId);
 
+    const commentString = answers.rows[0].comments;
+
+    const sections = commentString.split('<br/>');
+    const divComments = [sections[1], sections[4], sections[7], sections[10], sections[13]];
+    
+    console.log(sections);
+    console.log(divComments );
+
     res.render("edit-evaluation.ejs", {
       student,
       userType,
@@ -441,7 +451,7 @@ app.get("/edit-evaluation", async (req, res) => {
       conceptualContributionValue: answers.rows[0].conceptual_contribution,
       practical_contributionValue: answers.rows[0].practical_contribution,
       work_ethicValue: answers.rows[0].work_ethic,
-      commentsValue: answers.rows[0].comments,
+      commentsValue: divComments,
     });
   } catch (error) {
     console.error("Error fetching student for evaluation:", error);
@@ -1048,10 +1058,16 @@ app.post("/submit-evaluation", async (req, res) => {
 
 // The edition of an evaluation route ----------------------------------
 app.post("/edit-submition", async (req, res) => {
-  var commentsObj;
-  commentsObj.cooperation =
-    req.body.cooperation_comments != ""
-      ? "Cooperation Contribution Comment: <br/>" +
+  var commentsObj = {
+    cooperation: "",
+    conceptual: "",
+    practical: "",
+    work_ethic: "",
+    comments: "",
+  };
+  commentsObj.cooperation = 
+  req.body.cooperation_comments != "" 
+  ? "Cooperation Contribution Comment: <br/>" +
         req.body.cooperation_comments +
         "<br/><br/>"
       : "";
