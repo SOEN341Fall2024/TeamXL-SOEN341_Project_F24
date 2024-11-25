@@ -747,12 +747,13 @@ app.post("/login", async (req, res) => {
     const result = await db.query(
       `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = '${username}' UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = '${username}' ;`
     );
-
-    req.session.userID = result.rows[0].id;
+  
 
     if (result.rows.length > 0) {
+
       const user = result.rows[0];
       req.session.userType = user.origin;
+      req.session.userID = result.rows[0].id;
 
       console.log("User found:", user); // Debugging: Log the result
 
