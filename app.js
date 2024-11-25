@@ -842,6 +842,7 @@ app.post("/edit-teams", async (req, res) => {
       IDsToRemove = [IDsToRemove];
     }
     for(var i = 0; i < IDsToRemove.length; i++){
+      await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 OR id_evaluatee = $1", [IDsToRemove[i]]);
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         null,
         IDsToRemove[i],
