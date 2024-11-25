@@ -83,8 +83,6 @@ Gemini_API_key= your_gemini_api_key
 - Do not commit .env files.
 - Provide a .env.example file with placeholders for required configurations.
 
----
-
 ## **4. Testing Standards**
 
 ### **4.1. Tools Used**
@@ -111,6 +109,7 @@ describe("Home Page Tests", () => {
   });
 });
 ```
+
 ## **5. CI/CD Workflow**
 
 ### **5.1. GitHub Actions Workflow**
@@ -127,11 +126,12 @@ Implemented a CI/CD pipeline using GitHub Actions.
 - **Test Coverage**: Ensure the code is well-tested.
 - **Duplications**: Avoiding code repetitions.
 
+---
+
 ### **6.2. Benefits**
 - Automated checks for coding standards, security, and test coverage.
 - Centralized dashboard for tracking issues and metrics.
 
+---
 
-
-
-This coding standards document ensures consistency, quality, and maintainability throughout the project. Tools like Jest, GitHub Actions, and SonarCloud provide automated testing and monitoring to enforce these standards.
+_**This coding standards document ensures consistency, quality, and maintainability throughout the project. Tools like Jest, GitHub Actions, and SonarCloud provide automated testing and monitoring to enforce these standards.**_
