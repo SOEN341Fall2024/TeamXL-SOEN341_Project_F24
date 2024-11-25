@@ -11,7 +11,7 @@ import csv from "csv-parser";
 import fs from "fs";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { group } from "console";
-import { Parser } from "json2csv"; 
+import { Parser } from "json2csv";
 import {
   getCooperation,
   getConceptual,
@@ -43,7 +43,7 @@ const app = express();
 const port = 3000;
 const saltRounds = 10;
 
-app.use(express.json()); 
+app.use(express.json());
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -94,41 +94,42 @@ app.get("/register", (req, res) => {
 // Route to handle the Student Dashboard view
 app.get("/student-dashboard", async (req, res) => {
   const studentID = req.session.userID;
-  res.render("student-dashboard");
 
-  // try {
-  //   // Query to get the number of teammates
-  //   const totalTeammatesQuery = await db.query(
-  //     `SELECT COUNT(*) AS total_teammates
-  //      FROM student
-  //      WHERE id_group = (SELECT id_group FROM student WHERE id = $1)
-  //      AND id != $1`,
-  //     [studentID]
-  //   );
-  //   const totalTeammates = totalTeammatesQuery.rows[0]?.total_teammates || 0;
+  try {
+    // Query to get the number of teammates (excluding the student themselves)
+    const totalTeammatesQuery = await db.query(
+      `SELECT COUNT(*) AS total_teammates
+       FROM student
+       WHERE id_group = (SELECT id_group FROM student WHERE id = $1)
+       AND id != $1`,
+      [studentID]
+    );
+    const totalTeammates = totalTeammatesQuery.rows[0]?.total_teammates || 0;
 
-  //   // Query to get the number of completed reviews
-  //   const completedReviewsQuery = await db.query(
-  //     `SELECT COUNT(*) AS completed_reviews
-  //      FROM evaluation
-  //      WHERE id_evaluator = $1`,
-  //     [studentID]
-  //   );
-  //   const completedReviews =
-  //     completedReviewsQuery.rows[0]?.completed_reviews || 0;
+    // Query to get the number of completed reviews (i.e., the number of teammates the student has reviewed)
+    const completedReviewsQuery = await db.query(
+      `SELECT COUNT(*) AS completed_reviews
+       FROM evaluation
+       WHERE id_evaluator = $1`,
+      [studentID]
+    );
+    const completedReviews =
+      completedReviewsQuery.rows[0]?.completed_reviews || 0;
 
-  //   // Check if there are pending evaluations
-  //   const hasPendingReviews = completedReviews < totalTeammates;
-  //   console.log("HasPendingReviews: " + hasPendingReviews);
+    // Check if there are pending reviews
+    const hasPendingReviews = completedReviews < totalTeammates;
 
-  //   // Render the dashboard view with the computed data
-  //   res.render("student-dashboard", {
-  //     hasPendingReviews, // Pass the boolean indicating if there are pending reviews
-  //   });
-  // } catch (err) {
-  //   console.error("Error fetching data for student dashboard:", err);
-  //   res.redirect("/"); // Redirect to homepage or an error page in case of failure
-  // }
+    // Render the dashboard view with the computed data
+    res.render("student-dashboard", {
+      hasPendingReviews, // Pass the boolean indicating if there are pending reviews
+      reviewStatus: hasPendingReviews
+        ? "You have pending reviews"
+        : "You have completed your reviews",
+    });
+  } catch (err) {
+    console.error("Error fetching data for student dashboard:", err);
+    res.redirect("/"); // Redirect to homepage or an error page in case of failure
+  }
 });
 
 // Route for the INSTRUCTOR DASHBOARD page
@@ -221,10 +222,11 @@ app.get("/edit-profile", async (req, res) => {
     res.render("edit-profile", { profile }); // Render the edit-profile.ejs view
   } catch (err) {
     console.error("Error fetching profile for edit:", err);
-    res.status(500).send("An error occurred while loading the edit profile page.");
+    res
+      .status(500)
+      .send("An error occurred while loading the edit profile page.");
   }
 });
-
 
 // Route for the VIEW TEAMS page
 app.get("/view-teams", async (req, res) => {
@@ -276,9 +278,7 @@ app.get("/view-teams", async (req, res) => {
 
 //Route for EDIT TEAMS page
 app.get("/edit-team", async (req, res) => {
-  const RESULT1 = await db.query(
-    "SELECT * FROM groups ORDER BY id_group ASC"
-  );
+  const RESULT1 = await db.query("SELECT * FROM groups ORDER BY id_group ASC");
 
   const RESULT2 = await db.query(
     "SELECT * FROM student WHERE id_group is NULL"
@@ -292,7 +292,7 @@ app.get("/edit-team", async (req, res) => {
   var availableStudents = RESULT2.rows;
   var student_info = RESULT3.rows;
 
-  for(var i = 0; i < teams.length; i++){
+  for (var i = 0; i < teams.length; i++) {
     appendGroupMembers(teams[i], student_info);
   }
 
@@ -459,11 +459,17 @@ app.get("/edit-evaluation", async (req, res) => {
 
     const commentString = answers.rows[0].comments;
 
-    const sections = commentString.split('<br/>');
-    const divComments = [sections[1], sections[4], sections[7], sections[10], sections[13]];
-    
+    const sections = commentString.split("<br/>");
+    const divComments = [
+      sections[1],
+      sections[4],
+      sections[7],
+      sections[10],
+      sections[13],
+    ];
+
     console.log(sections);
-    console.log(divComments );
+    console.log(divComments);
 
     res.render("edit-evaluation.ejs", {
       student,
@@ -582,7 +588,6 @@ app.get("/logout", (req, res) => {
 
 app.use("/uploads", express.static("uploads"));
 
-
 // Route for access assessment page
 app.get("/access-assessment", (req, res) => {
   const instructorUsername = req.query.instructorUsername;
@@ -602,22 +607,24 @@ app.get("/student-chatrooms", async (req, res) => {
       "SELECT NAME FROM student WHERE id = $1 ",
       [studentId]
     );
-   
-    const student_name = nameQuery.rows[0].name.toString()
+
+    const student_name = nameQuery.rows[0].name.toString();
 
     // Get the student's group
     const groupQuery = await db.query(
       "SELECT s.id_group, g.group_name FROM student s JOIN groups g ON s.id_group = g.id_group WHERE s.id = $1",
       [studentId]
     );
-   
+
     if (!groupQuery.rows[0]) {
-      return res.status(400).send("You must be assigned to a group to use chat.");
+      return res
+        .status(400)
+        .send("You must be assigned to a group to use chat.");
     }
-   
+
     const groupId = groupQuery.rows[0].id_group;
     const groupName = groupQuery.rows[0].group_name;
-   
+
     // Get group members
     const membersQuery = await db.query(
       `SELECT s.id, s.name
@@ -625,7 +632,7 @@ app.get("/student-chatrooms", async (req, res) => {
        WHERE s.id_group = $1`,
       [groupId]
     );
-   
+
     let messagesQuery = null;
     try {
       messagesQuery = await db.query(
@@ -645,36 +652,28 @@ app.get("/student-chatrooms", async (req, res) => {
     // Initialize messages as an empty array if null
     const messages = messagesQuery.rows ? messagesQuery.rows.reverse() : [];
 
-  
-   
     res.render("./student-chatrooms.ejs", {
       me: student_name,
       messages: messages,
       groupName: groupName,
       members: membersQuery.rows,
-      title: 'Chatroom',
-      studentId: studentId
-  });
+      title: "Chatroom",
+      studentId: studentId,
+    });
   } catch (err) {
     console.error("Error loading chat:", err);
     res.status(500).send("Error loading chat");
   }
 });
 
-
-
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
-
 
 // Add this route to handle message sending
 app.post("/send-message", async (req, res) => {
   try {
-
     const { message } = req.body;
     const senderId = req.session.userID;
     const messageOneObject = message.toString();
-    
-
 
     const groupQuery = await db.query(
       "SELECT id_group FROM student WHERE id = $1",
@@ -690,14 +689,13 @@ app.post("/send-message", async (req, res) => {
       [groupId, senderId, message]
     );
 
-    if(messageOneObject.startsWith("@chat") ){
-
+    if (messageOneObject.startsWith("@chat")) {
       const aiPrompt = message.substring(5).trim();
 
       console.log(aiPrompt);
       const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    
+
       const result = await model.generateContent(aiPrompt);
       console.log(result.response.text());
 
@@ -708,13 +706,10 @@ app.post("/send-message", async (req, res) => {
         [groupId, senderId, "Chat: " + result.response.text()]
       );
     }
-
-
   } catch (err) {
     console.error("Error sending message:", err);
   }
 });
-
 
 // Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
@@ -769,10 +764,8 @@ app.post("/login", async (req, res) => {
     const result = await db.query(
       `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = '${username}' UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = '${username}' ;`
     );
-  
 
     if (result.rows.length > 0) {
-
       const user = result.rows[0];
       req.session.userType = user.origin;
       req.session.userID = result.rows[0].id;
@@ -790,10 +783,7 @@ app.post("/login", async (req, res) => {
               userType: user.origin,
             });
           } else {
-            res.render("student-dashboard.ejs", {
-              userType: user.origin,
-              studentId: user.id,
-            }); // Render student dashboard
+            res.redirect("/student-dashboard"); // Render student dashboard
           }
         } else {
           res.render("incorrect-pw-un.ejs");
@@ -871,7 +861,8 @@ app.post("/edit-profile", async (req, res) => {
       return res.redirect("/login"); // Redirect to login if user is not logged in
     }
 
-    const { firstName, lastName, email, address, address2, province, zip } = req.body;
+    const { firstName, lastName, email, address, address2, province, zip } =
+      req.body;
 
     // Update profile in the database
     const updateQuery = `
@@ -887,7 +878,16 @@ app.post("/edit-profile", async (req, res) => {
       WHERE ID_STUDENT = $8
     `;
 
-    await db.query(updateQuery, [firstName, lastName, email, address, address2, province, zip, userId]);
+    await db.query(updateQuery, [
+      firstName,
+      lastName,
+      email,
+      address,
+      address2,
+      province,
+      zip,
+      userId,
+    ]);
 
     res.redirect("/profile"); // Redirect to the profile page after saving changes
   } catch (err) {
@@ -895,7 +895,6 @@ app.post("/edit-profile", async (req, res) => {
     res.status(500).send("An error occurred while saving your profile.");
   }
 });
-
 
 app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
   const IDs = req.body.studentIDs;
@@ -1005,18 +1004,18 @@ app.post("/edit-teams", async (req, res) => {
 
   var team = RESULT.rows[0];
 
-  if(newTeamName != team.group_name){
+  if (newTeamName != team.group_name) {
     await db.query("UPDATE groups SET group_name = $1 WHERE id_group = $2", [
       newTeamName,
       teamID,
     ]);
   }
 
-  if(studentsToAdd != null){
-    if(!Array.isArray(studentsToAdd)){
+  if (studentsToAdd != null) {
+    if (!Array.isArray(studentsToAdd)) {
       studentsToAdd = [studentsToAdd];
     }
-    for(var i = 0; i < studentsToAdd.length; i++){
+    for (var i = 0; i < studentsToAdd.length; i++) {
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         teamID,
         studentsToAdd[i],
@@ -1024,12 +1023,15 @@ app.post("/edit-teams", async (req, res) => {
     }
   }
 
-  if(IDsToRemove != null){
-    if(!Array.isArray(IDsToRemove)){
+  if (IDsToRemove != null) {
+    if (!Array.isArray(IDsToRemove)) {
       IDsToRemove = [IDsToRemove];
     }
-    for(var i = 0; i < IDsToRemove.length; i++){
-      await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 OR id_evaluatee = $1", [IDsToRemove[i]]);
+    for (var i = 0; i < IDsToRemove.length; i++) {
+      await db.query(
+        "DELETE FROM evaluation WHERE id_evaluator = $1 OR id_evaluatee = $1",
+        [IDsToRemove[i]]
+      );
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         null,
         IDsToRemove[i],
@@ -1122,9 +1124,9 @@ app.post("/edit-submition", async (req, res) => {
     work_ethic: "",
     comments: "",
   };
-  commentsObj.cooperation = 
-  req.body.cooperation_comments != "" 
-  ? "Cooperation Contribution Comment: <br/>" +
+  commentsObj.cooperation =
+    req.body.cooperation_comments != ""
+      ? "Cooperation Contribution Comment: <br/>" +
         req.body.cooperation_comments +
         "<br/><br/>"
       : "";
