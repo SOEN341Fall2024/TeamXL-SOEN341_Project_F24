@@ -622,25 +622,34 @@ app.post("/send-message", async (req, res) => {
       [groupId, senderId, message]
     );
 
+    try {
+    if(message.startsWith('@chat') ){
+
+      console.log(req.body.message);
+      const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+      const result = await model.generateContent(req.body.message);
+      console.log(result.response.text());
+
+      await db.query(
+        `INSERT INTO messages (id_group, sender, content) 
+         VALUES ($1, $2, $3) 
+         RETURNING *`,
+        [groupId, senderId, result.response.text()]
+      );
+    }
+
+    } catch (error) {
+      console.error("Error Chat bot:", err);
+    }
+
+
   } catch (err) {
     console.error("Error sending message:", err);
   }
 });
 
-// For chatbot
-/*
-app.post("/send-message", async (req, res) => {
-
-console.log(req.body.message);
-
-  const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  const result = await model.generateContent(req.body.message);
-   console.log(result.response.text());
-
-});
-*/
 
 // Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
