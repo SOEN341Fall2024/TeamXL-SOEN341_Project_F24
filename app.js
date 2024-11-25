@@ -550,10 +550,6 @@ app.get("/logout", (req, res) => {
 
 app.use("/uploads", express.static("uploads"));
 
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
 
 // Route for access assessment page
 app.get("/access-assessment", (req, res) => {
