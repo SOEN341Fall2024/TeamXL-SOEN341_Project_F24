@@ -1037,7 +1037,7 @@ app.post("/edit-teams", async (req, res) => {
     }
   }
 
-  res.redirect("/login");
+  res.redirect("/view-teams");
 });
 
 // Route to handle PEER_ASSESSMENTS (SELECTED PEER) data
