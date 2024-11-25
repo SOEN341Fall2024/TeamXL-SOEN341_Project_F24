@@ -104,7 +104,7 @@ describe('App Tests', () => {
           password: 'testpass'
         });
 
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(302);
     });
   });
 
@@ -168,7 +168,7 @@ describe('App Tests', () => {
           password: 'testpass'
         });
 
-      expect(loginResponse.status).toBe(200);
+      expect(loginResponse.status).toBe(302);
 
       // Now make the peer assessment request using the same agent
       const response = await agent
