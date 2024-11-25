@@ -9,7 +9,9 @@ import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { group } from "console";
+import { Parser } from "json2csv";
 import {
   getCooperation,
   getConceptual,
@@ -40,6 +42,8 @@ dotenv.config();
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+
+app.use(express.json());
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -90,41 +94,42 @@ app.get("/register", (req, res) => {
 // Route to handle the Student Dashboard view
 app.get("/student-dashboard", async (req, res) => {
   const studentID = req.session.userID;
-  res.render("student-dashboard");
 
-  // try {
-  //   // Query to get the number of teammates
-  //   const totalTeammatesQuery = await db.query(
-  //     `SELECT COUNT(*) AS total_teammates
-  //      FROM student
-  //      WHERE id_group = (SELECT id_group FROM student WHERE id = $1)
-  //      AND id != $1`,
-  //     [studentID]
-  //   );
-  //   const totalTeammates = totalTeammatesQuery.rows[0]?.total_teammates || 0;
+  try {
+    // Query to get the number of teammates (excluding the student themselves)
+    const totalTeammatesQuery = await db.query(
+      `SELECT COUNT(*) AS total_teammates
+       FROM student
+       WHERE id_group = (SELECT id_group FROM student WHERE id = $1)
+       AND id != $1`,
+      [studentID]
+    );
+    const totalTeammates = totalTeammatesQuery.rows[0]?.total_teammates || 0;
 
-  //   // Query to get the number of completed reviews
-  //   const completedReviewsQuery = await db.query(
-  //     `SELECT COUNT(*) AS completed_reviews
-  //      FROM evaluation
-  //      WHERE id_evaluator = $1`,
-  //     [studentID]
-  //   );
-  //   const completedReviews =
-  //     completedReviewsQuery.rows[0]?.completed_reviews || 0;
+    // Query to get the number of completed reviews (i.e., the number of teammates the student has reviewed)
+    const completedReviewsQuery = await db.query(
+      `SELECT COUNT(*) AS completed_reviews
+       FROM evaluation
+       WHERE id_evaluator = $1`,
+      [studentID]
+    );
+    const completedReviews =
+      completedReviewsQuery.rows[0]?.completed_reviews || 0;
 
-  //   // Check if there are pending evaluations
-  //   const hasPendingReviews = completedReviews < totalTeammates;
-  //   console.log("HasPendingReviews: " + hasPendingReviews);
+    // Check if there are pending reviews
+    const hasPendingReviews = completedReviews < totalTeammates;
 
-  //   // Render the dashboard view with the computed data
-  //   res.render("student-dashboard", {
-  //     hasPendingReviews, // Pass the boolean indicating if there are pending reviews
-  //   });
-  // } catch (err) {
-  //   console.error("Error fetching data for student dashboard:", err);
-  //   res.redirect("/"); // Redirect to homepage or an error page in case of failure
-  // }
+    // Render the dashboard view with the computed data
+    res.render("student-dashboard", {
+      hasPendingReviews, // Pass the boolean indicating if there are pending reviews
+      reviewStatus: hasPendingReviews
+        ? "You have pending reviews"
+        : "You have completed your reviews",
+    });
+  } catch (err) {
+    console.error("Error fetching data for student dashboard:", err);
+    res.redirect("/"); // Redirect to homepage or an error page in case of failure
+  }
 });
 
 // Route for the INSTRUCTOR DASHBOARD page
@@ -201,6 +206,28 @@ app.get("/profile", async (req, res) => {
   }
 });
 
+// Fetch Edit Profile
+app.get("/edit-profile", async (req, res) => {
+  try {
+    const userId = req.session.userID; // Get logged-in user ID
+    if (!userId) {
+      return res.redirect("/login"); // Redirect to login if user is not logged in
+    }
+
+    // Fetch profile data from the database
+    const profileQuery = "SELECT * FROM PROFILE WHERE ID_STUDENT = $1";
+    const result = await db.query(profileQuery, [userId]);
+
+    const profile = result.rows[0] || {}; // Use an empty object if no profile is found
+    res.render("edit-profile", { profile }); // Render the edit-profile.ejs view
+  } catch (err) {
+    console.error("Error fetching profile for edit:", err);
+    res
+      .status(500)
+      .send("An error occurred while loading the edit profile page.");
+  }
+});
+
 // Route for the VIEW TEAMS page
 app.get("/view-teams", async (req, res) => {
   const userType = req.session.userType;
@@ -251,9 +278,7 @@ app.get("/view-teams", async (req, res) => {
 
 //Route for EDIT TEAMS page
 app.get("/edit-team", async (req, res) => {
-  const RESULT1 = await db.query(
-    "SELECT * FROM groups ORDER BY id_group ASC"
-  );
+  const RESULT1 = await db.query("SELECT * FROM groups ORDER BY id_group ASC");
 
   const RESULT2 = await db.query(
     "SELECT * FROM student WHERE id_group is NULL"
@@ -267,7 +292,7 @@ app.get("/edit-team", async (req, res) => {
   var availableStudents = RESULT2.rows;
   var student_info = RESULT3.rows;
 
-  for(var i = 0; i < teams.length; i++){
+  for (var i = 0; i < teams.length; i++) {
     appendGroupMembers(teams[i], student_info);
   }
 
@@ -415,6 +440,8 @@ app.get("/assess-notification", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+//------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
 
 app.get("/edit-evaluation", async (req, res) => {
   const studentId = req.params.id;
@@ -430,6 +457,20 @@ app.get("/edit-evaluation", async (req, res) => {
 
     const student = await getStudentById(studentId);
 
+    const commentString = answers.rows[0].comments;
+
+    const sections = commentString.split("<br/>");
+    const divComments = [
+      sections[1],
+      sections[4],
+      sections[7],
+      sections[10],
+      sections[13],
+    ];
+
+    console.log(sections);
+    console.log(divComments);
+
     res.render("edit-evaluation.ejs", {
       student,
       userType,
@@ -438,7 +479,7 @@ app.get("/edit-evaluation", async (req, res) => {
       conceptualContributionValue: answers.rows[0].conceptual_contribution,
       practical_contributionValue: answers.rows[0].practical_contribution,
       work_ethicValue: answers.rows[0].work_ethic,
-      commentsValue: answers.rows[0].comments,
+      commentsValue: divComments,
     });
   } catch (error) {
     console.error("Error fetching student for evaluation:", error);
@@ -547,11 +588,6 @@ app.get("/logout", (req, res) => {
 
 app.use("/uploads", express.static("uploads"));
 
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
-
 // Route for access assessment page
 app.get("/access-assessment", (req, res) => {
   const instructorUsername = req.query.instructorUsername;
@@ -562,7 +598,279 @@ app.get("/access-assessment", (req, res) => {
   });
 });
 
+// Server-side route
+app.get("/student-chatrooms", async (req, res) => {
+  try {
+    const studentId = req.session.userID;
+
+    const nameQuery = await db.query(
+      "SELECT NAME FROM student WHERE id = $1 ",
+      [studentId]
+    );
+
+    const student_name = nameQuery.rows[0].name.toString();
+
+    // Get the student's group
+    const groupQuery = await db.query(
+      "SELECT s.id_group, g.group_name FROM student s JOIN groups g ON s.id_group = g.id_group WHERE s.id = $1",
+      [studentId]
+    );
+
+    if (!groupQuery.rows[0]) {
+      return res
+        .status(400)
+        .send("You must be assigned to a group to use chat.");
+    }
+
+    const groupId = groupQuery.rows[0].id_group;
+    const groupName = groupQuery.rows[0].group_name;
+
+    // Get group members
+    const membersQuery = await db.query(
+      `SELECT s.id, s.name
+       FROM student s
+       WHERE s.id_group = $1`,
+      [groupId]
+    );
+
+    let messagesQuery = null;
+    try {
+      messagesQuery = await db.query(
+        `SELECT m.*, s.name as sender_name 
+         FROM messages m 
+         JOIN student s ON m.sender = s.id 
+         WHERE m.id_group = $1 
+         ORDER BY m.time DESC 
+         LIMIT 50`,
+        [groupId]
+      );
+    } catch (error) {
+      // Silently ignore the error and proceed with `messagesQuery` as null or an empty array
+      messagesQuery = [];
+    }
+
+    // Initialize messages as an empty array if null
+    const messages = messagesQuery.rows ? messagesQuery.rows.reverse() : [];
+
+    res.render("./student-chatrooms.ejs", {
+      me: student_name,
+      messages: messages,
+      groupName: groupName,
+      members: membersQuery.rows,
+      title: "Chatroom",
+      studentId: studentId,
+    });
+  } catch (err) {
+    console.error("Error loading chat:", err);
+    res.status(500).send("Error loading chat");
+  }
+});
+
+//Route for export reviews as CSV
+app.get("/export-reviews-csv", async (req, res) => {
+  try {
+    // Fetch the detailed review data from your database
+    const result = await db.query(`
+      SELECT 
+        e.id_evaluatee AS evaluatee_id,
+        s.name AS evaluatee_name,
+        e.cooperation,
+        e.conceptual_contribution AS conceptual,
+        e.practical_contribution AS practical,
+        e.work_ethic,
+        e.comments
+      FROM 
+        evaluation e
+      JOIN 
+        student s
+      ON 
+        e.id_evaluatee = s.id
+      ORDER BY 
+        s.id_group, e.id_evaluatee
+    `);
+
+    const reviews = result.rows;
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).send("No review data available to export.");
+    }
+
+    // Process comments to separate each type
+    const processedReviews = reviews.map(review => {
+      const commentParts = {
+        cooperation_comment: "",
+        conceptual_comment: "",
+        practical_comment: "",
+        work_ethic_comment: "",
+        additional_comment: "",
+      };
+
+      // Split comments by type if they follow a structured format (e.g., labeled sections)
+      const commentLines = review.comments.split("<br/><br/>").map(line => line.trim());
+      commentLines.forEach(line => {
+        if (line.startsWith("Cooperation Contribution Comment:")) {
+          commentParts.cooperation_comment = line.replace("Cooperation Contribution Comment:", "").trim();
+        } else if (line.startsWith("Conceptual Contribution Comment:")) {
+          commentParts.conceptual_comment = line.replace("Conceptual Contribution Comment:", "").trim();
+        } else if (line.startsWith("Practical Contribution Comment:")) {
+          commentParts.practical_comment = line.replace("Practical Contribution Comment:", "").trim();
+        } else if (line.startsWith("Work Ethic Comment:")) {
+          commentParts.work_ethic_comment = line.replace("Work Ethic Comment:", "").trim();
+        } else if (line.startsWith("Additional Comment:")) {
+          commentParts.additional_comment = line.replace("Additional Comment:", "").trim();
+        }
+      });
+
+      return {
+        ...review,
+        ...commentParts, // Add separated comments to the review object
+      };
+    });
+
+    // Define the fields/columns for the CSV
+    const fields = [
+      { label: "Evaluatee ID", value: "evaluatee_id" },
+      { label: "Evaluatee Name", value: "evaluatee_name" },
+      { label: "Cooperation", value: "cooperation" },
+      { label: "Conceptual Contribution", value: "conceptual" },
+      { label: "Practical Contribution", value: "practical" },
+      { label: "Work Ethic", value: "work_ethic" },
+      { label: "Cooperation Comment", value: "cooperation_comment" },
+      { label: "Conceptual Comment", value: "conceptual_comment" },
+      { label: "Practical Comment", value: "practical_comment" },
+      { label: "Work Ethic Comment", value: "work_ethic_comment" },
+      { label: "Additional Comment", value: "additional_comment" },
+    ];
+
+    // Create the CSV using json2csv
+    const json2csv = new Parser({ fields });
+    const csv = json2csv.parse(processedReviews);
+
+    // Set headers and send the CSV file
+    res.header("Content-Type", "text/csv");
+    res.attachment("detailed_reviews.csv");
+    res.send(csv);
+  } catch (err) {
+    console.error("Error generating CSV export:", err);
+    res.status(500).send("An error occurred while exporting reviews as CSV.");
+  }
+});
+
+// Define the fields/columns for the summary CSV page
+app.get("/export-summary-csv", async (req, res) => {
+  try {
+    // SQL Query to fetch required data
+    const result = await db.query(`
+      SELECT 
+        s.id AS student_id,
+        s.name AS student_name,
+        g.group_name AS team_name,
+        ROUND(MAX(e.cooperation), 2) AS cooperation,
+        ROUND(MAX(e.conceptual_contribution), 2) AS conceptual_contribution,
+        ROUND(MAX(e.practical_contribution), 2) AS practical_contribution,
+        ROUND(MAX(e.work_ethic), 2) AS work_ethic,
+        ROUND(AVG((e.cooperation + e.conceptual_contribution + e.practical_contribution + e.work_ethic) / 4.0), 2) AS average
+      FROM 
+        student s
+      LEFT JOIN 
+        evaluation e ON s.id = e.id_evaluatee
+      LEFT JOIN 
+        groups g ON s.id_group = g.id_group
+      GROUP BY 
+        s.id, g.group_name
+      ORDER BY 
+        g.group_name, s.id;
+    `);
+
+    const rows = result.rows;
+
+    if (!rows || rows.length === 0) {
+      return res.status(404).send("No data available to export.");
+    }
+
+    // Replace null or undefined values with 0
+    const processedRows = rows.map(row => ({
+      student_id: row.student_id,
+      student_name: row.student_name || "N/A", // Default for missing names
+      team_name: row.team_name || "N/A", // Default for missing teams
+      cooperation: row.cooperation !== null ? row.cooperation : 0,
+      conceptual_contribution: row.conceptual_contribution !== null ? row.conceptual_contribution : 0,
+      practical_contribution: row.practical_contribution !== null ? row.practical_contribution : 0,
+      work_ethic: row.work_ethic !== null ? row.work_ethic : 0,
+      average: row.average !== null ? row.average : 0,
+    }));
+
+    // Define CSV fields
+    const fields = [
+      { label: "Student ID", value: "student_id" },
+      { label: "Name", value: "student_name" },
+      { label: "Team", value: "team_name" },
+      { label: "Cooperation", value: "cooperation" },
+      { label: "Conceptual Contribution", value: "conceptual_contribution" },
+      { label: "Practical Contribution", value: "practical_contribution" },
+      { label: "Work Ethic", value: "work_ethic" },
+      { label: "Average", value: "average" },
+    ];
+
+    // Generate CSV
+    const json2csv = new Parser({ fields });
+    const csv = json2csv.parse(processedRows);
+
+    // Send CSV file
+    res.header("Content-Type", "text/csv");
+    res.attachment("reviews_summary.csv");
+    res.send(csv);
+  } catch (err) {
+    console.error("Error generating CSV export:", err);
+    res.status(500).send("An error occurred while exporting the summary as CSV.");
+  }
+});
+
+
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
+
+// Add this route to handle message sending
+app.post("/send-message", async (req, res) => {
+  try {
+    const { message } = req.body;
+    const senderId = req.session.userID;
+    const messageOneObject = message.toString();
+
+    const groupQuery = await db.query(
+      "SELECT id_group FROM student WHERE id = $1",
+      [senderId]
+    );
+    const groupId = groupQuery.rows[0].id_group;
+
+    // Save message to database
+    const result = await db.query(
+      `INSERT INTO messages (id_group, sender, content) 
+       VALUES ($1, $2, $3) 
+       RETURNING *`,
+      [groupId, senderId, message]
+    );
+
+    if (messageOneObject.startsWith("@chat")) {
+      const aiPrompt = message.substring(5).trim();
+
+      console.log(aiPrompt);
+      const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+      const result = await model.generateContent(aiPrompt);
+      console.log(result.response.text());
+
+      await db.query(
+        `INSERT INTO messages (id_group, sender, content) 
+         VALUES ($1, $2, $3) 
+         RETURNING *`,
+        [groupId, senderId, "Chat: " + result.response.text()]
+      );
+    }
+  } catch (err) {
+    console.error("Error sending message:", err);
+  }
+});
 
 // Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
@@ -618,11 +926,10 @@ app.post("/login", async (req, res) => {
       `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = '${username}' UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = '${username}' ;`
     );
 
-    req.session.userID = result.rows[0].id;
-
     if (result.rows.length > 0) {
       const user = result.rows[0];
       req.session.userType = user.origin;
+      req.session.userID = result.rows[0].id;
 
       console.log("User found:", user); // Debugging: Log the result
 
@@ -637,10 +944,7 @@ app.post("/login", async (req, res) => {
               userType: user.origin,
             });
           } else {
-            res.render("student-dashboard.ejs", {
-              userType: user.origin,
-              studentId: user.id,
-            }); // Render student dashboard
+            res.redirect("/student-dashboard"); // Render student dashboard
           }
         } else {
           res.render("incorrect-pw-un.ejs");
@@ -706,6 +1010,49 @@ app.post("/profile", async (req, res) => {
     res.redirect("/profile");
   } catch (err) {
     console.error("Error saving profile:", err);
+    res.status(500).send("An error occurred while saving your profile.");
+  }
+});
+
+// Edit student profile
+app.post("/edit-profile", async (req, res) => {
+  try {
+    const userId = req.session.userID; // Get logged-in user ID
+    if (!userId) {
+      return res.redirect("/login"); // Redirect to login if user is not logged in
+    }
+
+    const { firstName, lastName, email, address, address2, province, zip } =
+      req.body;
+
+    // Update profile in the database
+    const updateQuery = `
+      UPDATE PROFILE
+      SET 
+        FIRST_NAME = $1, 
+        LAST_NAME = $2, 
+        EMAIL = $3, 
+        ADDRESS = $4, 
+        ADDRESS2 = $5, 
+        PROVINCE = $6, 
+        ZIP = $7
+      WHERE ID_STUDENT = $8
+    `;
+
+    await db.query(updateQuery, [
+      firstName,
+      lastName,
+      email,
+      address,
+      address2,
+      province,
+      zip,
+      userId,
+    ]);
+
+    res.redirect("/profile"); // Redirect to the profile page after saving changes
+  } catch (err) {
+    console.error("Error saving profile updates:", err);
     res.status(500).send("An error occurred while saving your profile.");
   }
 });
@@ -818,18 +1165,18 @@ app.post("/edit-teams", async (req, res) => {
 
   var team = RESULT.rows[0];
 
-  if(newTeamName != team.group_name){
+  if (newTeamName != team.group_name) {
     await db.query("UPDATE groups SET group_name = $1 WHERE id_group = $2", [
       newTeamName,
       teamID,
     ]);
   }
 
-  if(studentsToAdd != null){
-    if(!Array.isArray(studentsToAdd)){
+  if (studentsToAdd != null) {
+    if (!Array.isArray(studentsToAdd)) {
       studentsToAdd = [studentsToAdd];
     }
-    for(var i = 0; i < studentsToAdd.length; i++){
+    for (var i = 0; i < studentsToAdd.length; i++) {
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         teamID,
         studentsToAdd[i],
@@ -837,11 +1184,15 @@ app.post("/edit-teams", async (req, res) => {
     }
   }
 
-  if(IDsToRemove != null){
-    if(!Array.isArray(IDsToRemove)){
+  if (IDsToRemove != null) {
+    if (!Array.isArray(IDsToRemove)) {
       IDsToRemove = [IDsToRemove];
     }
-    for(var i = 0; i < IDsToRemove.length; i++){
+    for (var i = 0; i < IDsToRemove.length; i++) {
+      await db.query(
+        "DELETE FROM evaluation WHERE id_evaluator = $1 OR id_evaluatee = $1",
+        [IDsToRemove[i]]
+      );
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         null,
         IDsToRemove[i],
@@ -849,7 +1200,7 @@ app.post("/edit-teams", async (req, res) => {
     }
   }
 
-  res.redirect("/login");
+  res.redirect("/view-teams");
 });
 
 // Route to handle PEER_ASSESSMENTS (SELECTED PEER) data
@@ -927,7 +1278,13 @@ app.post("/submit-evaluation", async (req, res) => {
 
 // The edition of an evaluation route ----------------------------------
 app.post("/edit-submition", async (req, res) => {
-  var commentsObj;
+  var commentsObj = {
+    cooperation: "",
+    conceptual: "",
+    practical: "",
+    work_ethic: "",
+    comments: "",
+  };
   commentsObj.cooperation =
     req.body.cooperation_comments != ""
       ? "Cooperation Contribution Comment: <br/>" +
