@@ -604,10 +604,13 @@ app.get("/student-chatrooms", async (req, res) => {
 // Add this route to handle message sending
 app.post("/send-message", async (req, res) => {
   try {
+
     const { message } = req.body;
     const senderId = req.session.userID;
+    const messageOneObject = message.toString();
     
-    // Get sender's group
+
+
     const groupQuery = await db.query(
       "SELECT id_group FROM student WHERE id = $1",
       [senderId]
@@ -622,26 +625,23 @@ app.post("/send-message", async (req, res) => {
       [groupId, senderId, message]
     );
 
-    try {
-    if(message.startsWith('@chat') ){
+    if(messageOneObject.startsWith("@chat") ){
 
-      console.log(req.body.message);
+      const aiPrompt = message.substring(5).trim();
+
+      console.log(aiPrompt);
       const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
-      const result = await model.generateContent(req.body.message);
+      const result = await model.generateContent(aiPrompt);
       console.log(result.response.text());
 
       await db.query(
         `INSERT INTO messages (id_group, sender, content) 
          VALUES ($1, $2, $3) 
          RETURNING *`,
-        [groupId, senderId, result.response.text()]
+        [groupId, senderId, "Chat: " + result.response.text()]
       );
-    }
-
-    } catch (error) {
-      console.error("Error Chat bot:", err);
     }
 
 
