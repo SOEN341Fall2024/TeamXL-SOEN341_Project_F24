@@ -130,7 +130,7 @@ You’re now ready to explore our **Peer Assessment System**!
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the [MIT Licence](./LICENSE).
 
 ---
 
