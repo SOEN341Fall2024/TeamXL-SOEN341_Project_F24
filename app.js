@@ -627,30 +627,31 @@ app.get("/export-reviews-csv", async (req, res) => {
     const fields = [
       { label: "Evaluatee ID", value: "evaluatee_id" },
       { label: "Evaluatee Name", value: "evaluatee_name" },
-      { label: "Cooperation", value: "cooperation" },
-      { label: "Conceptual Contribution", value: "conceptual" },
-      { label: "Practical Contribution", value: "practical" },
-      { label: "Work Ethic", value: "work_ethic" },
+      { label: "Cooperation Score (%)", value: row => `${row.cooperation}%` },
+      { label: "Conceptual Contribution (%)", value: row => `${row.conceptual}%` },
+      { label: "Practical Contribution (%)", value: row => `${row.practical}%` },
+      { label: "Work Ethic (%)", value: row => `${row.work_ethic}%` },
       { label: "Cooperation Comment", value: "cooperation_comment" },
       { label: "Conceptual Comment", value: "conceptual_comment" },
       { label: "Practical Comment", value: "practical_comment" },
       { label: "Work Ethic Comment", value: "work_ethic_comment" },
-      { label: "Additional Comment", value: "additional_comment" },
+      { label: "Additional Remarks", value: "additional_comment" },
     ];
 
-    // Create the CSV using json2csv
+    // Use json2csv to generate the CSV
     const json2csv = new Parser({ fields });
     const csv = json2csv.parse(processedReviews);
 
     // Set headers and send the CSV file
     res.header("Content-Type", "text/csv");
-    res.attachment("detailed_reviews.csv");
+    res.attachment("Detailed_Reviews.csv");
     res.send(csv);
   } catch (err) {
     console.error("Error generating CSV export:", err);
     res.status(500).send("An error occurred while exporting reviews as CSV.");
   }
 });
+
 
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
 
