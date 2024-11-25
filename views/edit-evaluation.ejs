@@ -155,7 +155,7 @@
                     <!-- New comment box for Cooperation -->
                     <label for="coop-comments" class="form-label">Comments on Cooperation</label>
                     <textarea class="form-control" id="cooperation_comments" name="cooperation_comments" rows="3"
-                        placeholder="feedback on Cooperation..."></textarea>
+                        placeholder="feedback on Cooperation..."><%= commentsValue[0] %></textarea>
 
                 </div>
 
@@ -183,7 +183,7 @@
                     <!-- New comment box for Conceptual Contribution -->
                     <label for="concept-comments" class="form-label">Comments on Conceptual Contribution</label>
                     <textarea class="form-control" id="conceptual_comments" name="conceptual_comments" rows="3"
-                        placeholder="feedback on Conceptual Contribution..."></textarea>
+                        placeholder="feedback on Conceptual Contribution..."><%= commentsValue[1] %></textarea>
 
                 </div>
 
@@ -211,7 +211,7 @@
                     <p id="practical-warning" class="warning">Please select a rating for Practical Contribution.</p>
                     <label for="practical-comments" class="form-label">Comments on Practical Contribution</label>
                     <textarea class="form-control" id="practical-comments" name="practical_comments" rows="3"
-                        placeholder="feedback on Practical Contribution..."></textarea>
+                        placeholder="feedback on Practical Contribution..."><%= commentsValue[2] %></textarea>
 
                 </div>
 
@@ -239,7 +239,7 @@
                     <!-- New comment box for Work Ethic -->
                     <label for="ethic-comments" class="form-label">Comments on Work Ethic</label>
                     <textarea class="form-control" id="work_ethic_comments" name="work_ethic_comments" rows="3"
-                        placeholder="feedback on Work Ethic..."></textarea>
+                        placeholder="feedback on Work Ethic..."><%= commentsValue[3] %></textarea>
 
                 </div>
 
@@ -247,7 +247,7 @@
                 <div class="form-section text-center mb-5">
                     <label for="comments" class="form-label">Overall Comments </label>
                     <textarea class="form-control" id="comments" name="comments" rows="4"
-                        placeholder="Write any feedback here..."><%= commentsValue === null ? '' : commentsValue %></textarea>
+                        placeholder="Write any feedback here..."><%= commentsValue[4] %></textarea>
                 </div>
 
                 <!-- Submit Button -->
