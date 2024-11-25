@@ -1,31 +1,5 @@
 <%- include('partials/header', { title: 'edit-team' }) %>
 <body>
-  <%
-    // Mock Data for Testing
-    const teams = [
-      { id: 1, name: 'Team Alpha', members: [] },
-      { id: 2, name: 'Team Bravo', members: [] },
-      { id: 3, name: 'Team Charlie', members: [] }
-    ];
-
-    const availableStudents = [
-      { id: 1, name: 'Kevin' }, 
-      { id: 2, name: 'Joyal' }, 
-      { id: 3, name: 'Aditi' },
-      { id: 4, name: 'Owen' }, 
-      { id: 5, name: 'Oussama' }, 
-      { id: 6, name: 'Jonathan' },
-      { id: 7, name: 'Emily' },
-      { id: 8, name: 'Michael' },
-      { id: 9, name: 'Sophia' },
-      { id: 10, name: 'James' },
-      { id: 11, name: 'Olivia' }
-    ];
-
-    let removedStudents = [];
-    let newStudents = [];
-  %>
-
   <!-- Container to center the form -->
   <div class="container mt-5 mb-5 d-flex justify-content-center align-items-center">
     <!-- Card to hold the form -->
@@ -33,13 +7,13 @@
       <h2 class="text-center mb-4">Edit Teams</h2>
 
       <!-- Form to edit the team -->
-      <form id="editTeamForm" onsubmit="return showConfirmation()">
+      <form id="editTeamForm" action="/edit-teams" method="POST">
         <!-- Team selection dropdown -->
         <div class="form-group mx-5 my-4">
           <label for="teamSelect">Select Team</label>
           <select id="teamSelect" name="team" class="form-control" style="max-width: 700px;" onchange="switchTeam()">
             <% teams.forEach(function(team) { %>
-              <option value="<%= team.id %>"><%= team.name %></option>
+              <option value="<%= team.id_group %>"><%= team.group_name %><% currentTeam = team %></option>
             <% }) %>
           </select>
         </div>
@@ -54,40 +28,29 @@
         <div class="row">
           <!-- Available Students List -->
           <div class="mx-5 col-md-5">
-            <h5 class="mb-3">List of Students</h5>
+            <h5 class="mb-3">List of Students<br />(Add)</h5>
             <input type="text" id="studentSearch" class="form-control mb-3" placeholder="Search for students" style="max-width: 300px;">
             <div class="border rounded p-2" style="max-height: 300px; overflow-y: auto;">
               <ul id="studentList" class="list-group mb-0">
                 <% availableStudents.forEach(function(student) { %>
                   <li class="list-group-item d-flex align-items-center">
-                    <input type="checkbox" id="student_<%= student.id %>" class="mr-2" name="students[]" value="<%= student.id %>">
+                    <input type="checkbox" name="studentIDs" value="<%= student.id %>">
                     <label for="student_<%= student.id %>" class="mb-0 mx-2"><%= student.name %></label>
                   </li>
-                <% }) %>
+                <% }) %> 
               </ul>
             </div>
           </div>
 
           <!-- Current Team Members and New Students -->
           <div class="col-md-4">
-            <h5 class="mb-3">Current Team Members</h5>
+            <h5 class="mb-3">Current Team Members <br /> (Remove)</h5>
             <div class="border rounded p-2 mb-3" style="max-height: 300px; overflow-y: auto;">
-              <ul id="currentMembersList" class="list-group mb-0"></ul>
-            </div>
-
-            <!-- Centered Buttons with Reduced Width -->
-            <div class="d-flex justify-content-center mb-3">
-              <button type="button" class="btn btn-outline-danger btn-sm" style="width: 150px;" onclick="removeAllMembers()">Remove All</button>
-            </div>
-
-            <h5 class="mb-3">New Students</h5>
-            <div class="border rounded p-2 mb-3" style="max-height: 300px; overflow-y: auto;">
-              <ul id="newStudentsList" class="list-group mb-0"></ul>
-            </div>
-
-            <!-- Centered Buttons with Reduced Width -->
-            <div class="d-flex justify-content-center">
-              <button type="button" class="btn btn-outline-success btn-sm" style="width: 150px;" onclick="saveNewStudents()">Save New Students</button>
+              <ul id="currentMembersList" class="list-group mb-0">
+                <% for(var i = 0; i < currentTeam.members.length; i++){ %>
+                      <li><%= currentTeam.members[i] %></li>
+                    <% } %>
+              </ul>
             </div>
           </div>
         </div>
@@ -122,16 +85,23 @@
 
     function switchTeam() {
       let teamId = document.getElementById('teamSelect').value;
-      let selectedTeam = teams.find(team => team.id == teamId);
-      document.getElementById('teamName').value = selectedTeam.name;
+      let selectedTeam = teams.find(team => team.id_group == teamId);
+      document.getElementById('teamName').value = selectedTeam.group_name;
       let memberList = document.getElementById('currentMembersList');
       memberList.innerHTML = '';
       selectedTeam.members.forEach(member => {
         let li = document.createElement('li');
         li.classList.add('list-group-item');
-        li.innerHTML = `${member.name} <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeMember(${member.id})">Remove</button>`;
+        li.innerHTML = `${member.name} <input type="checkbox" name = "IDsToRemove" value = "${member.id}"></input>`;
         memberList.appendChild(li);
       });
+    }
+
+    function getTeamMembers(){
+      let teamId = document.getElementById('teamSelect').value;
+      let selectedTeam = teams.find(team => team.id_group == teamId);
+      
+      return selectedTeam.members;
     }
 
     function addNewStudent(studentId, studentName) {
