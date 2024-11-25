@@ -9,6 +9,7 @@ import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { group } from "console";
 import {
   getCooperation,
@@ -40,6 +41,8 @@ dotenv.config();
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+
+app.use(express.json()); 
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -547,10 +550,6 @@ app.get("/logout", (req, res) => {
 
 app.use("/uploads", express.static("uploads"));
 
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
 
 // Route for access assessment page
 app.get("/access-assessment", (req, res) => {
@@ -562,7 +561,128 @@ app.get("/access-assessment", (req, res) => {
   });
 });
 
+// Server-side route
+app.get("/student-chatrooms", async (req, res) => {
+  try {
+    const studentId = req.session.userID;
+
+    const nameQuery = await db.query(
+      "SELECT NAME FROM student WHERE id = $1 ",
+      [studentId]
+    );
+   
+    const student_name = nameQuery.rows[0].name.toString()
+
+    // Get the student's group
+    const groupQuery = await db.query(
+      "SELECT s.id_group, g.group_name FROM student s JOIN groups g ON s.id_group = g.id_group WHERE s.id = $1",
+      [studentId]
+    );
+   
+    if (!groupQuery.rows[0]) {
+      return res.status(400).send("You must be assigned to a group to use chat.");
+    }
+   
+    const groupId = groupQuery.rows[0].id_group;
+    const groupName = groupQuery.rows[0].group_name;
+   
+    // Get group members
+    const membersQuery = await db.query(
+      `SELECT s.id, s.name
+       FROM student s
+       WHERE s.id_group = $1`,
+      [groupId]
+    );
+   
+    let messagesQuery = null;
+    try {
+      messagesQuery = await db.query(
+        `SELECT m.*, s.name as sender_name 
+         FROM messages m 
+         JOIN student s ON m.sender = s.id 
+         WHERE m.id_group = $1 
+         ORDER BY m.time DESC 
+         LIMIT 50`,
+        [groupId]
+      );
+    } catch (error) {
+      // Silently ignore the error and proceed with `messagesQuery` as null or an empty array
+      messagesQuery = [];
+    }
+
+    // Initialize messages as an empty array if null
+    const messages = messagesQuery.rows ? messagesQuery.rows.reverse() : [];
+
+  
+   
+    res.render("./student-chatrooms.ejs", {
+      me: student_name,
+      messages: messages,
+      groupName: groupName,
+      members: membersQuery.rows,
+      title: 'Chatroom',
+      studentId: studentId
+  });
+  } catch (err) {
+    console.error("Error loading chat:", err);
+    res.status(500).send("Error loading chat");
+  }
+});
+
+
+
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
+
+
+// Add this route to handle message sending
+app.post("/send-message", async (req, res) => {
+  try {
+
+    const { message } = req.body;
+    const senderId = req.session.userID;
+    const messageOneObject = message.toString();
+    
+
+
+    const groupQuery = await db.query(
+      "SELECT id_group FROM student WHERE id = $1",
+      [senderId]
+    );
+    const groupId = groupQuery.rows[0].id_group;
+
+    // Save message to database
+    const result = await db.query(
+      `INSERT INTO messages (id_group, sender, content) 
+       VALUES ($1, $2, $3) 
+       RETURNING *`,
+      [groupId, senderId, message]
+    );
+
+    if(messageOneObject.startsWith("@chat") ){
+
+      const aiPrompt = message.substring(5).trim();
+
+      console.log(aiPrompt);
+      const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+      const result = await model.generateContent(aiPrompt);
+      console.log(result.response.text());
+
+      await db.query(
+        `INSERT INTO messages (id_group, sender, content) 
+         VALUES ($1, $2, $3) 
+         RETURNING *`,
+        [groupId, senderId, "Chat: " + result.response.text()]
+      );
+    }
+
+
+  } catch (err) {
+    console.error("Error sending message:", err);
+  }
+});
+
 
 // Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
