@@ -114,35 +114,22 @@
               <div class="btn-group">
                 
                 <div class="pending-evaluations-section">
-             <!-- Button trigger modal -->
-<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Notification
-</button>
+                  <a tabindex="0" class="btn btn-dark" role="button" data-bs-toggle="popover" data-bs-trigger="focus" 
+   data-bs-title="Message" 
+   data-bs-content="<%= (typeof hasPendingReviews !== 'undefined' && hasPendingReviews) ? 'You have not completed the peer assessment for your team members. Please make sure to submit your evaluations.' : 'No pending reviews at the moment.' %>">
+   Notifications
+</a>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Pending Reviews</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <% if (typeof hasPendingReviews !== 'undefined' && hasPendingReviews) { %>
-          You have not completed the peer assessment for your team members. Please make sure to submit your evaluations.
-        <% } else { %>
-          No pending reviews at the moment.
-        <% } %>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- Bootstrap and Popover JS -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Initialize the popover after the content has been rendered
+    var popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+    var popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+  });
+</script>
 
-</div>
+                </div>
 
             </li>
             <li>
@@ -345,4 +332,9 @@
     </div>
   </div>
 </div>
+
+
+
+
+
 <%- include('partials/footer') %>
