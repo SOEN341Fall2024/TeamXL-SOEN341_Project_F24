@@ -84,41 +84,42 @@ app.get("/register", (req, res) => {
 // Route to handle the Student Dashboard view
 app.get("/student-dashboard", async (req, res) => {
   const studentID = req.session.userID;
-  res.render("student-dashboard");
 
-  // try {
-  //   // Query to get the number of teammates
-  //   const totalTeammatesQuery = await db.query(
-  //     `SELECT COUNT(*) AS total_teammates
-  //      FROM student
-  //      WHERE id_group = (SELECT id_group FROM student WHERE id = $1)
-  //      AND id != $1`,
-  //     [studentID]
-  //   );
-  //   const totalTeammates = totalTeammatesQuery.rows[0]?.total_teammates || 0;
+  try {
+    // Query to get the number of teammates (excluding the student themselves)
+    const totalTeammatesQuery = await db.query(
+      `SELECT COUNT(*) AS total_teammates
+       FROM student
+       WHERE id_group = (SELECT id_group FROM student WHERE id = $1)
+       AND id != $1`,
+      [studentID]
+    );
+    const totalTeammates = totalTeammatesQuery.rows[0]?.total_teammates || 0;
 
-  //   // Query to get the number of completed reviews
-  //   const completedReviewsQuery = await db.query(
-  //     `SELECT COUNT(*) AS completed_reviews
-  //      FROM evaluation
-  //      WHERE id_evaluator = $1`,
-  //     [studentID]
-  //   );
-  //   const completedReviews =
-  //     completedReviewsQuery.rows[0]?.completed_reviews || 0;
+    // Query to get the number of completed reviews (i.e., the number of teammates the student has reviewed)
+    const completedReviewsQuery = await db.query(
+      `SELECT COUNT(*) AS completed_reviews
+       FROM evaluation
+       WHERE id_evaluator = $1`,
+      [studentID]
+    );
+    const completedReviews =
+      completedReviewsQuery.rows[0]?.completed_reviews || 0;
 
-  //   // Check if there are pending evaluations
-  //   const hasPendingReviews = completedReviews < totalTeammates;
-  //   console.log("HasPendingReviews: " + hasPendingReviews);
+    // Check if there are pending reviews
+    const hasPendingReviews = completedReviews < totalTeammates;
 
-  //   // Render the dashboard view with the computed data
-  //   res.render("student-dashboard", {
-  //     hasPendingReviews, // Pass the boolean indicating if there are pending reviews
-  //   });
-  // } catch (err) {
-  //   console.error("Error fetching data for student dashboard:", err);
-  //   res.redirect("/"); // Redirect to homepage or an error page in case of failure
-  // }
+    // Render the dashboard view with the computed data
+    res.render("student-dashboard", {
+      hasPendingReviews, // Pass the boolean indicating if there are pending reviews
+      reviewStatus: hasPendingReviews
+        ? "You have pending reviews"
+        : "You have completed your reviews",
+    });
+  } catch (err) {
+    console.error("Error fetching data for student dashboard:", err);
+    res.redirect("/"); // Redirect to homepage or an error page in case of failure
+  }
 });
 
 // Route for the INSTRUCTOR DASHBOARD page
@@ -605,10 +606,7 @@ app.post("/login", async (req, res) => {
               userType: user.origin,
             });
           } else {
-            res.render("student-dashboard.ejs", {
-              userType: user.origin,
-              studentId: user.id,
-            }); // Render student dashboard
+            res.redirect("/student-dashboard"); // Render student dashboard
           }
         } else {
           res.render("incorrect-pw-un.ejs");
