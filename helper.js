@@ -207,3 +207,74 @@ function getSplitComment(type, comments){
 export function stringprint(str){
     return str;
 }
+
+export function getCooperationAvg(student_info){
+    var AmountOfReviews = 0;
+    var total = 0;
+
+    for(var i = 0; i < student_info.length; i++){
+        if(isNaN(student_info[i].id_evaluator)){
+            continue;
+        }
+        total += student_info[i].cooperation;
+        AmountOfReviews++;
+    }
+
+    return parseFloat(total / AmountOfReviews * 20).toFixed(2);
+}
+
+export function getConceptualAvg(student_info){
+    var AmountOfReviews = 0;
+    var total = 0;
+
+    for(var i = 0; i < student_info.length; i++){
+        if(isNaN(student_info[i].id_evaluator)){
+            continue;
+        }
+        total += student_info[i].conceptual_contribution;
+        AmountOfReviews++;
+    }
+
+    return parseFloat(total / AmountOfReviews * 20).toFixed(2);
+}
+
+export function getPracticalAvg(student_info){
+    var AmountOfReviews = 0;
+    var total = 0;
+
+    for(var i = 0; i < student_info.length; i++){
+        if(isNaN(student_info[i].id_evaluator)){
+            continue;
+        }
+        total += student_info[i].practical_contribution;
+        AmountOfReviews++;
+    }
+
+    return parseFloat(total / AmountOfReviews * 20).toFixed(2);
+}
+
+export function getWorkEthicAvg(student_info){
+    var AmountOfReviews = 0;
+    var total = 0;
+
+    for(var i = 0; i < student_info.length; i++){
+        if(isNaN(student_info[i].id_evaluator)){
+            continue;
+        }
+        total += student_info[i].work_ethic;
+        AmountOfReviews++;
+    }
+
+    return parseFloat(total / AmountOfReviews * 20).toFixed(2);
+}
+
+export function appendGroupMembers(group, student_info){
+    var studentArr = [];
+    for(var i = 0; i < student_info.length; i++){
+        if(group.id_group == student_info[i].id_group){
+            studentArr.push(student_info[i]);
+        }
+    }
+
+    group.members = studentArr;
+}
