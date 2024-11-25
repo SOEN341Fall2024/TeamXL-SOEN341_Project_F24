@@ -1,122 +1,60 @@
-<%- include('partials/header-2', { title: 'Profile', userType, instructorUsername }) %>
-
+<%- include('partials/student-header', { title: 'Profile', headerTitle: 'Profile' }) %>
 
 <div class="container m-5" style="width:50%">
-<div class="row g-5">
-    <div class="col-md-9 col-lg-8">
-      <h4 class="mb-3">Profile</h4>
-      <form class="needs-validation" novalidate="">
-        <div class="row g-3">
-          <div class="col-sm-6">
-            <label for="firstName" class="form-label">First name</label>
-            <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
-            <div class="invalid-feedback">
-              Valid first name is required.
-            </div>
-          </div>
+  <h4 class="mb-3">Profile</h4>
+  
+  <div class="row g-3">
 
-          <div class="col-sm-6">
-            <label for="lastName" class="form-label">Last name</label>
-            <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
-            <div class="invalid-feedback">
-              Valid last name is required.
-            </div>
-          </div>
+    <!-- First Name -->
+    <div class="col-sm-6">
+      <label for="firstName" class="form-label">First name</label>
+      <p class="form-control-plaintext"><%= profile?.first_name || 'N/A' %></p>
+    </div>
 
+    <!-- Last Name -->
+    <div class="col-sm-6">
+      <label for="lastName" class="form-label">Last name</label>
+      <p class="form-control-plaintext"><%= profile?.last_name || 'N/A' %></p>
+    </div>
 
-          <div class="col-12">
-            <label for="email" class="form-label">Email <span class="text-body-secondary">(Optional)</span></label>
-            <input type="email" class="form-control" id="email" placeholder="you@example.com">
-            <div class="invalid-feedback">
-              Please enter a valid email address for notifications and updates.
-            </div>
-          </div>
+    <!-- Email -->
+    <div class="col-12">
+      <label for="email" class="form-label">Email <span class="text-muted">(Optional)</span></label>
+      <p class="form-control-plaintext"><%= profile?.email || 'N/A' %></p>
+    </div>
 
-          <div class="col-12">
-            <label for="address" class="form-label">Address</label>
-            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required="">
-            <div class="invalid-feedback">
-              Please Enter your address
-            </div>
-          </div>
+    <!-- Address -->
+    <div class="col-12">
+      <label for="address" class="form-label">Address</label>
+      <p class="form-control-plaintext"><%= profile?.address || 'N/A' %></p>
+    </div>
 
-          <div class="col-12">
-            <label for="address2" class="form-label">Address 2 <span class="text-body-secondary">(Optional)</span></label>
-            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">
-          </div>
+    <!-- Address 2 -->
+    <div class="col-12">
+      <label for="address2" class="form-label">Address 2 <span class="text-muted">(Optional)</span></label>
+      <p class="form-control-plaintext"><%= profile?.address2 || 'N/A' %></p>
+    </div>
 
-          <div class="col-md-5">
-            <label for="country" class="form-label">Country</label>
-            <select class="form-select" id="country" required="">
-                <option value="">Choose...</option>
-                <option value="Canada">Canada</option>
-                <option value="USA">USA</option>
-            </select>
-            <div class="invalid-feedback">
-                Please select a valid country.
-            </div>
-        </div>
-        
-        <div class="col-md-3" id="province-container" style="display:none;">
-            <label for="state" class="form-label">Province/State</label>
-            <select class="form-select" id="state" required="">
-                <option value="">Choose...</option>
-                <option>Alberta</option>
-                <option>British Columbia</option>
-                <option>Manitoba</option>
-                <option>New Brunswick</option>
-                <option>Newfoundland and Labrador</option>
-                <option>Nova Scotia</option>
-                <option>Ontario</option>
-                <option>Prince Edward Island</option>
-                <option>Quebec</option>
-                <option>Saskatchewan</option>
-            </select>
-            <div class="invalid-feedback">
-                Please provide a valid state.
-            </div>
-        </div>
+    <!-- Country -->
+    <div class="col-md-5">
+      <label for="country" class="form-label">Country</label>
+      <p class="form-control-plaintext">Canada</p>
+    </div>
 
-        <div class="col-md-3" id="state-container" style="display:none;">
-            <label for="state-text" class="form-label">State</label>
-            <input type="text" id="state-text" class="form-control" placeholder="Enter your state" />
-            <div class="invalid-feedback">
-                Please provide a valid state.
-            </div>
-        </div>
+    <!-- Province -->
+    <div class="col-md-3">
+      <label for="province" class="form-label">Province</label>
+      <p class="form-control-plaintext"><%= profile?.province || 'N/A' %></p>
+    </div>
 
-          <div class="col-md-4">
-            <label for="zip" class="form-label">Zip</label>
-            <input type="text" class="form-control" id="zip" placeholder="" required="">
-            <div class="invalid-feedback">
-              Zip code required.
-            </div>
-          </div>
-        </div>
-  </div>
+    <!-- Zip Code -->
+    <div class="col-md-4">
+      <label for="zip" class="form-label">Zip</label>
+      <p class="form-control-plaintext"><%= profile?.zip || 'N/A' %></p>
+    </div>
+
   </div>
 
-  <button type="button" class="btn btn-success mt-4">Save</button>
-
-
-  <script>
-    const countrySelect = document.getElementById('country');
-    const provinceContainer = document.getElementById('province-container');
-    const stateContainer = document.getElementById('state-container');
-
-    countrySelect.addEventListener('change', function() {
-        if (countrySelect.value === "Canada") {
-            provinceContainer.style.display = 'block'; 
-            stateContainer.style.display = 'none'; 
-        } else if (countrySelect.value === "USA") {
-            provinceContainer.style.display = 'none'; 
-            stateContainer.style.display = 'block'; 
-        } else {
-            provinceContainer.style.display = 'none'; 
-            stateContainer.style.display = 'none'; 
-    }});
-</script>
 </div>
-
 
 <%- include('partials/footer') %>
