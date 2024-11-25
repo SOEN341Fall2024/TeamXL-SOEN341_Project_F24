@@ -122,7 +122,7 @@
         }
 
         .chat-bubble.other {
-            background-color: #ce1a1aba;
+            background-color: #08ec1bba;
             border: 1px solid #ddd;
             align-self: flex-start;
             border-radius: 20px 20px 20px 0;
@@ -229,7 +229,7 @@
         // Function to start auto-refresh
         function startAutoRefresh() {
             if (!refreshInterval) {
-                refreshInterval = setInterval(refreshPage, 1000);
+                refreshInterval = setInterval(refreshPage, 5000);
                 console.log('Auto-refresh started');
             }
         }
@@ -291,6 +291,20 @@
             });
         });
 
+        window.onload = function () {
+            console.log('Window loaded'); // Debug log
+            const sendButton = document.getElementById('sendButton');
+            if (sendButton) {
+                sendButton.onclick = function () {
+                    console.log('Button clicked (from window.onload)'); // Debug log
+                    const message = document.getElementById('message').value.trim();
+                    if (message) {
+                        console.log('Message to send:', message);
+                    }
+                    refreshPage();
+                };
+            }
+        };
 
     </script>
 </body>
