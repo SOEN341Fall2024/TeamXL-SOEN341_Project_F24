@@ -25,7 +25,13 @@ import {
   getComments,
   getCommentsObj,
   stringprint,
+  getCooperationAvg,
+  getConceptualAvg,
+  getPracticalAvg,
+  getWorkEthicAvg,
+  appendGroupMembers,
 } from "./helper.js";
+import { Template } from "ejs";
 
 dotenv.config();
 
@@ -244,8 +250,31 @@ app.get("/view-teams", async (req, res) => {
 });
 
 //Route for EDIT TEAMS page
-app.get("/edit-team", (req, res) => {
-  res.render("edit-team.ejs");
+app.get("/edit-team", async (req, res) => {
+  const RESULT1 = await db.query(
+    "SELECT * FROM groups ORDER BY id_group ASC"
+  );
+
+  const RESULT2 = await db.query(
+    "SELECT * FROM student WHERE id_group is NULL"
+  );
+
+  const RESULT3 = await db.query(
+    "SELECT * FROM student ORDER BY id_group, id ASC"
+  );
+
+  var teams = RESULT1.rows;
+  var availableStudents = RESULT2.rows;
+  var student_info = RESULT3.rows;
+
+  for(var i = 0; i < teams.length; i++){
+    appendGroupMembers(teams[i], student_info);
+  }
+
+  res.render("edit-team.ejs", {
+    teams,
+    availableStudents,
+  });
 });
 
 async function getIncompleteAssessments() {
@@ -287,7 +316,7 @@ app.get("/peer-assessment", async (req, res) => {
       );
       const groupID = r_temp.rows[0].id_group;
       const result = await db.query(
-        "SELECT * FROM student WHERE LOWER(name) LIKE $1 AND id != $2 AND id_group = $3",
+        "SELECT DISTINCT id, name, id_group FROM student JOIN evaluation ON id != $2 AND id_group = $3 WHERE NOT EXISTS (SELECT * FROM evaluation WHERE id_evaluator = $2 AND id_evaluatee = id) AND LOWER(name) LIKE $1",
         [`%${query}%`, req.session.userID, groupID]
       );
       res.render("peer-assessment.ejs", {
@@ -437,6 +466,10 @@ app.get("/view-reviews-summary", async (req, res) => {
     getWorkEthic,
     getPeers,
     getAverage,
+    getCooperationAvg,
+    getConceptualAvg,
+    getPracticalAvg,
+    getWorkEthicAvg,
     student_info,
     groups,
     instructorUsername: instructorUsername,
@@ -465,6 +498,10 @@ app.get("/view-reviews-detailed", async (req, res) => {
     getTeammateInfo,
     getCommentMadeByStudent,
     getGradesGivenByStudent,
+    getCooperationAvg,
+    getConceptualAvg,
+    getPracticalAvg,
+    getWorkEthicAvg,
     student_info,
     groups,
     sorted_students,
@@ -513,11 +550,6 @@ app.use("/uploads", express.static("uploads"));
 // Route for the STUDENT CHATROOMS page
 app.get("/student-chatrooms", (req, res) => {
   res.render("student-chatrooms.ejs");
-});
-
-// Route for the View Review Completion page
-app.get("/view-review-completion", (req, res) => {
-  res.render("view-review-completion.ejs");
 });
 
 // Route for access assessment page
@@ -770,6 +802,54 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
     // Optionally handle the error response
     res.status(500).send("An error occurred while creating teams.");
   }
+});
+
+app.post("/edit-teams", async (req, res) => {
+  var newTeamName = req.body.teamName;
+  var studentsToAdd = req.body.studentIDs;
+  var IDsToRemove = req.body.IDsToRemove;
+  var teamID = req.body.team;
+
+  //console.log(newTeamName, studentsToAdd, IDsToRemove, teamID);
+
+  const RESULT = await db.query("SELECT * FROM groups WHERE id_group = $1", [
+    teamID,
+  ]);
+
+  var team = RESULT.rows[0];
+
+  if(newTeamName != team.group_name){
+    await db.query("UPDATE groups SET group_name = $1 WHERE id_group = $2", [
+      newTeamName,
+      teamID,
+    ]);
+  }
+
+  if(studentsToAdd != null){
+    if(!Array.isArray(studentsToAdd)){
+      studentsToAdd = [studentsToAdd];
+    }
+    for(var i = 0; i < studentsToAdd.length; i++){
+      await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
+        teamID,
+        studentsToAdd[i],
+      ]);
+    }
+  }
+
+  if(IDsToRemove != null){
+    if(!Array.isArray(IDsToRemove)){
+      IDsToRemove = [IDsToRemove];
+    }
+    for(var i = 0; i < IDsToRemove.length; i++){
+      await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
+        null,
+        IDsToRemove[i],
+      ]);
+    }
+  }
+
+  res.redirect("/login");
 });
 
 // Route to handle PEER_ASSESSMENTS (SELECTED PEER) data

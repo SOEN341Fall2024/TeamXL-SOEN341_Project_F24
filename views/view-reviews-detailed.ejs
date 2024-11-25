@@ -46,9 +46,9 @@
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body text-center">
             <h5 class="card-title">Cooperation</h5>
-            <p class="display-6 text-success">88%</p> <!-- Replace with dynamic values (backend) -->
+            <p class="display-6 text-success"><%- getCooperationAvg(student_info) %></p> <!-- Replace with dynamic values (backend) -->
             <div class="progress mt-2">
-              <div class="progress-bar bg-success" role="progressbar" style="width: 88%" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar bg-success" role="progressbar" style="width: <%- getCooperationAvg(student_info) %>%" aria-valuenow="<%- getCooperationAvg(student_info) %>" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
         </div>
@@ -57,9 +57,9 @@
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body text-center">
             <h5 class="card-title">Conceptual</h5>
-            <p class="display-6 text-info">75%</p> <!-- Replace with dynamic values (backend) -->
+            <p class="display-6 text-info"><%- getConceptualAvg(student_info) %></p> <!-- Replace with dynamic values (backend) -->
             <div class="progress mt-2">
-              <div class="progress-bar bg-info" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar bg-info" role="progressbar" style="width: <%- getConceptualAvg(student_info) %>%" aria-valuenow="<%- getConceptualAvg(student_info) %>" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
         </div>
@@ -68,9 +68,9 @@
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body text-center">
             <h5 class="card-title">Practical</h5>
-            <p class="display-6 text-warning">82%</p> <!-- Replace with dynamic values (backend) -->
+            <p class="display-6 text-warning"><%- getPracticalAvg(student_info) %></p> <!-- Replace with dynamic values (backend) -->
             <div class="progress mt-2">
-              <div class="progress-bar bg-warning" role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar bg-warning" role="progressbar" style="width: <%- getPracticalAvg(student_info) %>%" aria-valuenow="<%- getPracticalAvg(student_info) %>" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
         </div>
@@ -79,9 +79,9 @@
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body text-center">
             <h5 class="card-title">Work Ethic</h5>
-            <p class="display-6 text-primary">90%</p> <!-- Replace with dynamic values (backend) -->
+            <p class="display-6 text-primary"><%- getWorkEthicAvg(student_info) %></p> <!-- Replace with dynamic values (backend) -->
             <div class="progress mt-2">
-              <div class="progress-bar bg-primary" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar bg-primary" role="progressbar" style="width: <%- getWorkEthicAvg(student_info) %>%" aria-valuenow="<%- getWorkEthicAvg(student_info) %>" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
         </div>
