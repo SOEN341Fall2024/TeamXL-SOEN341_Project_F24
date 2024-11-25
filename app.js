@@ -11,6 +11,7 @@ import csv from "csv-parser";
 import fs from "fs";
 import { createDbConnection } from './db.config.js';
 import { group } from "console";
+import { Parser } from "json2csv"; 
 import {
   getCooperation,
   getConceptual,
@@ -202,6 +203,27 @@ app.get("/profile", async (req, res) => {
       );
   }
 });
+
+// Fetch Edit Profile
+app.get("/edit-profile", async (req, res) => {
+  try {
+    const userId = req.session.userID; // Get logged-in user ID
+    if (!userId) {
+      return res.redirect("/login"); // Redirect to login if user is not logged in
+    }
+
+    // Fetch profile data from the database
+    const profileQuery = "SELECT * FROM PROFILE WHERE ID_STUDENT = $1";
+    const result = await db.query(profileQuery, [userId]);
+
+    const profile = result.rows[0] || {}; // Use an empty object if no profile is found
+    res.render("edit-profile", { profile }); // Render the edit-profile.ejs view
+  } catch (err) {
+    console.error("Error fetching profile for edit:", err);
+    res.status(500).send("An error occurred while loading the edit profile page.");
+  }
+});
+
 
 // Route for the VIEW TEAMS page
 app.get("/view-teams", async (req, res) => {
@@ -840,6 +862,40 @@ app.post("/profile", async (req, res) => {
   }
 });
 
+// Edit student profile
+app.post("/edit-profile", async (req, res) => {
+  try {
+    const userId = req.session.userID; // Get logged-in user ID
+    if (!userId) {
+      return res.redirect("/login"); // Redirect to login if user is not logged in
+    }
+
+    const { firstName, lastName, email, address, address2, province, zip } = req.body;
+
+    // Update profile in the database
+    const updateQuery = `
+      UPDATE PROFILE
+      SET 
+        FIRST_NAME = $1, 
+        LAST_NAME = $2, 
+        EMAIL = $3, 
+        ADDRESS = $4, 
+        ADDRESS2 = $5, 
+        PROVINCE = $6, 
+        ZIP = $7
+      WHERE ID_STUDENT = $8
+    `;
+
+    await db.query(updateQuery, [firstName, lastName, email, address, address2, province, zip, userId]);
+
+    res.redirect("/profile"); // Redirect to the profile page after saving changes
+  } catch (err) {
+    console.error("Error saving profile updates:", err);
+    res.status(500).send("An error occurred while saving your profile.");
+  }
+});
+
+
 app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
   const IDs = req.body.studentIDs;
   const TEAMNAME = req.body.teamname;
@@ -980,7 +1036,7 @@ app.post("/edit-teams", async (req, res) => {
     }
   }
 
-  res.redirect("/login");
+  res.redirect("/view-teams");
 });
 
 // Route to handle PEER_ASSESSMENTS (SELECTED PEER) data
