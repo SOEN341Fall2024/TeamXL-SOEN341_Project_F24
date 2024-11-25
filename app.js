@@ -10,6 +10,7 @@ import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
 import { group } from "console";
+import { Parser } from "json2csv"; 
 import {
   getCooperation,
   getConceptual,
@@ -560,6 +561,95 @@ app.get("/access-assessment", (req, res) => {
     instructorUsername: instructorUsername,
     userType: userType,
   });
+});
+
+app.get("/export-reviews-csv", async (req, res) => {
+  try {
+    // Fetch the detailed review data from your database
+    const result = await db.query(`
+      SELECT 
+        e.id_evaluatee AS evaluatee_id,
+        s.name AS evaluatee_name,
+        e.cooperation,
+        e.conceptual_contribution AS conceptual,
+        e.practical_contribution AS practical,
+        e.work_ethic,
+        e.comments
+      FROM 
+        evaluation e
+      JOIN 
+        student s
+      ON 
+        e.id_evaluatee = s.id
+      ORDER BY 
+        s.id_group, e.id_evaluatee
+    `);
+
+    const reviews = result.rows;
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).send("No review data available to export.");
+    }
+
+    // Process comments to separate each type
+    const processedReviews = reviews.map(review => {
+      const commentParts = {
+        cooperation_comment: "",
+        conceptual_comment: "",
+        practical_comment: "",
+        work_ethic_comment: "",
+        additional_comment: "",
+      };
+
+      // Split comments by type if they follow a structured format (e.g., labeled sections)
+      const commentLines = review.comments.split("<br/><br/>").map(line => line.trim());
+      commentLines.forEach(line => {
+        if (line.startsWith("Cooperation Contribution Comment:")) {
+          commentParts.cooperation_comment = line.replace("Cooperation Contribution Comment:", "").trim();
+        } else if (line.startsWith("Conceptual Contribution Comment:")) {
+          commentParts.conceptual_comment = line.replace("Conceptual Contribution Comment:", "").trim();
+        } else if (line.startsWith("Practical Contribution Comment:")) {
+          commentParts.practical_comment = line.replace("Practical Contribution Comment:", "").trim();
+        } else if (line.startsWith("Work Ethic Comment:")) {
+          commentParts.work_ethic_comment = line.replace("Work Ethic Comment:", "").trim();
+        } else if (line.startsWith("Additional Comment:")) {
+          commentParts.additional_comment = line.replace("Additional Comment:", "").trim();
+        }
+      });
+
+      return {
+        ...review,
+        ...commentParts, // Add separated comments to the review object
+      };
+    });
+
+    // Define the fields/columns for the CSV
+    const fields = [
+      { label: "Evaluatee ID", value: "evaluatee_id" },
+      { label: "Evaluatee Name", value: "evaluatee_name" },
+      { label: "Cooperation", value: "cooperation" },
+      { label: "Conceptual Contribution", value: "conceptual" },
+      { label: "Practical Contribution", value: "practical" },
+      { label: "Work Ethic", value: "work_ethic" },
+      { label: "Cooperation Comment", value: "cooperation_comment" },
+      { label: "Conceptual Comment", value: "conceptual_comment" },
+      { label: "Practical Comment", value: "practical_comment" },
+      { label: "Work Ethic Comment", value: "work_ethic_comment" },
+      { label: "Additional Comment", value: "additional_comment" },
+    ];
+
+    // Create the CSV using json2csv
+    const json2csv = new Parser({ fields });
+    const csv = json2csv.parse(processedReviews);
+
+    // Set headers and send the CSV file
+    res.header("Content-Type", "text/csv");
+    res.attachment("detailed_reviews.csv");
+    res.send(csv);
+  } catch (err) {
+    console.error("Error generating CSV export:", err);
+    res.status(500).send("An error occurred while exporting reviews as CSV.");
+  }
 });
 
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
