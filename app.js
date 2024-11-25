@@ -653,6 +653,7 @@ app.get("/export-reviews-csv", async (req, res) => {
   }
 });
 
+// Define the fields/columns for the summary CSV page
 app.get("/export-summary-csv", async (req, res) => {
   try {
     // SQL Query to fetch required data
@@ -721,6 +722,7 @@ app.get("/export-summary-csv", async (req, res) => {
     res.status(500).send("An error occurred while exporting the summary as CSV.");
   }
 });
+
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
 
 // Route to handle user REGISTRATION

@@ -1,60 +1,77 @@
 <%- include('partials/student-header', { title: 'Profile', headerTitle: 'Profile' }) %>
 
-<div class="container m-5" style="width:50%">
-  <h4 class="mb-3">Profile</h4>
-  
-  <div class="row g-3">
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Profile Card -->
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center">
+          <h4 class="mb-0">Profile</h4>
+        </div>
+        <div class="card-body">
+          <!-- Profile Info -->
+          <div class="row g-4">
 
-    <!-- First Name -->
-    <div class="col-sm-6">
-      <label for="firstName" class="form-label">First name</label>
-      <p class="form-control-plaintext"><%= profile?.first_name || 'N/A' %></p>
+            <!-- First Name -->
+            <div class="col-md-6">
+              <label class="form-label text-muted">First Name</label>
+              <p class="fw-bold fs-5"><%= profile?.first_name || 'N/A' %></p>
+            </div>
+
+            <!-- Last Name -->
+            <div class="col-md-6">
+              <label class="form-label text-muted">Last Name</label>
+              <p class="fw-bold fs-5"><%= profile?.last_name || 'N/A' %></p>
+            </div>
+
+            <!-- Email -->
+            <div class="col-12">
+              <label class="form-label text-muted">Email</label>
+              <p class="fw-bold fs-5"><%= profile?.email || 'N/A' %></p>
+            </div>
+
+            <!-- Address -->
+            <div class="col-12">
+              <label class="form-label text-muted">Address</label>
+              <p class="fw-bold fs-5"><%= profile?.address || 'N/A' %></p>
+            </div>
+
+            <!-- Address 2 -->
+            <div class="col-12">
+              <label class="form-label text-muted">Address 2</label>
+              <p class="fw-bold fs-5"><%= profile?.address2 || 'N/A' %></p>
+            </div>
+
+            <!-- Country -->
+            <div class="col-md-5">
+              <label class="form-label text-muted">Country</label>
+              <p class="fw-bold fs-5">Canada</p>
+            </div>
+
+            <!-- Province -->
+            <div class="col-md-3">
+              <label class="form-label text-muted">Province</label>
+              <p class="fw-bold fs-5"><%= profile?.province || 'N/A' %></p>
+            </div>
+
+            <!-- Zip Code -->
+            <div class="col-md-4">
+              <label class="form-label text-muted">Zip</label>
+              <p class="fw-bold fs-5"><%= profile?.zip || 'N/A' %></p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer text-center bg-light">
+          <button class="btn btn-outline-primary" onclick="location.href='/edit-profile'">
+            Edit Profile
+          </button>
+        </div>
+      </div>
     </div>
-
-    <!-- Last Name -->
-    <div class="col-sm-6">
-      <label for="lastName" class="form-label">Last name</label>
-      <p class="form-control-plaintext"><%= profile?.last_name || 'N/A' %></p>
-    </div>
-
-    <!-- Email -->
-    <div class="col-12">
-      <label for="email" class="form-label">Email <span class="text-muted">(Optional)</span></label>
-      <p class="form-control-plaintext"><%= profile?.email || 'N/A' %></p>
-    </div>
-
-    <!-- Address -->
-    <div class="col-12">
-      <label for="address" class="form-label">Address</label>
-      <p class="form-control-plaintext"><%= profile?.address || 'N/A' %></p>
-    </div>
-
-    <!-- Address 2 -->
-    <div class="col-12">
-      <label for="address2" class="form-label">Address 2 <span class="text-muted">(Optional)</span></label>
-      <p class="form-control-plaintext"><%= profile?.address2 || 'N/A' %></p>
-    </div>
-
-    <!-- Country -->
-    <div class="col-md-5">
-      <label for="country" class="form-label">Country</label>
-      <p class="form-control-plaintext">Canada</p>
-    </div>
-
-    <!-- Province -->
-    <div class="col-md-3">
-      <label for="province" class="form-label">Province</label>
-      <p class="form-control-plaintext"><%= profile?.province || 'N/A' %></p>
-    </div>
-
-    <!-- Zip Code -->
-    <div class="col-md-4">
-      <label for="zip" class="form-label">Zip</label>
-      <p class="form-control-plaintext"><%= profile?.zip || 'N/A' %></p>
-    </div>
-
   </div>
-
 </div>
 
 <%- include('partials/footer') %>
