@@ -9,7 +9,9 @@ import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { group } from "console";
+import { Parser } from "json2csv"; 
 import {
   getCooperation,
   getConceptual,
@@ -25,7 +27,13 @@ import {
   getComments,
   getCommentsObj,
   stringprint,
+  getCooperationAvg,
+  getConceptualAvg,
+  getPracticalAvg,
+  getWorkEthicAvg,
+  appendGroupMembers,
 } from "./helper.js";
+import { Template } from "ejs";
 
 dotenv.config();
 
@@ -34,6 +42,8 @@ dotenv.config();
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+
+app.use(express.json()); 
 
 // Middleware to parse URL-encoded bodies (from forms)
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -196,6 +206,27 @@ app.get("/profile", async (req, res) => {
   }
 });
 
+// Fetch Edit Profile
+app.get("/edit-profile", async (req, res) => {
+  try {
+    const userId = req.session.userID; // Get logged-in user ID
+    if (!userId) {
+      return res.redirect("/login"); // Redirect to login if user is not logged in
+    }
+
+    // Fetch profile data from the database
+    const profileQuery = "SELECT * FROM PROFILE WHERE ID_STUDENT = $1";
+    const result = await db.query(profileQuery, [userId]);
+
+    const profile = result.rows[0] || {}; // Use an empty object if no profile is found
+    res.render("edit-profile", { profile }); // Render the edit-profile.ejs view
+  } catch (err) {
+    console.error("Error fetching profile for edit:", err);
+    res.status(500).send("An error occurred while loading the edit profile page.");
+  }
+});
+
+
 // Route for the VIEW TEAMS page
 app.get("/view-teams", async (req, res) => {
   const userType = req.session.userType;
@@ -245,8 +276,31 @@ app.get("/view-teams", async (req, res) => {
 });
 
 //Route for EDIT TEAMS page
-app.get("/edit-team", (req, res) => {
-  res.render("edit-team.ejs");
+app.get("/edit-team", async (req, res) => {
+  const RESULT1 = await db.query(
+    "SELECT * FROM groups ORDER BY id_group ASC"
+  );
+
+  const RESULT2 = await db.query(
+    "SELECT * FROM student WHERE id_group is NULL"
+  );
+
+  const RESULT3 = await db.query(
+    "SELECT * FROM student ORDER BY id_group, id ASC"
+  );
+
+  var teams = RESULT1.rows;
+  var availableStudents = RESULT2.rows;
+  var student_info = RESULT3.rows;
+
+  for(var i = 0; i < teams.length; i++){
+    appendGroupMembers(teams[i], student_info);
+  }
+
+  res.render("edit-team.ejs", {
+    teams,
+    availableStudents,
+  });
 });
 
 async function getIncompleteAssessments() {
@@ -288,7 +342,7 @@ app.get("/peer-assessment", async (req, res) => {
       );
       const groupID = r_temp.rows[0].id_group;
       const result = await db.query(
-        "SELECT * FROM student WHERE LOWER(name) LIKE $1 AND id != $2 AND id_group = $3",
+        "SELECT DISTINCT id, name, id_group FROM student JOIN evaluation ON id != $2 AND id_group = $3 WHERE NOT EXISTS (SELECT * FROM evaluation WHERE id_evaluator = $2 AND id_evaluatee = id) AND LOWER(name) LIKE $1",
         [`%${query}%`, req.session.userID, groupID]
       );
       res.render("peer-assessment.ejs", {
@@ -387,6 +441,8 @@ app.get("/assess-notification", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+//------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
 
 app.get("/edit-evaluation", async (req, res) => {
   const studentId = req.params.id;
@@ -402,6 +458,14 @@ app.get("/edit-evaluation", async (req, res) => {
 
     const student = await getStudentById(studentId);
 
+    const commentString = answers.rows[0].comments;
+
+    const sections = commentString.split('<br/>');
+    const divComments = [sections[1], sections[4], sections[7], sections[10], sections[13]];
+    
+    console.log(sections);
+    console.log(divComments );
+
     res.render("edit-evaluation.ejs", {
       student,
       userType,
@@ -410,7 +474,7 @@ app.get("/edit-evaluation", async (req, res) => {
       conceptualContributionValue: answers.rows[0].conceptual_contribution,
       practical_contributionValue: answers.rows[0].practical_contribution,
       work_ethicValue: answers.rows[0].work_ethic,
-      commentsValue: answers.rows[0].comments,
+      commentsValue: divComments,
     });
   } catch (error) {
     console.error("Error fetching student for evaluation:", error);
@@ -438,6 +502,10 @@ app.get("/view-reviews-summary", async (req, res) => {
     getWorkEthic,
     getPeers,
     getAverage,
+    getCooperationAvg,
+    getConceptualAvg,
+    getPracticalAvg,
+    getWorkEthicAvg,
     student_info,
     groups,
     instructorUsername: instructorUsername,
@@ -466,6 +534,10 @@ app.get("/view-reviews-detailed", async (req, res) => {
     getTeammateInfo,
     getCommentMadeByStudent,
     getGradesGivenByStudent,
+    getCooperationAvg,
+    getConceptualAvg,
+    getPracticalAvg,
+    getWorkEthicAvg,
     student_info,
     groups,
     sorted_students,
@@ -511,15 +583,6 @@ app.get("/logout", (req, res) => {
 
 app.use("/uploads", express.static("uploads"));
 
-// Route for the STUDENT CHATROOMS page
-app.get("/student-chatrooms", (req, res) => {
-  res.render("student-chatrooms.ejs");
-});
-
-// Route for the View Review Completion page
-app.get("/view-review-completion", (req, res) => {
-  res.render("view-review-completion.ejs");
-});
 
 // Route for access assessment page
 app.get("/access-assessment", (req, res) => {
@@ -531,7 +594,128 @@ app.get("/access-assessment", (req, res) => {
   });
 });
 
+// Server-side route
+app.get("/student-chatrooms", async (req, res) => {
+  try {
+    const studentId = req.session.userID;
+
+    const nameQuery = await db.query(
+      "SELECT NAME FROM student WHERE id = $1 ",
+      [studentId]
+    );
+   
+    const student_name = nameQuery.rows[0].name.toString()
+
+    // Get the student's group
+    const groupQuery = await db.query(
+      "SELECT s.id_group, g.group_name FROM student s JOIN groups g ON s.id_group = g.id_group WHERE s.id = $1",
+      [studentId]
+    );
+   
+    if (!groupQuery.rows[0]) {
+      return res.status(400).send("You must be assigned to a group to use chat.");
+    }
+   
+    const groupId = groupQuery.rows[0].id_group;
+    const groupName = groupQuery.rows[0].group_name;
+   
+    // Get group members
+    const membersQuery = await db.query(
+      `SELECT s.id, s.name
+       FROM student s
+       WHERE s.id_group = $1`,
+      [groupId]
+    );
+   
+    let messagesQuery = null;
+    try {
+      messagesQuery = await db.query(
+        `SELECT m.*, s.name as sender_name 
+         FROM messages m 
+         JOIN student s ON m.sender = s.id 
+         WHERE m.id_group = $1 
+         ORDER BY m.time DESC 
+         LIMIT 50`,
+        [groupId]
+      );
+    } catch (error) {
+      // Silently ignore the error and proceed with `messagesQuery` as null or an empty array
+      messagesQuery = [];
+    }
+
+    // Initialize messages as an empty array if null
+    const messages = messagesQuery.rows ? messagesQuery.rows.reverse() : [];
+
+  
+   
+    res.render("./student-chatrooms.ejs", {
+      me: student_name,
+      messages: messages,
+      groupName: groupName,
+      members: membersQuery.rows,
+      title: 'Chatroom',
+      studentId: studentId
+  });
+  } catch (err) {
+    console.error("Error loading chat:", err);
+    res.status(500).send("Error loading chat");
+  }
+});
+
+
+
 //----POST REQUESTS FOR ALL THE WEBPAGES ----//
+
+
+// Add this route to handle message sending
+app.post("/send-message", async (req, res) => {
+  try {
+
+    const { message } = req.body;
+    const senderId = req.session.userID;
+    const messageOneObject = message.toString();
+    
+
+
+    const groupQuery = await db.query(
+      "SELECT id_group FROM student WHERE id = $1",
+      [senderId]
+    );
+    const groupId = groupQuery.rows[0].id_group;
+
+    // Save message to database
+    const result = await db.query(
+      `INSERT INTO messages (id_group, sender, content) 
+       VALUES ($1, $2, $3) 
+       RETURNING *`,
+      [groupId, senderId, message]
+    );
+
+    if(messageOneObject.startsWith("@chat") ){
+
+      const aiPrompt = message.substring(5).trim();
+
+      console.log(aiPrompt);
+      const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+      const result = await model.generateContent(aiPrompt);
+      console.log(result.response.text());
+
+      await db.query(
+        `INSERT INTO messages (id_group, sender, content) 
+         VALUES ($1, $2, $3) 
+         RETURNING *`,
+        [groupId, senderId, "Chat: " + result.response.text()]
+      );
+    }
+
+
+  } catch (err) {
+    console.error("Error sending message:", err);
+  }
+});
+
 
 // Route to handle user REGISTRATION
 app.post("/register", async (req, res) => {
@@ -586,12 +770,13 @@ app.post("/login", async (req, res) => {
     const result = await db.query(
       `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = '${username}' UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = '${username}' ;`
     );
-
-    req.session.userID = result.rows[0].id;
+  
 
     if (result.rows.length > 0) {
+
       const user = result.rows[0];
       req.session.userType = user.origin;
+      req.session.userID = result.rows[0].id;
 
       console.log("User found:", user); // Debugging: Log the result
 
@@ -675,6 +860,40 @@ app.post("/profile", async (req, res) => {
     res.status(500).send("An error occurred while saving your profile.");
   }
 });
+
+// Edit student profile
+app.post("/edit-profile", async (req, res) => {
+  try {
+    const userId = req.session.userID; // Get logged-in user ID
+    if (!userId) {
+      return res.redirect("/login"); // Redirect to login if user is not logged in
+    }
+
+    const { firstName, lastName, email, address, address2, province, zip } = req.body;
+
+    // Update profile in the database
+    const updateQuery = `
+      UPDATE PROFILE
+      SET 
+        FIRST_NAME = $1, 
+        LAST_NAME = $2, 
+        EMAIL = $3, 
+        ADDRESS = $4, 
+        ADDRESS2 = $5, 
+        PROVINCE = $6, 
+        ZIP = $7
+      WHERE ID_STUDENT = $8
+    `;
+
+    await db.query(updateQuery, [firstName, lastName, email, address, address2, province, zip, userId]);
+
+    res.redirect("/profile"); // Redirect to the profile page after saving changes
+  } catch (err) {
+    console.error("Error saving profile updates:", err);
+    res.status(500).send("An error occurred while saving your profile.");
+  }
+});
+
 
 app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
   const IDs = req.body.studentIDs;
@@ -770,6 +989,55 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
   }
 });
 
+app.post("/edit-teams", async (req, res) => {
+  var newTeamName = req.body.teamName;
+  var studentsToAdd = req.body.studentIDs;
+  var IDsToRemove = req.body.IDsToRemove;
+  var teamID = req.body.team;
+
+  //console.log(newTeamName, studentsToAdd, IDsToRemove, teamID);
+
+  const RESULT = await db.query("SELECT * FROM groups WHERE id_group = $1", [
+    teamID,
+  ]);
+
+  var team = RESULT.rows[0];
+
+  if(newTeamName != team.group_name){
+    await db.query("UPDATE groups SET group_name = $1 WHERE id_group = $2", [
+      newTeamName,
+      teamID,
+    ]);
+  }
+
+  if(studentsToAdd != null){
+    if(!Array.isArray(studentsToAdd)){
+      studentsToAdd = [studentsToAdd];
+    }
+    for(var i = 0; i < studentsToAdd.length; i++){
+      await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
+        teamID,
+        studentsToAdd[i],
+      ]);
+    }
+  }
+
+  if(IDsToRemove != null){
+    if(!Array.isArray(IDsToRemove)){
+      IDsToRemove = [IDsToRemove];
+    }
+    for(var i = 0; i < IDsToRemove.length; i++){
+      await db.query("DELETE FROM evaluation WHERE id_evaluator = $1 OR id_evaluatee = $1", [IDsToRemove[i]]);
+      await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
+        null,
+        IDsToRemove[i],
+      ]);
+    }
+  }
+
+  res.redirect("/view-teams");
+});
+
 // Route to handle PEER_ASSESSMENTS (SELECTED PEER) data
 app.post("/student-evaluation", async (req, res) => {
   const studentId = req.body.studentRadio;
@@ -845,10 +1113,16 @@ app.post("/submit-evaluation", async (req, res) => {
 
 // The edition of an evaluation route ----------------------------------
 app.post("/edit-submition", async (req, res) => {
-  var commentsObj;
-  commentsObj.cooperation =
-    req.body.cooperation_comments != ""
-      ? "Cooperation Contribution Comment: <br/>" +
+  var commentsObj = {
+    cooperation: "",
+    conceptual: "",
+    practical: "",
+    work_ethic: "",
+    comments: "",
+  };
+  commentsObj.cooperation = 
+  req.body.cooperation_comments != "" 
+  ? "Cooperation Contribution Comment: <br/>" +
         req.body.cooperation_comments +
         "<br/><br/>"
       : "";
