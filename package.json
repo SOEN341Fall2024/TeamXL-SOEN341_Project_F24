@@ -32,14 +32,9 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.js$": "babel-jest"
+      "^.+\\.jsx?$": "babel-jest"
     },
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "jsx",
-      "node"
-    ]
+    "testEnvironment": "node"
   },
   "scripts": {
     "start": "node server.js",
