@@ -451,13 +451,13 @@ app.get("/view-reviews-summary", async (req, res) => {
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   const result1 = await db.query(
-    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
+    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id WHERE NOT id_group IS NULL ORDER BY id_group, id ASC"
   );
   const result2 = await db.query(
     "SELECT group_name, id_group FROM groups ORDER BY id_group ASC"
   );
   const student_info = result1.rows;
-  const groups = result2.rows;
+  const groups = result2.rows;  
 
   res.render("view-reviews-summary.ejs", {
     getCooperation,
@@ -482,7 +482,7 @@ app.get("/view-reviews-detailed", async (req, res) => {
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   const result1 = await db.query(
-    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id ORDER BY id_group, id ASC"
+    "SELECT * FROM evaluation RIGHT JOIN student ON id_evaluatee = id WHERE NOT id_group IS NULL ORDER BY id_group, id ASC"
   );
   const result2 = await db.query(
     "SELECT group_name, id_group FROM groups ORDER BY id_group ASC"
