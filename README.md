@@ -107,6 +107,7 @@ DB_HOST= "localhost"
 DB_NAME= your_postgres_databasename
 DB_PASSWORD= your_postgres_password
 DB_PORT= 5432
+Gemini_API_key= your_gemini_api_key
 ```
 #### 5️⃣ Configure the Database
 
