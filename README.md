@@ -91,6 +91,7 @@ Alternatively, you can manually install the required packages:
 ```bash
     npm install express body-parser pg dotenv ejs express-session multer csv-parser json2csv bcrypt
     npm install --save-dev nodemon
+    npm install @google/generative-ai
 ```
 #### 4️⃣ **Set Up Environment Variables**
 
