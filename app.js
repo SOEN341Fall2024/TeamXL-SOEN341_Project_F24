@@ -691,36 +691,50 @@ app.get("/export-reviews-csv", async (req, res) => {
     }
 
     // Process comments to separate each type
-    const processedReviews = reviews.map(review => {
-      const commentParts = {
-        cooperation_comment: "",
-        conceptual_comment: "",
-        practical_comment: "",
-        work_ethic_comment: "",
-        additional_comment: "",
-      };
+const processedReviews = reviews.map((review) => {
+  const commentParts = {
+    cooperation_comment: "",
+    conceptual_comment: "",
+    practical_comment: "",
+    work_ethic_comment: "",
+    additional_comment: "",
+  };
 
-      // Split comments by type if they follow a structured format (e.g., labeled sections)
-      const commentLines = review.comments.split("<br/><br/>").map(line => line.trim());
-      commentLines.forEach(line => {
-        if (line.startsWith("Cooperation Contribution Comment:")) {
-          commentParts.cooperation_comment = line.replace("Cooperation Contribution Comment:", "").trim();
-        } else if (line.startsWith("Conceptual Contribution Comment:")) {
-          commentParts.conceptual_comment = line.replace("Conceptual Contribution Comment:", "").trim();
-        } else if (line.startsWith("Practical Contribution Comment:")) {
-          commentParts.practical_comment = line.replace("Practical Contribution Comment:", "").trim();
-        } else if (line.startsWith("Work Ethic Comment:")) {
-          commentParts.work_ethic_comment = line.replace("Work Ethic Comment:", "").trim();
-        } else if (line.startsWith("Additional Comment:")) {
-          commentParts.additional_comment = line.replace("Additional Comment:", "").trim();
-        }
-      });
+  // Ensure comments is a string before splitting
+  const comments = review.comments || ""; // Use an empty string if comments is null or undefined
 
-      return {
-        ...review,
-        ...commentParts, // Add separated comments to the review object
-      };
-    });
+  // Split comments by type if they follow a structured format (e.g., labeled sections)
+  const commentLines = comments.split("<br/><br/>").map((line) => line.trim());
+  commentLines.forEach((line) => {
+    if (line.startsWith("Cooperation Contribution Comment:")) {
+      commentParts.cooperation_comment = line
+        .replace("Cooperation Contribution Comment:", "")
+        .trim();
+    } else if (line.startsWith("Conceptual Contribution Comment:")) {
+      commentParts.conceptual_comment = line
+        .replace("Conceptual Contribution Comment:", "")
+        .trim();
+    } else if (line.startsWith("Practical Contribution Comment:")) {
+      commentParts.practical_comment = line
+        .replace("Practical Contribution Comment:", "")
+        .trim();
+    } else if (line.startsWith("Work Ethic Comment:")) {
+      commentParts.work_ethic_comment = line
+        .replace("Work Ethic Comment:", "")
+        .trim();
+    } else if (line.startsWith("Additional Comment:")) {
+      commentParts.additional_comment = line
+        .replace("Additional Comment:", "")
+        .trim();
+    }
+  });
+
+  return {
+    ...review,
+    ...commentParts, // Add separated comments to the review object
+  };
+});
+
 
     // Define the fields/columns for the CSV
     const fields = [
