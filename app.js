@@ -2,7 +2,6 @@
 //pg for PostgreSQL interaction, and bcrypt for password hashing
 import express from "express";
 import bodyParser from "body-parser";
-import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import session from "express-session";
@@ -10,7 +9,6 @@ import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
 import { createDbConnection } from './db.config.js';
-import { group } from "console";
 import { Parser } from "json2csv";
 import {
   getCooperation,
@@ -32,7 +30,6 @@ import {
   getWorkEthicAvg,
   appendGroupMembers,
 } from "./helper.js";
-import { Template } from "ejs";
 
 dotenv.config();
 
@@ -1087,7 +1084,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
     // If a CSV file is uploaded, process it
     if (req.file) {
       const filePath = req.file.path; // Path to the uploaded file
-      const missingStudents = []; // Array to keep track of missing students
+      //const missingStudents = []; // Array to keep track of missing students
 
       // Parse the CSV file
       fs.createReadStream(filePath)
@@ -1096,7 +1093,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
           const teamNameArray = [row.team_name.trim()];
           const studentNameArray = [row.student_name.trim()]; // Extract and trim student name from the row
           const teamIDarray = [];
-          const NameArray = [];
+          //const NameArray = [];
           try {
             // Query to insert group
             for (let teamName of teamNameArray) {
