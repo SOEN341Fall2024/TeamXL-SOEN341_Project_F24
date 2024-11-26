@@ -1,66 +1,66 @@
 export function getCooperation(student_info, idx){
     const std_id = student_info[idx].id;
-    var cooperation = 0;
-    var count = 0;
+    let  cooperation = 0;
+    let  count = 0;
     do {
         cooperation += student_info[idx].cooperation;
         idx++;
         count++;
     } while(idx != student_info.length && std_id == student_info[idx].id);
 
-    var result = cooperation / count 
+    let  result = cooperation / count 
     if(isNaN(result)) {result = 0; }
     return result;
 }
 
 export function getConceptual(student_info, idx){
     const std_id = student_info[idx].id;
-    var conceptual_contribution = 0;
-    var count = 0;
+    let  conceptual_contribution = 0;
+    let  count = 0;
     do {
         conceptual_contribution += student_info[idx].conceptual_contribution;
         idx++;
         count++;
     } while(idx != student_info.length && std_id == student_info[idx].id);
     
-    var result = conceptual_contribution / count 
+    let  result = conceptual_contribution / count 
     if(isNaN(result)) {result = 0; }
     return result;
 }
 
 export function getPractical(student_info, idx){
     const std_id = student_info[idx].id;
-    var practical_contribution = 0;
-    var count = 0;
+    let  practical_contribution = 0;
+    let  count = 0;
     do {
         practical_contribution += student_info[idx].practical_contribution;
         idx++;
         count++;
     } while(idx != student_info.length && std_id == student_info[idx].id);
 
-    var result = practical_contribution / count 
+    let  result = practical_contribution / count 
     if(isNaN(result)) {result = 0; }
     return result;
 }
 
 export function getWorkEthic(student_info, idx){
     const std_id = student_info[idx].id;
-    var work_ethic = 0;
-    var count = 0;
+    let  work_ethic = 0;
+    let  count = 0;
     do {
         work_ethic += student_info[idx].work_ethic;
         idx++;
         count++;
     } while(idx != student_info.length && std_id == student_info[idx].id);
 
-    var result = work_ethic / count 
+    let  result = work_ethic / count 
     if(isNaN(result)) {result = 0; }
     return result;
 }
 
 export function getPeers(student_info, idx){
     const std_id = student_info[idx].id;
-    var peerIDs = "";
+    let  peerIDs = "";
     do {
         peerIDs += student_info[idx].id_evaluator + " ";
         idx++;
@@ -74,12 +74,12 @@ export function getAverage(student_info, idx){
 }
 
 export function getTeammateInfo(student_info, sorted_students, idx){
-    var numOfTeammates = getNumberOfTeammates(student_info, sorted_students, idx)
-    var group_index = getSortedStudentTeamIndex(student_info, sorted_students, idx);
+    let  numOfTeammates = getNumberOfTeammates(student_info, sorted_students, idx)
+    let  group_index = getSortedStudentTeamIndex(student_info, sorted_students, idx);
 
-    var teammateInfo = new Array(numOfTeammates);
+    let  teammateInfo = new Array(numOfTeammates);
 
-    for(var i = 0; i < teammateInfo.length; i++){
+    for(let  i = 0; i < teammateInfo.length; i++){
         teammateInfo[i] = {name : sorted_students[group_index + i].name, id: sorted_students[group_index + i].id};
     }
 
@@ -117,9 +117,9 @@ export function getGradesGivenByStudent(evaluatorID, evaluateeID, student_info){
 }
 
 function getSortedStudentTeamIndex(student_info, sorted_students, idx){
-    var index = 0;
+    let  index = 0;
 
-    for (var i = 0; i < sorted_students.length; i++){
+    for (let  i = 0; i < sorted_students.length; i++){
         if(sorted_students[i].id_group == student_info[idx].id_group){
             index = i;
             break;
@@ -130,9 +130,9 @@ function getSortedStudentTeamIndex(student_info, sorted_students, idx){
 }
 
 function getStudentInfoTeamIndex(student_info, idx){
-    var index = 0;
+    let  index = 0;
 
-    for (var i = 0; i < student_info.length; i++){
+    for (let  i = 0; i < student_info.length; i++){
         if(student_info[i].id_group == student_info[idx].id_group){
             index = i;
             break;
@@ -143,10 +143,10 @@ function getStudentInfoTeamIndex(student_info, idx){
 }
 
 export function getNumberOfTeammates(student_info, sorted_students, idx){
-    var groupIndex = getSortedStudentTeamIndex(student_info, sorted_students, idx);
-    var numOfTeammates = 0;
+    let  groupIndex = getSortedStudentTeamIndex(student_info, sorted_students, idx);
+    let  numOfTeammates = 0;
 
-    for(var i = groupIndex; i < sorted_students.length; i++){
+    for(let  i = groupIndex; i < sorted_students.length; i++){
         if(sorted_students[i].id_group == student_info[idx].id_group){
            numOfTeammates++; 
         } else {
@@ -158,10 +158,10 @@ export function getNumberOfTeammates(student_info, sorted_students, idx){
 }
 
 export function getNumberOfReviews(student_info, idx){
-    var groupIndex = getStudentInfoTeamIndex(student_info, idx);
-    var numOfReviews = 0;
+    let  groupIndex = getStudentInfoTeamIndex(student_info, idx);
+    let  numOfReviews = 0;
 
-    for(var i = groupIndex; i < student_info.length; i++){
+    for(let  i = groupIndex; i < student_info.length; i++){
         if(student_info[i].id_evaluator == student_info[idx].id){
             numOfReviews++;
         } else if(student_info[i].id_group != student_info[idx].id_group){
@@ -173,7 +173,7 @@ export function getNumberOfReviews(student_info, idx){
 }
 
 export function getComments(commentsObj){
-    var comments = commentsObj.cooperation;
+    let  comments = commentsObj.cooperation;
     comments += commentsObj.conceptual;
     comments += commentsObj.practical;
     comments += commentsObj.work_ethic;
@@ -187,10 +187,10 @@ export function stringprint(str){
 }
 
 export function getCooperationAvg(student_info){
-    var AmountOfReviews = 0;
-    var total = 0;
+    let  AmountOfReviews = 0;
+    let  total = 0;
 
-    for(let student of student_info.length){
+    for(let student of student_info){
         if(isNaN(student.id_evaluator)){
             continue;
         }
@@ -202,8 +202,8 @@ export function getCooperationAvg(student_info){
 }
 
 export function getConceptualAvg(student_info){
-    var AmountOfReviews = 0;
-    var total = 0;
+    let  AmountOfReviews = 0;
+    let  total = 0;
 
     for(let student of student_info){
         if(isNaN(student.id_evaluator)){
@@ -217,10 +217,10 @@ export function getConceptualAvg(student_info){
 }
 
 export function getPracticalAvg(student_info){
-    var AmountOfReviews = 0;
-    var total = 0;
+    let  AmountOfReviews = 0;
+    let  total = 0;
 
-    for(let student of student_info.length){
+    for(let student of student_info){
         if(isNaN(student.id_evaluator)){
             continue;
         }
@@ -232,10 +232,10 @@ export function getPracticalAvg(student_info){
 }
 
 export function getWorkEthicAvg(student_info){
-    var AmountOfReviews = 0;
-    var total = 0;
+    let  AmountOfReviews = 0;
+    let  total = 0;
 
-    for(let student of student_info.length){
+    for(let student of student_info){
         if(isNaN(student.id_evaluator)){
             continue;
         }
@@ -247,7 +247,7 @@ export function getWorkEthicAvg(student_info){
 }
 
 export function appendGroupMembers(group, student_info){
-    var studentArr = [];
+    let  studentArr = [];
     for(let student of student_info){
         if(group.id_group == student.id_group){
             studentArr.push(student);
