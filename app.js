@@ -1089,7 +1089,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
       const TEAM_ID = TEAM_ID_QUERY_RESULT.rows[0].id_group;
 
       if (Array.isArray(IDs)) {
-        for (let ID of IDs.length) {
+        for (let ID of IDs) {
           await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
             TEAM_ID,
             ID,
