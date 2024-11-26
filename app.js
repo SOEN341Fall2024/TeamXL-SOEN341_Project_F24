@@ -300,7 +300,7 @@ app.get("/edit-team", async (req, res) => {
   });
 });
 
-async function getIncompleteAssessments() {
+async function getIncompleteAssessments(userID) {
   const query = `
     SELECT s2.ID AS evaluatee_id, s2.NAME AS evaluatee_name
     FROM STUDENT s2
@@ -317,7 +317,7 @@ async function getIncompleteAssessments() {
   `;
 
   try {
-    const result = await db.query(query, [userId]);
+    const result = await db.query(query, [userID]);
     return result.rows; // List of students not yet reviewed by the user
   } catch (error) {
     console.error("Database Query Error:", error);
@@ -879,9 +879,10 @@ app.post("/register", async (req, res) => {
 
   try {
     const checkResult = await db.query(
-      `SELECT * FROM ${role} WHERE name = $1`,
-      [username]
-    );
+      `SELECT * FROM $1 WHERE name = $2`, [
+      role, 
+      username,
+    ]);
 
     if (checkResult.rows.length > 0) {
       // Check if request is AJAX and render accordingly
@@ -921,7 +922,9 @@ app.post("/login", async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = '${username}' UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = '${username}' ;`
+      `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = $1 UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = $1 ;`, [
+        username,
+      ]
     );
 
     if (result.rows.length > 0) {
