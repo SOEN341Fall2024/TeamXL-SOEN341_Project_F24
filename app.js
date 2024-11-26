@@ -287,7 +287,7 @@ app.get("/edit-team", async (req, res) => {
   let availableStudents = RESULT2.rows;
   let student_info = RESULT3.rows;
 
-  for (let team of teams.length) {
+  for (let team of teams) {
     appendGroupMembers(team, student_info);
   }
 
