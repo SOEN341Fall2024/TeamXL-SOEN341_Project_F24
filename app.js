@@ -25,7 +25,6 @@ import {
   getNumberOfReviews,
   getNumberOfTeammates,
   getComments,
-  getCommentsObj,
   stringprint,
   getCooperationAvg,
   getConceptualAvg,
