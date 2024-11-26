@@ -2,13 +2,15 @@
 //pg for PostgreSQL interaction, and bcrypt for password hashing
 import express from "express";
 import bodyParser from "body-parser";
+import pg  from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { group } from "console";
 import { createDbConnection } from './db.config.js';
 import { Parser } from "json2csv";
 import {
@@ -31,6 +33,7 @@ import {
   getWorkEthicAvg,
   appendGroupMembers,
 } from "./helper.js";
+import { Template } from "ejs";
 
 dotenv.config();
 
@@ -913,10 +916,15 @@ app.post("/register", async (req, res) => {
         if (err) {
           console.error("Error hashing password:", err);
         } else {
-          await db.query(
-            `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
-            [username, hash]
-          );
+          if (role == "student"){
+            await db.query(
+              `INSERT INTO student (name, password) VALUES ($1, $2)`,
+            [username, hash]);
+          } else if(role == "instructor"){
+            await db.query(
+              `INSERT INTO instructor (name, password) VALUES ($1, $2)`,
+            [username, hash]);
+          }
 
           // Check if request is AJAX and render accordingly
           if (req.headers["x-requested-with"] === "XMLHttpRequest") {
