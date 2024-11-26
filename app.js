@@ -8,6 +8,7 @@ import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createDbConnection } from './db.config.js';
 import { Parser } from "json2csv";
 import {
