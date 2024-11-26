@@ -33,7 +33,8 @@
                   
                   <ul class="dropdown-menu" style="">
                       <!-- The Three Buttons for Team Management -->
-                    <li><a class="nav-link" href="/create-teams?instructorUsername=<%= instructorUsername %>">Create Team</a></li>
+                    <li><a class="dropdown-item" href="/create-teams?instructorUsername=<%= instructorUsername %>">Create Team</a></li>
+                    <li><a class="dropdown-item" href="/edit-teams?instructorUsername=<%= instructorUsername %>">Edit Team</a></li>
                     <li><a class="dropdown-item" href="/view-teams?instructorUsername=<%= instructorUsername %>">View Teams</a></li>
                     <li><a class="dropdown-item" href="/access-assessment?instructorUsername=<%= instructorUsername %>">Peer Assessment</a></li>
                   </ul>
@@ -53,7 +54,7 @@
                   
                   <ul class="dropdown-menu" style="">
                       <!-- The Three Buttons for Assessments -->
-                    <li><a class="nav-link" href="/view-reviews-summary?instructorUsername=<%= instructorUsername %>">Reviews Summary</a></li>
+                    <li><a class="dropdown-item" href="/view-reviews-summary?instructorUsername=<%= instructorUsername %>">Reviews Summary</a></li>
                     <li><a class="dropdown-item" href="/view-reviews-detailed?instructorUsername=<%= instructorUsername %>">Detailed Reviews</a></li>
                     <li><a class="dropdown-item" href="/view-review-completion?instructorUsername=<%= instructorUsername %>">Reviews Completion</a></li>
                   </ul>
