@@ -2,7 +2,7 @@
 //pg for PostgreSQL interaction, and bcrypt for password hashing
 import express from "express";
 import bodyParser from "body-parser";
-import { pg } from "pg";
+import pg  from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import session from "express-session";
