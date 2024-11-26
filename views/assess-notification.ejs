@@ -1,81 +1,8 @@
-<!DOCTYPE html>
+<%- include('partials/student-header', { title: 'Student Search Results', headerTitle: 'Student Search Results'   }) %>
 
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pending Peer Assessments</title>
-  <link rel="stylesheet" href="/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-  <header>
-    <div class="px-3 py-2 text-bg-dark border-bottom">
-      <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-between">
-          <!-- Logo and Title -->
-          <a href="/student-dashboard" class="d-flex align-items-center text-white text-decoration-none">
-            <svg class="me-2" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8 0a8 8 0 1 0 8 8A8 8 0 0 0 8 0zM4 7a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm5 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-            </svg>
-            <span class="fs-4">InsightSphere</span>
-          </a>
 
-          <!-- Navigation Links -->
-          <ul class="nav">
-            <li class="nav-item">
-              <a href="/student-dashboard" class="nav-link text-white d-flex align-items-center">
-                <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M16 8c0-1.657-4-8-8-8S0 6.343 0 8s4 8 8 8 8-6.343 8-8zM8 2.2c2.086 0 4.156 3.517 4.684 4.868C11.816 9.66 10.052 10.8 8 10.8S4.184 9.66 3.316 7.068C3.844 5.717 5.914 2.2 8 2.2z"></path>
-                </svg>
-                Dashboard
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="peersDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M16 6c0 2.5-2.5 10-8 10S0 8.5 0 6s2.5-6 8-6 8 3.5 8 6z"></path>
-                </svg>
-                Peers
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="peersDropdown">
-                <li><a class="dropdown-item" href="/view-teams">View Teams</a></li>
-                <li><a class="dropdown-item" href="/peer-assessment">Peer Assessment</a></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM4 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm6 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
-                </svg>
-                Notifications
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="notificationsDropdown">
-                <li><a class="dropdown-item" href="/private-messages">Private Messages</a></li>
-                <li><a class="dropdown-item" href="/contacts">Contacts</a></li>
-              </ul>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg class="me-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="..."></path> <!-- Account Icon -->
-                </svg>
-                Account
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-                <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                <li><a class="dropdown-item" href="/logout">Logout</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main class="container mt-4">
-    <h1 class="mb-4 text-primary">Pending Peer Assessments</h1>
+  <main class="container mt-5" style="height: 550px;">
+    <h1 class="mb-4 text-dark">Pending Peer Assessments</h1>
     <div class="notification-box">
       <% if (incompleteAssessments && incompleteAssessments.length > 0) { %>
         <ul class="list-group">
@@ -94,11 +21,11 @@
     </div>
   </main>
 
-  <footer class="text-center mt-4">
-    <p>Peer Review System © 2024</p> 
-  </footer>
-</body>
-</html> 
+
+
+
+
+<%- include('partials/footer') %>
 
 
 
