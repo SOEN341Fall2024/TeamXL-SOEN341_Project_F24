@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { createApp } from './app.js';
-import express from 'express';
+//import express from 'express';
 
 // Mock bcrypt module
 jest.mock('bcrypt', () => ({

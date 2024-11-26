@@ -2,7 +2,6 @@
 //pg for PostgreSQL interaction, and bcrypt for password hashing
 import express from "express";
 import bodyParser from "body-parser";
-import pg from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import session from "express-session";
@@ -10,7 +9,6 @@ import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
 import { createDbConnection } from './db.config.js';
-import { group } from "console";
 import { Parser } from "json2csv";
 import {
   getCooperation,
@@ -32,7 +30,6 @@ import {
   getWorkEthicAvg,
   appendGroupMembers,
 } from "./helper.js";
-import { Template } from "ejs";
 
 dotenv.config();
 
@@ -152,7 +149,7 @@ app.get("/instructor-dashboard", async (req, res) => {
 
 // Route for the CREATE TEAMS page
 app.get("/create-teams", async (req, res) => {
-  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  //const query = req.query.query ? req.query.query.toLowerCase() : "";
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   try {
@@ -300,7 +297,7 @@ app.get("/edit-team", async (req, res) => {
   });
 });
 
-async function getIncompleteAssessments() {
+async function getIncompleteAssessments(userID) {
   const query = `
     SELECT s2.ID AS evaluatee_id, s2.NAME AS evaluatee_name
     FROM STUDENT s2
@@ -317,7 +314,7 @@ async function getIncompleteAssessments() {
   `;
 
   try {
-    const result = await db.query(query, [userId]);
+    const result = await db.query(query, [userID]);
     return result.rows; // List of students not yet reviewed by the user
   } catch (error) {
     console.error("Database Query Error:", error);
@@ -486,7 +483,7 @@ app.get("/edit-evaluation", async (req, res) => {
 });
 
 app.get("/view-reviews-summary", async (req, res) => {
-  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  //const query = req.query.query ? req.query.query.toLowerCase() : "";
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   const result1 = await db.query(
@@ -517,7 +514,7 @@ app.get("/view-reviews-summary", async (req, res) => {
 });
 
 app.get("/view-reviews-detailed", async (req, res) => {
-  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  //const query = req.query.query ? req.query.query.toLowerCase() : "";
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   const result1 = await db.query(
@@ -550,7 +547,7 @@ app.get("/view-reviews-detailed", async (req, res) => {
 });
 
 app.get("/view-review-completion", async (req, res) => {
-  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  //const query = req.query.query ? req.query.query.toLowerCase() : "";
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   const result1 = await db.query(
@@ -841,7 +838,7 @@ app.post("/send-message", async (req, res) => {
     const groupId = groupQuery.rows[0].id_group;
 
     // Save message to database
-    const result = await db.query(
+    await db.query(
       `INSERT INTO messages (id_group, sender, content) 
        VALUES ($1, $2, $3) 
        RETURNING *`,
@@ -875,13 +872,13 @@ app.post("/register", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
-  const course_name = req.body.course_name;
 
   try {
     const checkResult = await db.query(
-      `SELECT * FROM ${role} WHERE name = $1`,
-      [username]
-    );
+      `SELECT * FROM $1 WHERE name = $2`, [
+      role, 
+      username,
+    ]);
 
     if (checkResult.rows.length > 0) {
       // Check if request is AJAX and render accordingly
@@ -921,8 +918,9 @@ app.post("/login", async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = '${username}' UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = '${username}' ;`
-    );
+      `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = $1 UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = $1 ;`, [
+        username,
+      ]);
 
     if (result.rows.length > 0) {
       const user = result.rows[0];
@@ -1086,7 +1084,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
     // If a CSV file is uploaded, process it
     if (req.file) {
       const filePath = req.file.path; // Path to the uploaded file
-      const missingStudents = []; // Array to keep track of missing students
+      //const missingStudents = []; // Array to keep track of missing students
 
       // Parse the CSV file
       fs.createReadStream(filePath)
@@ -1095,7 +1093,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
           const teamNameArray = [row.team_name.trim()];
           const studentNameArray = [row.student_name.trim()]; // Extract and trim student name from the row
           const teamIDarray = [];
-          const NameArray = [];
+          //const NameArray = [];
           try {
             // Query to insert group
             for (let teamName of teamNameArray) {
