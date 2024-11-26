@@ -61,7 +61,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(session({ secret: "key", resave: false, saveUninitialized: true }));
-
+app.use(express.json()); 
 
 //--------GET REQUESTS TO ROUTE TO ALL WEBPAGES OF THE WEBSITE--------//
 
@@ -234,7 +234,6 @@ app.get("/view-teams", async (req, res) => {
   if (req.session.userType == "INSTRUCTOR") {
     const instructorUsername = req.query.instructorUsername;
     try {
-      console.log("this is the " + instructorUsername);
 
       const DATA = await db.query(
         "SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY student.id_group ASC"
@@ -1122,6 +1121,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
         .on("data", async (row) => {
           const teamNameArray = [row.team_name.trim()];
           const studentNameArray = [row.student_name.trim()]; // Extract and trim student name from the row
+          const studentPassword = [row.password.trim()];
           const teamIDarray = [];
           //const NameArray = [];
           try {
@@ -1148,14 +1148,29 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
               }
             }
 
-            const password = process.env.PW3;
             //Query to insert new student or to upadate students
             for (let i = 0; i < studentNameArray.length; i++) {
-              await db.query(
-                "INSERT INTO student (NAME, PASSWORD, ID_GROUP ) VALUES ($1 , $2 , $3)",
-                [studentNameArray[i], password, parseInt(teamIDarray[i])]
-              );
+
+              console.log("1"+studentPassword[i]+"1");
+
+              bcrypt.hash(studentPassword[i], saltRounds, async (err, hash) => {
+                if (err) {
+                  console.error("Error hashing password:", err);
+                } else {
+
+                  console.log(hash);
+                  await db.query(
+                    "INSERT INTO student (NAME, PASSWORD, ID_GROUP ) VALUES ($1 , $2 , $3)",
+                    [studentNameArray[i].toLowerCase(), hash, parseInt(teamIDarray[i])]
+                  );
+                }
+              });
+
             }
+
+
+
+
           } catch (error) {
             console.error("Error processing student", error);
           }
