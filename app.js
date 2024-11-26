@@ -152,7 +152,7 @@ app.get("/instructor-dashboard", async (req, res) => {
 
 // Route for the CREATE TEAMS page
 app.get("/create-teams", async (req, res) => {
-  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  //const query = req.query.query ? req.query.query.toLowerCase() : "";
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   try {
@@ -486,7 +486,7 @@ app.get("/edit-evaluation", async (req, res) => {
 });
 
 app.get("/view-reviews-summary", async (req, res) => {
-  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  //const query = req.query.query ? req.query.query.toLowerCase() : "";
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   const result1 = await db.query(
@@ -517,7 +517,7 @@ app.get("/view-reviews-summary", async (req, res) => {
 });
 
 app.get("/view-reviews-detailed", async (req, res) => {
-  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  //const query = req.query.query ? req.query.query.toLowerCase() : "";
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   const result1 = await db.query(
@@ -550,7 +550,7 @@ app.get("/view-reviews-detailed", async (req, res) => {
 });
 
 app.get("/view-review-completion", async (req, res) => {
-  const query = req.query.query ? req.query.query.toLowerCase() : "";
+  //const query = req.query.query ? req.query.query.toLowerCase() : "";
   const instructorUsername = req.query.instructorUsername;
   const userType = req.session.userType;
   const result1 = await db.query(
@@ -841,7 +841,7 @@ app.post("/send-message", async (req, res) => {
     const groupId = groupQuery.rows[0].id_group;
 
     // Save message to database
-    const result = await db.query(
+    await db.query(
       `INSERT INTO messages (id_group, sender, content) 
        VALUES ($1, $2, $3) 
        RETURNING *`,
@@ -875,7 +875,6 @@ app.post("/register", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
-  const course_name = req.body.course_name;
 
   try {
     const checkResult = await db.query(
