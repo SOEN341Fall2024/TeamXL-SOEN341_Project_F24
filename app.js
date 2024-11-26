@@ -704,15 +704,15 @@ app.get("/export-reviews-csv", async (req, res) => {
       const commentLines = review.comments.split("<br/><br/>").map(line => line.trim());
       commentLines.forEach(line => {
         if (line.startsWith("Cooperation Contribution Comment:")) {
-          commentParts.cooperation_comment = line.replace("Cooperation Contribution Comment:", "").trim();
+          commentParts.cooperation_comment = line.replace("Cooperation Contribution Comment: <br/>", "", ).trim();
         } else if (line.startsWith("Conceptual Contribution Comment:")) {
-          commentParts.conceptual_comment = line.replace("Conceptual Contribution Comment:", "").trim();
+          commentParts.conceptual_comment = line.replace("Conceptual Contribution Comment: <br/>", "").trim();
         } else if (line.startsWith("Practical Contribution Comment:")) {
-          commentParts.practical_comment = line.replace("Practical Contribution Comment:", "").trim();
+          commentParts.practical_comment = line.replace("Practical Contribution Comment: <br/>", "").trim();
         } else if (line.startsWith("Work Ethic Comment:")) {
-          commentParts.work_ethic_comment = line.replace("Work Ethic Comment:", "").trim();
+          commentParts.work_ethic_comment = line.replace("Work Ethic Comment: <br/>", "").trim();
         } else if (line.startsWith("Additional Comment:")) {
-          commentParts.additional_comment = line.replace("Additional Comment:", "").trim();
+          commentParts.additional_comment = line.replace("Additional Comment: <br/>", "").trim();
         }
       });
 
@@ -872,13 +872,20 @@ app.post("/register", async (req, res) => {
   const username = req.body.username.toLowerCase(); // Convert to lowercase to handle case-insensitivity
   const password = req.body.password;
   const role = req.body.role;
-
+  console.log(role);
   try {
-    const checkResult = await db.query(
-      `SELECT * FROM $1 WHERE name = $2`, [
-      role, 
-      username,
-    ]);
+    let checkResult;
+    if (role == "student"){
+      checkResult = await db.query(
+        `SELECT * FROM student WHERE name = $1`, [
+        username,
+      ]);
+    } else if(role == "instructor"){
+      checkResult = await db.query(
+        `SELECT * FROM instructor WHERE name = $1`, [
+        username,
+      ]);
+    }
 
     if (checkResult.rows.length > 0) {
       // Check if request is AJAX and render accordingly
