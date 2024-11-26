@@ -190,7 +190,7 @@ export function getCooperationAvg(student_info){
     let  AmountOfReviews = 0;
     let  total = 0;
 
-    for(let student of student_info.length){
+    for(let student of student_info){
         if(isNaN(student.id_evaluator)){
             continue;
         }
