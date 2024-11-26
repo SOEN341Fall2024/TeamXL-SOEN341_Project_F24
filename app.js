@@ -292,8 +292,8 @@ app.get("/edit-team", async (req, res) => {
   var availableStudents = RESULT2.rows;
   var student_info = RESULT3.rows;
 
-  for (var i = 0; i < teams.length; i++) {
-    appendGroupMembers(teams[i], student_info);
+  for (let team of teams.length) {
+    appendGroupMembers(team, student_info);
   }
 
   res.render("edit-team.ejs", {
@@ -1072,10 +1072,10 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
       const TEAM_ID = TEAM_ID_QUERY_RESULT.rows[0].id_group;
 
       if (Array.isArray(IDs)) {
-        for (var i = 0; i < IDs.length; i++) {
+        for (let ID of IDs.length) {
           await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
             TEAM_ID,
-            IDs[i],
+            ID,
           ]);
         }
       } else {
@@ -1100,10 +1100,10 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
           const NameArray = [];
           try {
             // Query to insert group
-            for (var i = 0; i < teamNameArray.length; i++) {
+            for (let teamName of teamNameArray) {
               await db.query(
                 "INSERT INTO GROUPS(GROUP_NAME) VALUES ($1) ON CONFLICT (GROUP_NAME) DO NOTHING",
-                [teamNameArray[i]]
+                [teamName]
               );
             }
 
@@ -1176,10 +1176,10 @@ app.post("/edit-teams", async (req, res) => {
     if (!Array.isArray(studentsToAdd)) {
       studentsToAdd = [studentsToAdd];
     }
-    for (var i = 0; i < studentsToAdd.length; i++) {
+    for (let studentID of studentsToAdd) {
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         teamID,
-        studentsToAdd[i],
+        studentID,
       ]);
     }
   }
@@ -1188,14 +1188,14 @@ app.post("/edit-teams", async (req, res) => {
     if (!Array.isArray(IDsToRemove)) {
       IDsToRemove = [IDsToRemove];
     }
-    for (var i = 0; i < IDsToRemove.length; i++) {
+    for (let studentID of IDsToRemove) {
       await db.query(
         "DELETE FROM evaluation WHERE id_evaluator = $1 OR id_evaluatee = $1",
-        [IDsToRemove[i]]
+        [studentID]
       );
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         null,
-        IDsToRemove[i],
+        studentID,
       ]);
     }
   }
