@@ -926,10 +926,6 @@ app.post("/register", async (req, res) => {
               `INSERT INTO instructor (name, password) VALUES ($1, $2)`,
             [username, hash]);
           }
-          await db.query(
-            `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
-            [username, hash]
-          );
 
           // Check if request is AJAX and render accordingly
           if (req.headers["x-requested-with"] === "XMLHttpRequest") {
