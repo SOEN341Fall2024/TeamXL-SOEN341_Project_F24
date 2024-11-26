@@ -917,6 +917,15 @@ app.post("/register", async (req, res) => {
         if (err) {
           console.error("Error hashing password:", err);
         } else {
+          if (role == "student"){
+            await db.query(
+              `INSERT INTO student (name, password) VALUES ($1, $2)`,
+            [username, hash]);
+          } else if(role == "instructor"){
+            await db.query(
+              `INSERT INTO instructor (name, password) VALUES ($1, $2)`,
+            [username, hash]);
+          }
           await db.query(
             `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
             [username, hash]
