@@ -25,7 +25,6 @@ import {
   getNumberOfReviews,
   getNumberOfTeammates,
   getComments,
-  getCommentsObj,
   stringprint,
   getCooperationAvg,
   getConceptualAvg,
@@ -287,12 +286,12 @@ app.get("/edit-team", async (req, res) => {
     "SELECT * FROM student ORDER BY id_group, id ASC"
   );
 
-  var teams = RESULT1.rows;
-  var availableStudents = RESULT2.rows;
-  var student_info = RESULT3.rows;
+  let teams = RESULT1.rows;
+  let availableStudents = RESULT2.rows;
+  let student_info = RESULT3.rows;
 
-  for (var i = 0; i < teams.length; i++) {
-    appendGroupMembers(teams[i], student_info);
+  for (let team of teams.length) {
+    appendGroupMembers(team, student_info);
   }
 
   res.render("edit-team.ejs", {
@@ -1071,10 +1070,10 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
       const TEAM_ID = TEAM_ID_QUERY_RESULT.rows[0].id_group;
 
       if (Array.isArray(IDs)) {
-        for (var i = 0; i < IDs.length; i++) {
+        for (let ID of IDs.length) {
           await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
             TEAM_ID,
-            IDs[i],
+            ID,
           ]);
         }
       } else {
@@ -1099,15 +1098,15 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
           const NameArray = [];
           try {
             // Query to insert group
-            for (var i = 0; i < teamNameArray.length; i++) {
+            for (let teamName of teamNameArray) {
               await db.query(
                 "INSERT INTO GROUPS(GROUP_NAME) VALUES ($1) ON CONFLICT (GROUP_NAME) DO NOTHING",
-                [teamNameArray[i]]
+                [teamName]
               );
             }
 
             // Query to find all group ID from group name
-            for (var i = 0; i < teamNameArray.length; i++) {
+            for (let i = 0; i < teamNameArray.length; i++) {
               const result = await db.query(
                 "SELECT ID_GROUP FROM GROUPS WHERE GROUP_NAME = $1",
                 [teamNameArray[i]]
@@ -1123,7 +1122,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
 
             const password = "!!098764321!!";
             //Query to insert new student or to upadate students
-            for (var i = 0; i < studentNameArray.length; i++) {
+            for (let i = 0; i < studentNameArray.length; i++) {
               await db.query(
                 "INSERT INTO student (NAME, PASSWORD, ID_GROUP ) VALUES ($1 , $2 , $3)",
                 [studentNameArray[i], password, parseInt(teamIDarray[i])]
@@ -1151,10 +1150,10 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
 });
 
 app.post("/edit-teams", async (req, res) => {
-  var newTeamName = req.body.teamName;
-  var studentsToAdd = req.body.studentIDs;
-  var IDsToRemove = req.body.IDsToRemove;
-  var teamID = req.body.team;
+  let newTeamName = req.body.teamName;
+  let studentsToAdd = req.body.studentIDs;
+  let IDsToRemove = req.body.IDsToRemove;
+  let teamID = req.body.team;
 
   //console.log(newTeamName, studentsToAdd, IDsToRemove, teamID);
 
@@ -1162,7 +1161,7 @@ app.post("/edit-teams", async (req, res) => {
     teamID,
   ]);
 
-  var team = RESULT.rows[0];
+  let team = RESULT.rows[0];
 
   if (newTeamName != team.group_name) {
     await db.query("UPDATE groups SET group_name = $1 WHERE id_group = $2", [
@@ -1175,10 +1174,10 @@ app.post("/edit-teams", async (req, res) => {
     if (!Array.isArray(studentsToAdd)) {
       studentsToAdd = [studentsToAdd];
     }
-    for (var i = 0; i < studentsToAdd.length; i++) {
+    for (let studentID of studentsToAdd) {
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         teamID,
-        studentsToAdd[i],
+        studentID,
       ]);
     }
   }
@@ -1187,14 +1186,14 @@ app.post("/edit-teams", async (req, res) => {
     if (!Array.isArray(IDsToRemove)) {
       IDsToRemove = [IDsToRemove];
     }
-    for (var i = 0; i < IDsToRemove.length; i++) {
+    for (let studentID of IDsToRemove) {
       await db.query(
         "DELETE FROM evaluation WHERE id_evaluator = $1 OR id_evaluatee = $1",
-        [IDsToRemove[i]]
+        [studentID]
       );
       await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
         null,
-        IDsToRemove[i],
+        studentID,
       ]);
     }
   }
@@ -1216,7 +1215,7 @@ app.post("/student-evaluation", async (req, res) => {
 
 //Route to handle the submission of the evaluation
 app.post("/submit-evaluation", async (req, res) => {
-  var commentsObj = {
+  let commentsObj = {
     cooperation: "",
     conceptual: "",
     practical: "",
@@ -1277,7 +1276,7 @@ app.post("/submit-evaluation", async (req, res) => {
 
 // The edition of an evaluation route ----------------------------------
 app.post("/edit-submition", async (req, res) => {
-  var commentsObj = {
+  let commentsObj = {
     cooperation: "",
     conceptual: "",
     practical: "",
