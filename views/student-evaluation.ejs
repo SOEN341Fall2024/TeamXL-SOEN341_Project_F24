@@ -78,8 +78,14 @@
     .warning {
         color: red;
         font-size: 0.9rem;
-        display: none;
+        display: none; 
         margin-top: 5px;
+    }
+
+        /* Error message style */
+    .error-message {
+        color: red;
+        font-weight: bold;
     }
 </style>
 
@@ -109,6 +115,7 @@
                 <!-- New comment box for Cooperation -->
                 <label for="coop-comments" class="form-label">Comments on Cooperation</label>
                 <textarea class="form-control" id="cooperation_comments" name="cooperation_comments" rows="3" placeholder="feedback on Cooperation..."></textarea>
+                <div id="cooperation-error" class="error-message" style="display: none;">You must complete the Cooperation section.</div>
             </div>
 
             <!-- Conceptual Contribution Criterion Box -->
@@ -130,6 +137,7 @@
                 <!-- New comment box for Conceptual Contribution -->
                 <label for="concept-comments" class="form-label">Comments on Conceptual Contribution</label>
                 <textarea class="form-control" id="conceptual_comments" name="conceptual_comments" rows="3" placeholder="feedback on Conceptual Contribution..."></textarea>
+                <div id="conceptual-contribution-error" class="error-message" style="display: none;">You must complete the Conceptual Contribution section.</div>
             </div>
 
             <!-- Practical Contribution Criterion Box -->
@@ -151,6 +159,7 @@
                 <!-- New comment box for Practical Contribution -->
                 <label for="practical-comments" class="form-label">Comments on Practical Contribution</label>
                 <textarea class="form-control" id="practical-comments" name="practical_comments" rows="3" placeholder="feedback on Practical Contribution..."></textarea>
+                <div id="practical-contribution-error" class="error-message" style="display: none;">You must complete the Practical Contribution section.</div>
             </div>
 
             <!-- Work Ethic Criterion Box -->
@@ -172,6 +181,7 @@
                 <!-- New comment box for Work Ethic -->
                 <label for="ethic-comments" class="form-label">Comments on Work Ethic</label>
                 <textarea class="form-control" id="work_ethic_comments" name="work_ethic_comments" rows="3" placeholder="feedback on Work Ethic..."></textarea>
+                <div id="work-ethic-error" class="error-message" style="display: none;">You must complete the Work Ethic section.</div>
             </div>
 
                         <!-- Additional Comments (Optional) -->
@@ -185,10 +195,49 @@
                 <button type="submit" class="btn btn-primary">Submit Evaluation</button>
             </div>
         </form>
+    </div> 
     </div>
-    </div>
+
+
+<script>
+    // Attach event listener to form submission
+    document.querySelector('form').addEventListener('submit', function(event) {
+        let isValid = true;
+
+        // Sections to validate
+        const sections = [
+            { name: 'cooperation', errorId: 'cooperation-error' },
+            { name: 'conceptual_contribution', errorId: 'conceptual-contribution-error' },
+            { name: 'practical_contribution', errorId: 'practical-contribution-error' },
+            { name: 'work_ethic', errorId: 'work-ethic-error' }
+        ]; 
+
+        // Loop through each section to check if it has a rating
+        sections.forEach(section => {
+            const selectedRadio = document.querySelector(`input[name="${section.name}"]:checked`);
+            const errorElement = document.getElementById(section.errorId);
+
+            if (!selectedRadio) {
+                // Show error message if no radio button is selected
+                isValid = false;
+                errorElement.style.display = 'block';
+            } else {
+                // Hide error message if a radio button is selected
+                errorElement.style.display = 'none';
+            }
+        });
+
+        // Prevent form submission if validation fails
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+
+
   
-<%- include('partials/footer') %>
+<%- include('partials/footer') %> 
 
 
 
