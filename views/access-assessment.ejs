@@ -1,101 +1,150 @@
 <%- include('partials/instructor-header', { title: 'Instructor access assessments', headerTitle: 'Instructor access assessments', userType, instructorUsername }) %>
+
   <style>
     body {
       background-color: #f8f9fa;
     }
+
     .section-title {
-      border-bottom: 2px solid #e0e0e0;
+      border-bottom: 3px solid #6c757d;
       padding-bottom: 10px;
       margin-bottom: 20px;
     }
+
     .btn-custom {
       padding: 10px 20px;
       font-size: 1.1rem;
-      width: 180px;
-      height: 60px;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     .btn-custom i {
       margin-right: 8px; /* Space between icon and text */
     }
-    .info-box {
-      background-color: #ffffff;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 600px;
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card img {
+      object-fit: cover;
+      height: 250px;
+    }
+
+    .card-body {
+      text-align: center;
+    }
+
+    .card-text {
+      color: #495057;
+    }
+
+    .btn {
+      border-radius: 50px;
+    }
+
+    .btn-outline-success {
+      color: #198754;
+      border-color: #198754;
+    }
+
+    .btn-outline-success:hover {
+      background-color: #198754;
+      color: white;
+    }
+
+    .btn-success {
+      background-color: #198754;
+      border-color: #198754;
+    }
+
+    .btn-success:hover {
+      background-color: #166f49;
+    }
+
+    .text-muted {
+      max-width: 700px;
+      margin: auto;
     }
   </style>
 </head>
 <body>
 
-<div class="container py-5 d-flex flex-column align-items-center">
+<div class="container py-5">
   <!-- Page Title Section -->
-  <div class="text-center mb-2">
+  <div class="text-center mb-4">
     <h1 class="display-5 fw-bold text-dark">
       <i class="bi bi-journal-text me-2"></i> Peer Assessments
     </h1>
-    <p class="text-muted fs-5">Instructors can access various views of student assessments here to monitor and analyze team and individual performance.</p>
-  </div> 
+    <p class="text-muted fs-5">
+      Instructors can access various views of student assessments here to monitor and analyze team and individual performance.
+    </p>
+  </div>
 
- 
-
-  <div class="album py-5 bg-body-tertiary">
+  <!-- Cards Section -->
+  <div class="album py-5">
     <div class="container">
-
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        <!-- Card 1: Reviews Summary -->
         <div class="col">
-          <div class="card shadow-sm">
-            
-            <img src="/images/summary.jpg" class="card-img-top" alt="Image description" width="100%" height="300" style="object-fit: cover;">
+          <div class="card">
+            <img src="/images/summary.jpg" class="card-img-top" alt="Summary Report">
             <div class="card-body">
-              <p class="card-text">View a summarized report of student reviews, showing average scores across different criteria for each team member.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <button type="button" class="btn  btn-outline-success" onclick="location.href='/view-reviews-summary?instructorUsername=<%= instructorUsername %>'">Reviews Summary</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card shadow-sm">
-            
-            <img src="/images/detailed.jpg" class="card-img-top" alt="Image description" width="100%" height="300" style="object-fit: cover;">
-            <div class="card-body">
-              <p class="card-text">Explore detailed feedback and scores provided for each student by their peers, with breakdowns by evaluation criteria.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <button type="button" class="btn  btn-outline-success" onclick="location.href='/view-reviews-detailed?instructorUsername=<%= instructorUsername %>'">Detailed Reviews</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card shadow-sm">
-            
-            <img src="/images/completion.jpg" class="card-img-top" alt="Image description" width="100%" height="300" style="object-fit: cover;">
-            <div class="card-body">
-              <p class="card-text">Check the completion status of all peer assessments to ensure every student has been reviewed by their teammates.</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <button type="button" class="btn  btn-success" onclick="location.href='/view-review-completion?instructorUsername=<%= instructorUsername %>'">Reviews Completion</button>
-              </div>
-            </div>
-          </div>
-        </div>
+              <p class="card-text">
+                View a summarized report of student reviews, showing average scores across different criteria for each team member.
+              </p>
+              <button type="button" class="btn btn-outline-success" onclick="location.href='/view-reviews-summary?instructorUsername=<%= instructorUsername %>'">
+                Reviews Summary
+              </button>
             </div>
           </div>
         </div>
 
+        <!-- Card 2: Detailed Reviews -->
+        <div class="col">
+          <div class="card">
+            <img src="/images/detailed.jpg" class="card-img-top" alt="Detailed Feedback">
+            <div class="card-body">
+              <p class="card-text">
+                Explore detailed feedback and scores provided for each student by their peers, with breakdowns by evaluation criteria.
+              </p>
+              <button type="button" class="btn btn-outline-success" onclick="location.href='/view-reviews-detailed?instructorUsername=<%= instructorUsername %>'">
+                Detailed Reviews
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Reviews Completion -->
+        <div class="col">
+          <div class="card">
+            <img src="/images/completion.jpg" class="card-img-top" alt="Completion Status">
+            <div class="card-body">
+              <p class="card-text">
+                Check the completion status of all peer assessments to ensure every student has been reviewed by their teammates.
+              </p>
+              <button type="button" class="btn btn-outline-success" onclick="location.href='/view-review-completion?instructorUsername=<%= instructorUsername %>'">
+                Reviews Completion
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
 
    <!-- Button Section
   <div class="info-box"> 
