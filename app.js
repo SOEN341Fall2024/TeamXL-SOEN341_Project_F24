@@ -2,12 +2,15 @@
 //pg for PostgreSQL interaction, and bcrypt for password hashing
 import express from "express";
 import bodyParser from "body-parser";
+import pg  from "pg";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import session from "express-session";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { group } from "console";
 import { createDbConnection } from "./db.config.js";
 import { Parser } from "json2csv";
 import {
@@ -30,6 +33,7 @@ import {
   getWorkEthicAvg,
   appendGroupMembers,
 } from "./helper.js";
+import { Template } from "ejs";
 
 dotenv.config();
 
@@ -37,7 +41,8 @@ dotenv.config();
 const saltRounds = 10;
 
 // Setup for file uploads (Multer)
-const upload = multer({ dest: "uploads/" }); // Files will be uploaded to the 'uploads' directory
+const upload = multer({ dest: "uploads/", limits: {fileSize: 7000000} }); // Files will be uploaded to the 'uploads' directory
+
 
 // Create and export the app instance with a real DB connection
 const db = createDbConnection();
@@ -50,11 +55,12 @@ if (process.env.NODE_ENV !== "test") {
 export const createApp = (db) => {
   const app = express();
 
-  // Middleware to parse URL-encoded bodies (from forms)
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.set("view engine", "ejs");
-  app.use(express.static("public"));
-  app.use(session({ secret: "key", resave: false, saveUninitialized: true }));
+// Middleware to parse URL-encoded bodies (from forms)
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+app.use(express.static("public"));
+app.use(session({ secret: "key", resave: false, saveUninitialized: true }));
+app.use(express.json()); 
 
   //--------GET REQUESTS TO ROUTE TO ALL WEBPAGES OF THE WEBSITE--------//
 
@@ -230,18 +236,17 @@ export const createApp = (db) => {
     }
   });
 
-  // Route for the VIEW TEAMS page
-  app.get("/view-teams", async (req, res) => {
-    const userType = req.session.userType;
-    console.log(req.session.userType);
-    if (req.session.userType == "INSTRUCTOR") {
-      const instructorUsername = req.query.instructorUsername;
-      try {
-        console.log("this is the " + instructorUsername);
+// Route for the VIEW TEAMS page
+app.get("/view-teams", async (req, res) => {
+  const userType = req.session.userType;
+  console.log(req.session.userType);
+  if (req.session.userType == "INSTRUCTOR") {
+    const instructorUsername = req.query.instructorUsername;
+    try {
 
-        const DATA = await db.query(
-          "SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY student.id_group ASC"
-        );
+      const DATA = await db.query(
+        "SELECT name, id, group_name FROM student, groups WHERE student.id_group = groups.id_group ORDER BY student.id_group ASC"
+      );
 
         res.render("view-teams-instructor.ejs", {
           Teams: DATA,
@@ -296,7 +301,7 @@ export const createApp = (db) => {
     let availableStudents = RESULT2.rows;
     let student_info = RESULT3.rows;
 
-    for (let team of teams.length) {
+    for (let team of teams) {
       appendGroupMembers(team, student_info);
     }
 
@@ -703,49 +708,56 @@ export const createApp = (db) => {
         return res.status(404).send("No review data available to export.");
       }
 
-      // Process comments to separate each type
-      const processedReviews = reviews.map((review) => {
-        const commentParts = {
-          cooperation_comment: "",
-          conceptual_comment: "",
-          practical_comment: "",
-          work_ethic_comment: "",
-          additional_comment: "",
-        };
+    // Process comments to separate each type
+const processedReviews = reviews.map((review) => {
+  const commentParts = {
+    cooperation_comment: "",
+    conceptual_comment: "",
+    practical_comment: "",
+    work_ethic_comment: "",
+    additional_comment: "",
+  };
 
-        // Split comments by type if they follow a structured format (e.g., labeled sections)
-        const commentLines = review.comments
-          .split("<br/><br/>")
-          .map((line) => line.trim());
-        commentLines.forEach((line) => {
-          if (line.startsWith("Cooperation Contribution Comment:")) {
-            commentParts.cooperation_comment = line
-              .replace("Cooperation Contribution Comment: <br/>", "")
-              .trim();
-          } else if (line.startsWith("Conceptual Contribution Comment:")) {
-            commentParts.conceptual_comment = line
-              .replace("Conceptual Contribution Comment: <br/>", "")
-              .trim();
-          } else if (line.startsWith("Practical Contribution Comment:")) {
-            commentParts.practical_comment = line
-              .replace("Practical Contribution Comment: <br/>", "")
-              .trim();
-          } else if (line.startsWith("Work Ethic Comment:")) {
-            commentParts.work_ethic_comment = line
-              .replace("Work Ethic Comment: <br/>", "")
-              .trim();
-          } else if (line.startsWith("Additional Comment:")) {
-            commentParts.additional_comment = line
-              .replace("Additional Comment: <br/>", "")
-              .trim();
-          }
-        });
+  // Ensure comments is a string before splitting
+  const comments = review.comments || ""; // Use an empty string if comments is null or undefined
+
+  // Split comments by type if they follow a structured format (e.g., labeled sections)
+  const commentLines = comments.split("<br/><br/>").map((line) => line.trim());
+  commentLines.forEach((line) => {
+    if (line.startsWith("Cooperation Contribution Comment:")) {
+      commentParts.cooperation_comment = line
+        .replace("Cooperation Contribution Comment: <br/>", "", )
+        .trim();
+    } else if (line.startsWith("Conceptual Contribution Comment:")) {
+      commentParts.conceptual_comment = line
+        .replace("Conceptual Contribution Comment: <br/>", "")
+        .trim();
+    } else if (line.startsWith("Practical Contribution Comment:")) {
+      commentParts.practical_comment = line
+        .replace("Practical Contribution Comment: <br/>", "")
+        .trim();
+    } else if (line.startsWith("Work Ethic Comment:")) {
+      commentParts.work_ethic_comment = line
+        .replace("Work Ethic Comment: <br/>", "")
+        .trim();
+    } else if (line.startsWith("Additional Comment:")) {
+      commentParts.additional_comment = line
+        .replace("Additional Comment: <br/>", "")
+        .trim();
+    }
+  });
 
         return {
           ...review,
           ...commentParts, // Add separated comments to the review object
         };
       });
+  return {
+    ...review,
+    ...commentParts, // Add separated comments to the review object
+  };
+});
+
 
       // Define the fields/columns for the CSV
       const fields = [
@@ -916,22 +928,27 @@ export const createApp = (db) => {
         );
       }
 
-      if (checkResult.rows.length > 0) {
-        // Check if request is AJAX and render accordingly
-        if (req.headers["x-requested-with"] === "XMLHttpRequest") {
-          res.render("username-exists-login.ejs", { ajax: true });
-        } else {
-          res.render("username-exists-login.ejs");
-        }
+    if (checkResult.rows.length > 0) {
+      // Check if request is AJAX and render accordingly
+      if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+        res.render("username-exists-login.ejs", { ajax: true });
       } else {
-        bcrypt.hash(password, saltRounds, async (err, hash) => {
-          if (err) {
-            console.error("Error hashing password:", err);
-          } else {
+        res.render("username-exists-login.ejs");
+      }
+    } else {
+      bcrypt.hash(password, saltRounds, async (err, hash) => {
+        if (err) {
+          console.error("Error hashing password:", err);
+        } else {
+          if (role == "student"){
             await db.query(
-              `INSERT INTO ${role} (name, password) VALUES ($1, $2)`,
-              [username, hash]
-            );
+              `INSERT INTO student (name, password) VALUES ($1, $2)`,
+            [username, hash]);
+          } else if(role == "instructor"){
+            await db.query(
+              `INSERT INTO instructor (name, password) VALUES ($1, $2)`,
+            [username, hash]);
+          }
 
             // Check if request is AJAX and render accordingly
             if (req.headers["x-requested-with"] === "XMLHttpRequest") {
@@ -1106,7 +1123,7 @@ export const createApp = (db) => {
         const TEAM_ID = TEAM_ID_QUERY_RESULT.rows[0].id_group;
 
         if (Array.isArray(IDs)) {
-          for (let ID of IDs.length) {
+          for (let ID of IDs) {
             await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
               TEAM_ID,
               ID,
@@ -1124,22 +1141,23 @@ export const createApp = (db) => {
         const filePath = req.file.path; // Path to the uploaded file
         //const missingStudents = []; // Array to keep track of missing students
 
-        // Parse the CSV file
-        fs.createReadStream(filePath)
-          .pipe(csv()) // Use csv-parser to read the CSV file
-          .on("data", async (row) => {
-            const teamNameArray = [row.team_name.trim()];
-            const studentNameArray = [row.student_name.trim()]; // Extract and trim student name from the row
-            const teamIDarray = [];
-            //const NameArray = [];
-            try {
-              // Query to insert group
-              for (let teamName of teamNameArray) {
-                await db.query(
-                  "INSERT INTO GROUPS(GROUP_NAME) VALUES ($1) ON CONFLICT (GROUP_NAME) DO NOTHING",
-                  [teamName]
-                );
-              }
+      // Parse the CSV file
+      fs.createReadStream(filePath)
+        .pipe(csv()) // Use csv-parser to read the CSV file
+        .on("data", async (row) => {
+          const teamNameArray = [row.team_name.trim()];
+          const studentNameArray = [row.student_name.trim()]; // Extract and trim student name from the row
+          const studentPassword = [row.password.trim()];
+          const teamIDarray = [];
+          //const NameArray = [];
+          try {
+            // Query to insert group
+            for (let teamName of teamNameArray) {
+              await db.query(
+                "INSERT INTO GROUPS(GROUP_NAME) VALUES ($1) ON CONFLICT (GROUP_NAME) DO NOTHING",
+                [teamName]
+              );
+            }
 
               // Query to find all group ID from group name
               for (let i = 0; i < teamNameArray.length; i++) {
@@ -1156,20 +1174,35 @@ export const createApp = (db) => {
                 }
               }
 
-              const password = "!!098764321!!";
-              //Query to insert new student or to upadate students
-              for (let i = 0; i < studentNameArray.length; i++) {
-                await db.query(
-                  "INSERT INTO student (NAME, PASSWORD, ID_GROUP ) VALUES ($1 , $2 , $3)",
-                  [studentNameArray[i], password, parseInt(teamIDarray[i])]
-                );
-              }
-            } catch (error) {
-              console.error("Error processing student", error);
+            //Query to insert new student or to upadate students
+            for (let i = 0; i < studentNameArray.length; i++) {
+
+              console.log("1"+studentPassword[i]+"1");
+
+              bcrypt.hash(studentPassword[i], saltRounds, async (err, hash) => {
+                if (err) {
+                  console.error("Error hashing password:", err);
+                } else {
+
+                  console.log(hash);
+                  await db.query(
+                    "INSERT INTO student (NAME, PASSWORD, ID_GROUP ) VALUES ($1 , $2 , $3)",
+                    [studentNameArray[i].toLowerCase(), hash, parseInt(teamIDarray[i])]
+                  );
+                }
+              });
+
             }
-          })
-          .on("end", () => {
-            console.log("CSV file successfully processed");
+
+
+
+
+          } catch (error) {
+            console.error("Error processing student", error);
+          }
+        })
+        .on("end", () => {
+          console.log("CSV file successfully processed");
 
             // Optionally, delete the uploaded file after processing
             fs.unlinkSync(filePath);

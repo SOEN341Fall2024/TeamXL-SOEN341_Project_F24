@@ -1,6 +1,9 @@
 import request from 'supertest';
 import { createApp } from './app.js';
+import dotenv from "dotenv";
 //import express from 'express';
+
+dotenv.config();
 
 // Mock bcrypt module
 jest.mock('bcrypt', () => ({
@@ -40,7 +43,7 @@ describe('App Tests', () => {
           rows: [{
             id: 1,
             name: 'testuser',
-            password: 'hashedPassword',
+            password: process.env.PW1,
             origin: 'STUDENT',
             id_group: 1
           }]
@@ -78,7 +81,7 @@ describe('App Tests', () => {
         .type('application/x-www-form-urlencoded')
         .send({
           username: 'testuser',
-          password: 'testpass',
+          password: process.env.PW2,
           role: 'student'
         });
 
@@ -91,7 +94,7 @@ describe('App Tests', () => {
         rows: [{
           id: 1,
           name: 'testuser',
-          password: 'hashedPassword',
+          password: process.env.PW1,
           origin: 'STUDENT'
         }]
       });
@@ -101,7 +104,7 @@ describe('App Tests', () => {
         .type('application/x-www-form-urlencoded')
         .send({
           username: 'testuser',
-          password: 'testpass'
+          password: process.env.PW2
         });
 
       expect(response.status).toBe(302);
@@ -142,7 +145,7 @@ describe('App Tests', () => {
           rows: [{ 
             id: 1,
             name: 'testuser',
-            password: 'hashedPassword',
+            password: process.env.PW1,
             origin: 'STUDENT',
             id_group: 1
           }] 
@@ -165,7 +168,7 @@ describe('App Tests', () => {
         .type('form')
         .send({
           username: 'testuser',
-          password: 'testpass'
+          password: process.env.PW2
         });
 
       expect(loginResponse.status).toBe(302);
@@ -195,7 +198,7 @@ describe('App Tests', () => {
         .type('application/x-www-form-urlencoded')
         .send({
           username: 'testuser',
-          password: 'testpass'
+          password: process.env.PW2
         });
   
       // Make the request
