@@ -37,7 +37,7 @@ dotenv.config();
 const saltRounds = 10;
 
 // Setup for file uploads (Multer)
-const upload = multer({ dest: "uploads/" }); // Files will be uploaded to the 'uploads' directory
+const upload = multer({ dest: "uploads/", limits: {fileSize: 10000000} }); // Files will be uploaded to the 'uploads' directory
 
 
 // Create and export the app instance with a real DB connection
