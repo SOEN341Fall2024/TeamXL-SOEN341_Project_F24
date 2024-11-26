@@ -1089,7 +1089,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
       const TEAM_ID = TEAM_ID_QUERY_RESULT.rows[0].id_group;
 
       if (Array.isArray(IDs)) {
-        for (let ID of IDs.length) {
+        for (let ID of IDs) {
           await db.query("UPDATE student SET id_group = $1 WHERE id = $2", [
             TEAM_ID,
             ID,
@@ -1139,7 +1139,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
               }
             }
 
-            const password = "!!098764321!!";
+            const password = process.env.PW3;
             //Query to insert new student or to upadate students
             for (let i = 0; i < studentNameArray.length; i++) {
               await db.query(
