@@ -33,6 +33,7 @@ import {
   getWorkEthicAvg,
   appendGroupMembers,
 } from "./helper.js";
+import { Template } from "ejs";
 
 dotenv.config();
 
