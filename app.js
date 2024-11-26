@@ -57,7 +57,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(session({ secret: "key", resave: false, saveUninitialized: true }));
-
+app.use(express.json()); 
 
 //--------GET REQUESTS TO ROUTE TO ALL WEBPAGES OF THE WEBSITE--------//
 
