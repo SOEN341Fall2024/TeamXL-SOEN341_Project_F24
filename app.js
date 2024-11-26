@@ -1125,7 +1125,7 @@ app.post("/create-teams", upload.single("csvfile"), async (req, res) => {
               }
             }
 
-            const password = "!!098764321!!";
+            const password = process.env.PW3;
             //Query to insert new student or to upadate students
             for (let i = 0; i < studentNameArray.length; i++) {
               await db.query(
