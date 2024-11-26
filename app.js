@@ -642,6 +642,8 @@ app.post("/send-message", async (req, res) => {
     const senderId = req.session.userID;
     const messageOneObject = message.toString();
     
+    const genAI = await new GoogleGenerativeAI(process.env.Gemini_API_key);
+    const model = await genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 
     const groupQuery = await db.query(
@@ -663,8 +665,6 @@ app.post("/send-message", async (req, res) => {
       const aiPrompt = message.substring(5).trim();
 
       console.log(aiPrompt);
-      const genAI = new GoogleGenerativeAI(process.env.Gemini_API_key);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
       const result = await model.generateContent(aiPrompt);
       console.log(result.response.text());
