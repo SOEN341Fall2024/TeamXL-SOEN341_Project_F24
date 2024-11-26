@@ -924,8 +924,7 @@ app.post("/login", async (req, res) => {
     const result = await db.query(
       `SELECT NAME,id,password,'INSTRUCTOR' AS origin FROM instructor WHERE NAME = $1 UNION SELECT NAME,id,password,'STUDENT' AS origin FROM student WHERE NAME = $1 ;`, [
         username,
-      ]
-    );
+      ]);
 
     if (result.rows.length > 0) {
       const user = result.rows[0];
