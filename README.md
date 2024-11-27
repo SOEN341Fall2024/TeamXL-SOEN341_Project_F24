@@ -3,17 +3,19 @@
 ## 🚀 **Team Name**
 **TeamXL**  
 
+## 🚀 **Website Name**
+**InsightSphere**  
+
 ---
 
-## 👥 **Team Members**
-| **Name**                  | **ID**     | **Roles**                                                                 |
-|---------------------------|------------|---------------------------------------------------------------------------|
-| Aditi Abhaysingh Ingle    | 40266449   | Scrum Master, Backend Developer, Frontend Developer, UX Designer          |
-| Jonathan Mehmannavaz      | 40210330   | Frontend Developer, Backend Developer, Test Engineer                      |
-| Joyal Biju Kulangara      | 40237314   | Frontend Developer, UX Designer, Test and QA Engineer                     |
-| Kevin Mandiouba           | 40243497   | Frontend Developer, UX Designer                                           |
-| Oussama Bouhenchir        | 40249465   | Frontend Developer, UX Designer                                           |
-| Owen Jorgensen            | 40227851   | Backend Developer, UX Designer                                            |
+| **Name**                  | **ID**     | **Roles**                                                                 | **GitHub**                         |
+|---------------------------|------------|---------------------------------------------------------------------------|-------------------------------------|
+| Aditi Abhaysingh Ingle    | 40266449   | Scrum Master, Backend Developer, Frontend Developer, UX Designer          | [aditiingle](https://github.com/aditiingle) |
+| Jonathan Mehmannavaz      | 40210330   | Frontend Developer, Backend Developer, Test Engineer                      | [JonaBaron](https://github.com/JonaBaron) |
+| Joyal Biju Kulangara      | 40237314   | Frontend Developer, UX Designer, Test and QA Engineer                     | [Joyal99](https://github.com/Joyal99) |
+| Kevin Mandiouba           | 40243497   | Frontend Developer, UX Designer                                           | [KevinMandiouba](https://github.com/KevinMandiouba) |
+| Oussama Bouhenchir        | 40249465   | Frontend Developer, UX Designer                                           | [ouss2231](https://github.com/ouss2231) |
+| Owen Jorgensen            | 40227851   | Backend Developer, UX Designer                                            | [owjorgen](https://github.com/owjorgen) |
 
 
 ## 📜 **Project Description**
@@ -38,6 +40,14 @@ Our development follows the **Agile methodology**, with incremental deliveries a
 - 💬 **Chatroom**: Implemented a chatroom enabling students in a group to communicate with each other.
 - 🤖 **Chatbot**: Implemented a chatbot that is enabled by typing **_@chat_** which allows the user to chat with Google's gemini api bot. 
 
+
+---
+
+## Demo
+
+📽️ **Demo Video**: [Watch the Demo](https://drive.google.com/file/d/10i0J1ifvUp_IGe-xO8-wZjBgtgf7hqZv/view?usp=sharing)
+
+> Note: This is a video demonstration hosted on Google Drive. Click the link to view.
 
 ---
 
@@ -91,6 +101,7 @@ Alternatively, you can manually install the required packages:
 ```bash
     npm install express body-parser pg dotenv ejs express-session multer csv-parser json2csv bcrypt
     npm install --save-dev nodemon
+    npm install @google/generative-ai
 ```
 #### 4️⃣ **Set Up Environment Variables**
 

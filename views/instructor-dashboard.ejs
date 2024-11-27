@@ -31,30 +31,34 @@
                     Peers
                   </button>
                   
-                  <ul class="dropdown-menu" style="">
+                  <ul class="dropdown-menu">
                       <!-- The Three Buttons for Team Management -->
-                    <li><a class="nav-link" href="/create-teams?instructorUsername=<%= instructorUsername %>">Create Team</a></li>
+                    <li><a class="dropdown-item" href="/create-teams?instructorUsername=<%= instructorUsername %>">Create Team</a></li>
+                    <li><a class="dropdown-item" href="/edit-team?instructorUsername=<%= instructorUsername %>">Edit Team</a></li>
                     <li><a class="dropdown-item" href="/view-teams?instructorUsername=<%= instructorUsername %>">View Teams</a></li>
                     <li><a class="dropdown-item" href="/access-assessment?instructorUsername=<%= instructorUsername %>">Peer Assessment</a></li>
                   </ul>
                 </div>
             </li>
 
-            <li class="nav-item dropdown">
-              <a href="#" class="nav-link text-white dropdown-toggle" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
-                  <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                  <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+            <li>
+              <a href="/access-assessment?instructorUsername=<%= instructorUsername %>"> </a>
+              <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                  <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+                  <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0M7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0"/>
                 </svg>
-                Notifications
-              </a>
-            
-              <!-- Dropdown Menu -->
-              <ul class="dropdown-menu p-2" aria-labelledby="notificationsDropdown">
-                <!-- Dropdown Items -->
-                <li><a class="dropdown-item" href="/private-messages">Private messages</a></li>
-                <li><a class="dropdown-item" href="/contacts">Contacts</a></li>
-              </ul>
+                <div class="btn-group">
+                  <button class="btn btn-dark btn-md dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Assessments
+                  </button>
+                  
+                  <ul class="dropdown-menu" style="">
+                      <!-- The Three Buttons for Assessments -->
+                    <li><a class="dropdown-item" href="/view-reviews-summary?instructorUsername=<%= instructorUsername %>">Reviews Summary</a></li>
+                    <li><a class="dropdown-item" href="/view-reviews-detailed?instructorUsername=<%= instructorUsername %>">Detailed Reviews</a></li>
+                    <li><a class="dropdown-item" href="/view-review-completion?instructorUsername=<%= instructorUsername %>">Reviews Completion</a></li>
+                  </ul>
+                </div>
             </li>
 
             <li>
@@ -110,9 +114,9 @@
                 <i class="bi bi-card-checklist text-primary" style="font-size: 2rem;"></i>
               </div>
               <h5 class="card-title">Create Teams</h5>
-              <p class="card-text text-muted">Create a new team for your students.</p>
+              <p class="card-text text-muted">Create new teams for your students.</p>
               <a href="/create-teams?instructorUsername=<%= instructorUsername %>" class="btn btn-outline-success btn-lg rounded-pill">
-                <i class="bi bi-plus-circle me-2"></i>Create Team
+                <i class="bi bi-plus-circle me-2"></i>Create Teams
             </a>
             </div>
           </div>
