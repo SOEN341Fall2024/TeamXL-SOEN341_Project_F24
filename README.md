@@ -3,9 +3,11 @@
 ## 🚀 **Team Name**
 **TeamXL**  
 
+## 🚀 **Website Name**
+**InsightSphere**  
+
 ---
 
-## 👥 **Team Members**
 | **Name**                  | **ID**     | **Roles**                                                                 | **GitHub**                         |
 |---------------------------|------------|---------------------------------------------------------------------------|-------------------------------------|
 | Aditi Abhaysingh Ingle    | 40266449   | Scrum Master, Backend Developer, Frontend Developer, UX Designer          | [aditiingle](https://github.com/aditiingle) |
@@ -38,6 +40,14 @@ Our development follows the **Agile methodology**, with incremental deliveries a
 - 💬 **Chatroom**: Implemented a chatroom enabling students in a group to communicate with each other.
 - 🤖 **Chatbot**: Implemented a chatbot that is enabled by typing **_@chat_** which allows the user to chat with Google's gemini api bot. 
 
+
+---
+
+## Demo
+
+📽️ **Demo Video**: [Watch the Demo](https://drive.google.com/file/d/10i0J1ifvUp_IGe-xO8-wZjBgtgf7hqZv/view?usp=sharing)
+
+> Note: This is a video demonstration hosted on Google Drive. Click the link to view.
 
 ---
 
