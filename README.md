@@ -6,14 +6,14 @@
 ---
 
 ## 👥 **Team Members**
-| **Name**                  | **ID**     | **Roles**                                                                 |
-|---------------------------|------------|---------------------------------------------------------------------------|
-| Aditi Abhaysingh Ingle    | 40266449   | Scrum Master, Backend Developer, Frontend Developer, UX Designer          |
-| Jonathan Mehmannavaz      | 40210330   | Frontend Developer, Backend Developer, Test Engineer                      |
-| Joyal Biju Kulangara      | 40237314   | Frontend Developer, UX Designer, Test and QA Engineer                     |
-| Kevin Mandiouba           | 40243497   | Frontend Developer, UX Designer                                           |
-| Oussama Bouhenchir        | 40249465   | Frontend Developer, UX Designer                                           |
-| Owen Jorgensen            | 40227851   | Backend Developer, UX Designer                                            |
+| **Name**                  | **ID**     | **Roles**                                                                 | **GitHub**                         |
+|---------------------------|------------|---------------------------------------------------------------------------|-------------------------------------|
+| Aditi Abhaysingh Ingle    | 40266449   | Scrum Master, Backend Developer, Frontend Developer, UX Designer          | [aditiingle](https://github.com/aditiingle) |
+| Jonathan Mehmannavaz      | 40210330   | Frontend Developer, Backend Developer, Test Engineer                      | [JonaBaron](https://github.com/JonaBaron) |
+| Joyal Biju Kulangara      | 40237314   | Frontend Developer, UX Designer, Test and QA Engineer                     | [Joyal99](https://github.com/Joyal99) |
+| Kevin Mandiouba           | 40243497   | Frontend Developer, UX Designer                                           | [KevinMandiouba](https://github.com/KevinMandiouba) |
+| Oussama Bouhenchir        | 40249465   | Frontend Developer, UX Designer                                           | [ouss2231](https://github.com/ouss2231) |
+| Owen Jorgensen            | 40227851   | Backend Developer, UX Designer                                            | [owjorgen](https://github.com/owjorgen) |
 
 
 ## 📜 **Project Description**
