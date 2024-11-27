@@ -6,14 +6,14 @@
 ---
 
 ## 👥 **Team Members**
-| **Name**                  | **ID**     | **Roles**                                                                 | **GitHub**                         |
-|---------------------------|------------|---------------------------------------------------------------------------|-------------------------------------|
-| Aditi Abhaysingh Ingle    | 40266449   | Scrum Master, Backend Developer, Frontend Developer, UX Designer          | [aditiingle](https://github.com/aditiingle) |
-| Jonathan Mehmannavaz      | 40210330   | Frontend Developer, Backend Developer, Test Engineer                      | [JonaBaron](https://github.com/JonaBaron) |
-| Joyal Biju Kulangara      | 40237314   | Frontend Developer, UX Designer, Test and QA Engineer                     | [Joyal99](https://github.com/Joyal99) |
-| Kevin Mandiouba           | 40243497   | Frontend Developer, UX Designer                                           | [KevinMandiouba](https://github.com/KevinMandiouba) |
-| Oussama Bouhenchir        | 40249465   | Frontend Developer, UX Designer                                           | [ouss2231](https://github.com/ouss2231) |
-| Owen Jorgensen            | 40227851   | Backend Developer, UX Designer                                            | [owjorgen](https://github.com/owjorgen) |
+| **Name**                  | **ID**     | **Roles**                                                                 |
+|---------------------------|------------|---------------------------------------------------------------------------|
+| [Aditi Abhaysingh Ingle](https://github.com/aditiingle)    | 40266449   | Scrum Master, Backend Developer, Frontend Developer, UX Designer          |
+| [Jonathan Mehmannavaz](https://github.com/JonaBaron)      | 40210330   | Frontend Developer, Backend Developer, Test Engineer                      |
+| [Joyal Biju Kulangara](https://github.com/Joyal99)       | 40237314   | Frontend Developer, UX Designer, Test and QA Engineer                     |
+| [Kevin Mandiouba](https://github.com/KevinMandiouba)           | 40243497   | Frontend Developer, UX Designer                                           |
+| [Oussama Bouhenchir](https://github.com/ouss2231)        | 40249465   | Frontend Developer, UX Designer                                           |
+| [Owen Jorgensen](https://github.com/owjorgen)            | 40227851   | Backend Developer, UX Designer                                            |
 
 
 ## 📜 **Project Description**
